@@ -5,16 +5,22 @@
 <header><title>Travelers Championship 2020</title></header>
 <body>
 
-<script>            
-        var valueSize = $( "#iframe" ).offset();
-        var totalsize = (valueSize.top * 2) + valueSize.left;
+function resizer(id)
+{
 
-        $( "#iframe" ).height(totalsize);            
+var doc=document.getElementById(id).contentWindow.document;
+var body_ = doc.body, html_ = doc.documentElement;
 
-</script>
+var height = Math.max( body_.scrollHeight, body_.offsetHeight, html_.clientHeight, html_.scrollHeight, html_.offsetHeight );
+var width  = Math.max( body_.scrollWidth, body_.offsetWidth, html_.clientWidth, html_.scrollWidth, html_.offsetWidth );
+
+document.getElementById(id).style.height=height;
+document.getElementById(id).style.width=width;
+
+}
         
 <!--<iframe width="700" height="900" frameborder="0" scrolling="no" src="https://onedrive.live.com/embed?resid=29A99D65AA1785D4%212892&authkey=%21AMYOaZEZ2jdcUDk&em=2&ActiveCell='Pool%20Scores'!B12&Item=OneDriveShare&wdHideGridlines=True&wdInConfigurator=True"></iframe>-->
-<iframe src="https://onedrive.live.com/embed?resid=29A99D65AA1785D4%212892&authkey=%21AMYOaZEZ2jdcUDk&em=2&ActiveCell='Pool%20Scores'!B12&Item=OneDriveShare&wdHideGridlines=True&wdInConfigurator=True" frameborder="0" id="iframe" width="100%"></iframe>
+<iframe src="https://onedrive.live.com/embed?resid=29A99D65AA1785D4%212892&authkey=%21AMYOaZEZ2jdcUDk&em=2&ActiveCell='Pool%20Scores'!B12&Item=OneDriveShare&wdHideGridlines=True&wdInConfigurator=True" frameborder="0" id="iframe1" onLoad="resizer('iframe1');"></iframe>
 
 <script>var clicky_site_ids = clicky_site_ids || []; clicky_site_ids.push(101261230);</script>
 <script async src="//static.getclicky.com/js"></script>
