@@ -1,41 +1,60 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta http-equiv="refresh" content="300">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta http-equiv="refresh" content="300" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>SLIM 2025 - PAYOUTS</title>
   <style>
-    /* Reset default browser styles for better consistency */
+    /* Reset margin/padding for full viewport usage */
     html, body {
       margin: 0;
       padding: 0;
-      width: 100%;
       height: 100%;
-      box-sizing: border-box; /* Include padding and border in the element's total width and height */
+      /* Removed overflow:hidden to allow scroll on small screens */
+      font-family: Arial, sans-serif;
+      background: #f9f9f9;
     }
 
+    /* Container with some padding for better spacing */
     .golf_table {
       width: 100%;
-      height: 100%;
-      display: flex; /* Use flexbox for easy centering and alignment */
-      justify-content: center;
-      align-items: center;
+      max-width: 1200px; /* Optional max width for large screens */
+      margin: 0 auto; /* Center horizontally */
+      padding: 10px;
+      box-sizing: border-box;
+      height: calc(100vh - 20px); /* Full viewport height minus padding */
     }
 
+    /* Responsive iframe */
     .golf_table iframe {
       width: 100%;
       height: 100%;
-      border: none; /* Removed the border to make it look cleaner */
+      border: 1px solid black;
+      display: block;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+
+    /* For smaller devices, allow the container to shrink */
+    @media (max-width: 600px) {
+      .golf_table {
+        height: 70vh; /* Reduce height on small screens */
+        padding: 5px;
+      }
     }
   </style>
 </head>
 
 <body>
   <div class="golf_table">
-    <iframe src="https://1drv.ms/x/c/29a99d65aa1785d4/IQStsemNQCa2Trynm6cuZ77LAXkKPqLBlWPI-dH5ZXFCqaQ?wdAllowInteractivity=False&Item=WEBSITE_GROUPINGS&wdHideGridlines=True&wdInConfigurator=True&wdDownloadButton=False" scrolling="yes"></iframe>
+    <!-- Add your src URL below -->
+    <iframe src="https://1drv.ms/x/c/29a99d65aa1785d4/IQStsemNQCa2Trynm6cuZ77LAXkKPqLBlWPI-dH5ZXFCqaQ?wdAllowInteractivity=False&Item=WEBSITE_GROUPINGS&wdHideGridlines=True&wdInConfigurator=True&wdDownloadButton=False" scrolling="yes" title="SLIM 2025 Payouts" loading="lazy"></iframe>
   </div>
 
+  <!--<p>Data error, need to research and fix it</p>-->
+
+  <!-- Clicky Analytics -->
   <script>
     var clicky_site_ids = clicky_site_ids || [];
     clicky_site_ids.push(101261230);
