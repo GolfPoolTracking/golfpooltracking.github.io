@@ -1,10 +1,13 @@
+"https://1drv.ms/x/c/29a99d65aa1785d4/IQStsemNQCa2Trynm6cuZ77LAXkKPqLBlWPI-dH5ZXFCqaQ?wdAllowInteractivity=False&Item=WEBSITE_GROUPINGS&wdHideGridlines=True&wdInConfigurator=True&wdDownloadButton=False" scrolling="yes" title="SLIM 2025 Payouts" loading="lazy"></iframe>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta http-equiv="refresh" content="300" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SLIM 2025 - XXXX</title>
+  <title>SLIM 2025 - GROUPINGS</title>
   <style>
     html, body {
       margin: 0;
@@ -14,16 +17,23 @@
       background: #f9f9f9;
     }
 
-    /* Wrapper maintains aspect ratio */
+    /* Default: 16:9 aspect ratio */
     .golf_table {
       position: relative;
       width: 100%;
-      padding-top: 56.25%; /* 16:9 aspect ratio (9 ÷ 16 × 100) */
+      padding-top: 56.25%; /* 16:9 */
       background: #fff;
       box-sizing: border-box;
     }
 
-    /* Responsive iframe fills the wrapper */
+    /* On larger screens: 21:9 ratio for more columns */
+    @media (min-width: 992px) {
+      .golf_table {
+        padding-top: 42.85%; /* 21:9 */
+      }
+    }
+
+    /* Responsive iframe fills the container */
     .golf_table iframe {
       position: absolute;
       top: 0;
@@ -39,7 +49,13 @@
 
 <body>
   <div class="golf_table">
-    <iframe src="https://1drv.ms/x/c/29a99d65aa1785d4/IQStsemNQCa2Trynm6cuZ77LAXkKPqLBlWPI-dH5ZXFCqaQ?wdAllowInteractivity=False&Item=WEBSITE_GROUPINGS&wdHideGridlines=True&wdInConfigurator=True&wdDownloadButton=False" scrolling="yes" title="SLIM 2025 Payouts" loading="lazy"></iframe>
+    <!-- Replace FILE_ID below with your real OneDrive embed ID -->
+    <iframe 
+	  src="https://1drv.ms/x/c/29a99d65aa1785d4/IQStsemNQCa2Trynm6cuZ77LAXkKPqLBlWPI-dH5ZXFCqaQ?em=2&wdAllowInteractivity=False&Item=WEBSITE_GROUPINGS&wdHideGridlines=True&wdDownloadButton=True&wdInConfigurator=True&wdInConfigurator=True&wdZoom=70" 
+      scrolling="yes" 
+      title="SLIM 2025 Payouts" 
+      loading="lazy">
+    </iframe>
   </div>
 
   <!-- Clicky Analytics -->
@@ -53,4 +69,3 @@
   </noscript>
 </body>
 </html>
-
