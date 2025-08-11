@@ -1,28 +1,46 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta http-equiv="refresh" content="300">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta http-equiv="refresh" content="300" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>SLIM 2025 - GROUPINGS</title>
   <style>
     html, body {
       margin: 0;
       padding: 0;
       height: 100%;
-      overflow: hidden; /* Prevent body scroll if not needed */
+      /* allow scrolling when needed */
+      overflow-y: auto;
+      font-family: Arial, sans-serif;
+      background: #fff;
     }
 
+    /* Container fills viewport height but allows page scrolling */
     .golf_table {
-      position: relative;
       width: 100%;
-      height: 100%;
+      min-height: 80vh; /* at least 80% of viewport height */
+      max-height: 90vh; /* max 90% viewport height */
+      margin: 0 auto;
+      padding: 10px;
+      box-sizing: border-box;
     }
 
     .golf_table iframe {
       width: 100%;
-      height: 100%;
-      border: 0.5px solid black;
+      height: 80vh; /* fill most of viewport height */
+      border: 1px solid black;
+      border-radius: 4px;
+      display: block;
+      /* allow iframe internal scroll */
+      overflow: auto;
+    }
+
+    /* Make sure iframe height scales better on smaller devices */
+    @media (max-width: 600px) {
+      .golf_table iframe {
+        height: 60vh;
+      }
     }
   </style>
 </head>
@@ -30,10 +48,8 @@
 <body>
   <div class="golf_table">
     <!-- Add your src URL below -->
-    <iframe src="https://1drv.ms/x/c/29a99d65aa1785d4/IQStsemNQCa2Trynm6cuZ77LAXkKPqLBlWPI-dH5ZXFCqaQ?wdAllowInteractivity=False&Item=WEBSITE_GROUPINGS&wdHideGridlines=True&wdInConfigurator=True&wdDownloadButton=False" scrolling="yes"></iframe>
- </div>
-
-  <!--<p>Data error, need to research and fix it</p>-->
+    <iframe src="" scrolling="yes" title="Golf Groupings"></iframe>
+  </div>
 
   <!-- Clicky Analytics -->
   <script>
@@ -42,7 +58,14 @@
   </script>
   <script async src="//static.getclicky.com/js"></script>
   <noscript>
-    <p><img alt="Clicky" width="1" height="1" src="//in.getclicky.com/101261230ns.gif" /></p>
+    <p>
+      <img
+        alt="Clicky"
+        width="1"
+        height="1"
+        src="//in.getclicky.com/101261230ns.gif"
+      />
+    </p>
   </noscript>
 </body>
 </html>
