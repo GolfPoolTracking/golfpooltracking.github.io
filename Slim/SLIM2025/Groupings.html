@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta http-equiv="refresh" content="300" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SLIM 2025 - GROUPINGSxxx</title>
+  <title>SLIM 2025 - GROUPINGS</title>
   <style>
     html, body {
       margin: 0;
@@ -14,27 +14,30 @@
       background: #f9f9f9;
     }
 
-    /* Default: 16:9 aspect ratio */
+    /* Container that can switch between aspect ratio or full height */
     .golf_table {
       position: relative;
       width: 100%;
-      padding-top: 56.25%; /* 16:9 */
+      height: 100vh; /* Full viewport height */
       background: #fff;
       box-sizing: border-box;
     }
 
-    /* On larger screens: 21:9 ratio for more columns */
-    @media (min-width: 992px) {
+    /* On small devices, keep some aspect ratio so it doesn’t squash */
+    @media (max-width: 768px) {
       .golf_table {
-        padding-top: 42.85%; /* 21:9 */
+        height: auto;
+        padding-top: 56.25%; /* 16:9 for small screens */
+      }
+      .golf_table iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
       }
     }
 
-    /* Responsive iframe fills the container */
+    /* Responsive iframe */
     .golf_table iframe {
-      position: absolute;
-      top: 0;
-      left: 0;
       width: 100%;
       height: 100%;
       border: 1px solid black;
@@ -48,9 +51,9 @@
   <div class="golf_table">
     <!-- Replace FILE_ID below with your real OneDrive embed ID -->
     <iframe 
-	  src="https://1drv.ms/x/c/29a99d65aa1785d4/IQStsemNQCa2Trynm6cuZ77LAXkKPqLBlWPI-dH5ZXFCqaQ?em=2&wdAllowInteractivity=False&Item=WEBSITE_GROUPINGS&wdHideGridlines=True&wdDownloadButton=True&wdInConfigurator=True&wdInConfigurator=True&wdZoom=70" 
+      src="https://1drv.ms/x/c/29a99d65aa1785d4/IQStsemNQCa2Trynm6cuZ77LAXkKPqLBlWPI-dH5ZXFCqaQ?em=2&wdAllowInteractivity=False&Item=WEBSITE_GROUPINGS&wdHideGridlines=True&wdDownloadButton=False&wdInConfigurator=True&wdInConfigurator=True&wdZoom=70" 
       scrolling="yes" 
-      title="SLIM 2025 Payouts" 
+      title="SLIM 2025 Groupings" 
       loading="lazy">
     </iframe>
   </div>
@@ -66,3 +69,4 @@
   </noscript>
 </body>
 </html>
+
