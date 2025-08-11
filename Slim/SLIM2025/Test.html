@@ -1,56 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta http-equiv="refresh" content="300" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
-  <title>SLIM 2025 - GROUPINGSxxx</title>
+  <meta charset="UTF-8">
+  <meta http-equiv="refresh" content="300">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SLIM 2025 - TEST</title>
   <style>
     html, body {
       margin: 0;
       padding: 0;
       height: 100%;
-      font-family: Arial, sans-serif;
-      background: #f9f9f9;
+      overflow: hidden; /* Prevent body scroll if not needed */
     }
 
-    /* Full height container */
     .golf_table {
       position: relative;
       width: 100%;
-      height: 100vh; /* Always fill viewport height */
-      background: #fff;
-      box-sizing: border-box;
+      height: 100%;
     }
 
-    /* Iframe styling */
     .golf_table iframe {
       width: 100%;
       height: 100%;
-      display: block;
-      border: 1px solid black;
-      border-radius: 4px;
-      box-sizing: border-box;
+      border: 0.5px solid black;
     }
   </style>
 </head>
 
 <body>
   <div class="golf_table">
-    <iframe id="excelFrame" src="" title="SLIM 2025 Groupings" loading="lazy"></iframe>
-  </div>
+    <!-- Add your src URL below -->
+    <iframe src="https://1drv.ms/x/c/29a99d65aa1785d4/IQStsemNQCa2Trynm6cuZ77LAXkKPqLBlWPI-dH5ZXFCqaQ?wdAllowInteractivity=False&Item=WEBSITE_PLAYINGHANDICAPS&wdHideGridlines=True&wdInConfigurator=True&wdDownloadButton=False" scrolling="yes"></iframe>
+ </div>
 
-  <script>
-    // Base OneDrive link (replace FILE_ID with your real file's ID)
-    const baseLink = "https://onedrive.live.com/edit?cid=29a99d65aa1785d4&id=29A99D65AA1785D4!s8de9b1ad26404eb6bca79ba72e67becb&resid=29A99D65AA1785D4!s8de9b1ad26404eb6bca79ba72e67becb&ithint=file%2Cxlsx&embed=1&em=2&wdAllowInteractivity=False&Item=WEBSITE_GROUPINGS&wdHideGridlines=True&wdInConfigurator=True%2CTrue&migratedtospo=true&redeem=aHR0cHM6Ly8xZHJ2Lm1zL3gvYy8yOWE5OWQ2NWFhMTc4NWQ0L0lRU3RzZW1OUUNhMlRyeW5tNmN1Wjc3TEFYa0tQcUxCbFdQSS1kSDVaWEZDcWFRP2VtPTImd2RBbGxvd0ludGVyYWN0aXZpdHk9RmFsc2UmSXRlbT1XRUJTSVRFX0dST1VQSU5HUyZ3ZEhpZGVHcmlkbGluZXM9VHJ1ZSZ3ZEluQ29uZmlndXJhdG9yPVRydWUmd2RJbkNvbmZpZ3VyYXRvcj1UcnVl&wdo=2";
-    
-    // Simple iOS detection
-    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-
-    // Set zoom based on device
-    const zoomLevel = isIOS ? 100 : 70;
-    document.getElementById("excelFrame").src = `${baseLink}&wdZoom=${zoomLevel}`;
-  </script>
+  <!--<p>Data error, need to research and fix it</p>-->
 
   <!-- Clicky Analytics -->
   <script>
