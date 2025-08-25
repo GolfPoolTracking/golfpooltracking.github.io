@@ -6,7 +6,7 @@
 <title>SLIM 2025 Forecast</title>
 <style>
   body { font-family: Arial, sans-serif; background: #222; color: #fff; padding: 20px; }
-  h1 { text-align: center; }
+  h1 { text-align: center; margin-bottom: 30px; }
   .forecast-card { background: rgba(0,0,0,0.7); padding: 15px; margin: 10px 0; border-radius: 10px; display: flex; align-items: center; gap: 15px; }
   .forecast-card img { width: 50px; height: 50px; }
   .forecast-info { display: flex; flex-direction: column; }
@@ -32,7 +32,7 @@ async function loadForecast() {
             ...downingsData.map(f => ({...f, location: 'Downings'}))
         ];
 
-        // Function to filter times according to your rules
+        // Filter times according to your rules
         function isInTimeRange(f) {
             const dt = new Date(f.time);
             const hour = dt.getUTCHours();
@@ -51,10 +51,16 @@ async function loadForecast() {
             return;
         }
 
-        // Sort by datetime
-        filtered.sort((a,b) => new Date(a.time) - new Date(b.time));
-
+        // Remove duplicate hours (keep first occurrence)
+        const uniqueHours = {};
         filtered.forEach(f => {
+            const key = f.time.substring(0,13); // YYYY-MM-DDTHH
+            if(!uniqueHours[key]) uniqueHours[key] = f;
+        });
+
+        const sorted = Object.values(uniqueHours).sort((a,b) => new Date(a.time) - new Date(b.time));
+
+        sorted.forEach(f => {
             const dt = new Date(f.time);
             const dayName = dt.toLocaleDateString('en-GB', { weekday: 'long' });
             const dateStr = dt.toLocaleDateString('en-GB');
