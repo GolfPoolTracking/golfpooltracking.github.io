@@ -28,8 +28,9 @@ jobs:
           tree = ET.parse('forecast_data/raw_forecast.xml')
           root = tree.getroot()
 
+          # Corrected start/end dates
           start = datetime.datetime(2025,8,28)
-          end   = datetime.datetime(2025,8,32)
+          end   = datetime.datetime(2025,9,1)  # first day of Sept to include all of 28-31 Aug
 
           forecasts = []
 
