@@ -8,7 +8,7 @@
   <style>
     body {
       font-family: Arial, sans-serif;
-      background: url("./Dancer_2024.jpg") no-repeat center center fixed;
+      background: url("../Dancer_2024.jpg") no-repeat center center fixed;
       background-size: cover;
       color: #fff;
       padding: 20px;
@@ -103,7 +103,8 @@ function renderForecast(data){
   });
 }
 
-fetch('forecast_data/forecast.json')
+// Correct fetch path for SLIM/SLIM2025 structure
+fetch('../../forecast_data/forecast.json')
   .then(r=>r.json())
   .then(renderForecast)
   .catch(err=>{
