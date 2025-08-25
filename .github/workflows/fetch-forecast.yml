@@ -23,15 +23,18 @@ jobs:
       - name: Fetch and process forecast
         run: |
           python - << 'PYCODE'
-          import requests, xmltodict, json
+          import requests, xmltodict, json, re
           from datetime import datetime
 
           url = "https://www.met.ie/Open_Data/xml/PointForecasts/55.2670,-7.6330.xml"
           resp = requests.get(url)
           resp.encoding = 'utf-8'
+          xml_text = resp.text
 
-          # sanitize XML: replace & with &amp; (common cause of ExpatError)
-          xml_text = resp.text.replace("& ", "&amp; ")
+          # Remove invalid control characters
+          xml_text = re.sub(r'[\x00-\x08\x0B\x0C\x0E-\x1F]', '', xml_text)
+          # Escape lone &
+          xml_text = xml_text.replace('&', '&amp;')
 
           data = xmltodict.parse(xml_text)
 
