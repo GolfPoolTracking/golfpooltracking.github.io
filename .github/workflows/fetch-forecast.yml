@@ -2,7 +2,7 @@ name: Fetch Met Éireann Forecast
 
 on:
   schedule:
-    - cron: '10 0 * * *'  # daily at 00:10 UTC
+    - cron: '10 0 * * *'  
   workflow_dispatch:
 
 jobs:
@@ -24,8 +24,8 @@ jobs:
           import xml.etree.ElementTree as ET
           import json
           import datetime
-          import sys
           import hashlib
+          import sys
 
           try:
               tree = ET.parse('forecast_data/raw_forecast.xml')
@@ -37,7 +37,8 @@ jobs:
           start = datetime.datetime(2025,8,28)
           end   = datetime.datetime(2025,9,1)
 
-          forecasts = []
+          forecasts = {}
+          # key: ISO hour string (YYYY-MM-DDTHH:00:00Z)
 
           for time_el in root.findall('.//time'):
               time_str = time_el.attrib.get('from')
@@ -48,10 +49,10 @@ jobs:
               if not (start <= dt_naive < end):
                   continue
 
-              # Prepare entry
-              entry = {'time': time_str}
+              hour_key = dt.strftime('%Y-%m-%dT%H:00:00Z')
 
-              # Merge all possible children
+              entry = forecasts.get(hour_key, {'time': hour_key})
+
               for child in time_el:
                   if child.tag == 'location':
                       temp = child.find('temperature')
@@ -72,31 +73,21 @@ jobs:
                   elif child.tag == 'precipitation':
                       entry['Rainfall'] = child.attrib.get('value')
 
-              # Ensure default values
+              # Ensure defaults
               entry.setdefault('Temperature', 'N/A')
               entry.setdefault('WindSpeed', '0')
               entry.setdefault('WindDirection', '0')
               entry.setdefault('Rainfall', '0.0')
               entry.setdefault('WeatherSymbol3', '1')
 
-              forecasts.append(entry)
-
-          if not forecasts:
-              forecasts = [{
-                  "time": "2025-08-28T12:00:00Z",
-                  "Temperature": "N/A",
-                  "Rainfall": "0.0",
-                  "WindSpeed": "0",
-                  "WindDirection": "0",
-                  "WeatherSymbol3": "1"
-              }]
+              forecasts[hour_key] = entry
 
           # Split JSON
-          portsalon = [f for f in forecasts if f['time'].startswith('2025-08-28')]
-          downings  = [f for f in forecasts if f['time'] > '2025-08-28']
+          portsalon = [v for k,v in sorted(forecasts.items()) if k.startswith('2025-08-28')]
+          downings  = [v for k,v in sorted(forecasts.items()) if k > '2025-08-28']
 
-          # Function to write only if changed
           def write_if_changed(path, data):
+              import os
               try:
                   with open(path,'r') as f:
                       old_hash = hashlib.md5(f.read().encode()).hexdigest()
