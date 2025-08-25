@@ -1,24 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Portsalon Forecast 26 Aug 2025</title>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<style>
-body { font-family: Arial; margin:2rem; background:#f4f4f9;}
-h1{text-align:center;}
-table{width:100%; max-width:900px;margin:1rem auto;border-collapse:collapse;background:#fff;box-shadow:0 2px 5px rgba(0,0,0,0.1);}
-th,td{padding:0.5rem;border:1px solid #ddd;text-align:center;}
-th{background:#d0e7ff;}
-img.icon{width:40px;height:40px;}
-canvas{max-width:900px;margin:1rem auto;display:block;}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Weather Forecast - Portsalon 26 Aug 2025</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: url("./Dancer_2024.jpg") no-repeat center center fixed;
+      background-size: cover;
+      color: #fff;
+      padding: 20px;
+      margin: 0;
+      min-height: 100vh;
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      top:0; left:0; right:0; bottom:0;
+      background: rgba(0,0,0,0.55);
+      z-index: -1;
+      pointer-events:none;
+    }
+    h1, h2 { text-align:center; text-shadow:2px 2px 6px rgba(0,0,0,0.9); }
+    #forecast { margin: 1rem auto; max-width: 900px; overflow-x:auto; }
+    table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+    th, td { border:1px solid #fff; padding:0.5rem; text-align:center; }
+    th { background: rgba(0,0,0,0.5); }
+    img.icon { width:40px; height:40px; }
+    canvas { max-width: 900px; margin: 2rem auto; display:block; background: rgba(0,0,0,0.3); border-radius:8px; }
+    @media(max-width:600px){ table, th, td{font-size:0.85rem;} }
+  </style>
 </head>
 <body>
-<h1>Forecast: Portsalon — 26 Aug 2025</h1>
-<div id="forecast">Loading forecast…</div>
-<canvas id="chart" height="200"></canvas>
+  <h1>SLIM 2025 - Donegal</h1>
+  <h2>Portsalon Forecast — 26 Aug 2025</h2>
+  <div id="forecast">Loading forecast…</div>
+  <canvas id="forecast-chart" height="200"></canvas>
 
 <script>
 function degToCompass(deg){
@@ -30,50 +49,67 @@ function degToArrow(deg){
   return deg==null?"":arrows[Math.round(deg/45)%8];
 }
 
+function renderForecast(data){
+  const container = document.getElementById("forecast");
+  if(!data.length){ 
+    container.innerHTML="No forecast available yet.";
+    return;
+  }
+
+  let html="<table><tr><th>Time</th><th>Icon</th><th>Temp (°C)</th><th>Rain (mm)</th><th>Cloud (%)</th><th>Wind km/h</th><th>Dir</th></tr>";
+  const chartTimes=[], temps=[], rain=[], wind=[];
+  
+  data.forEach(d=>{
+    const t = new Date(d.time).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
+    const temp = d.Temperature??'N/A';
+    const r = d.Rainfall??'0';
+    const cloud = d.TotalCloudCover??'N/A';
+    const w = d.WindSpeed ? Math.round(parseFloat(d.WindSpeed)*3.6) : 'N/A';
+    const deg = d.WindDirection ? parseFloat(d.WindDirection) : null;
+    const icon = d.WeatherSymbol3 ? `https://met.ie/Open_Data/icons/${d.WeatherSymbol3}.png` : "";
+
+    html+=`<tr>
+      <td>${t}</td>
+      <td>${icon?`<img class='icon' src='${icon}' alt=''>`:"—"}</td>
+      <td>${temp}</td>
+      <td>${r}</td>
+      <td>${cloud}</td>
+      <td>${w}</td>
+      <td>${degToCompass(deg)} ${degToArrow(deg)}</td>
+    </tr>`;
+
+    chartTimes.push(t); temps.push(parseFloat(temp)); rain.push(parseFloat(r)); wind.push(w==='N/A'?0:w);
+  });
+  html+="</table>";
+  container.innerHTML=html;
+
+  new Chart(document.getElementById('forecast-chart').getContext('2d'), {
+    type:'line',
+    data:{labels:chartTimes,datasets:[
+      {label:'Temp (°C)',data:temps,borderColor:'red',backgroundColor:'rgba(255,0,0,0.2)',yAxisID:'y1'},
+      {label:'Rain (mm)',data:rain,borderColor:'blue',backgroundColor:'rgba(0,0,255,0.2)',yAxisID:'y2'},
+      {label:'Wind (km/h)',data:wind,borderColor:'green',backgroundColor:'rgba(0,255,0,0.2)',yAxisID:'y3'}
+    ]},
+    options:{
+      responsive:true,
+      interaction:{mode:'index',intersect:false},
+      plugins:{legend:{position:'top'}},
+      scales:{
+        y1:{position:'left',title:{display:true,text:'Temp (°C)'}},
+        y2:{position:'right',grid:{drawOnChartArea:false},title:{display:true,text:'Rain (mm)'}},
+        y3:{position:'right',grid:{drawOnChartArea:false},title:{display:true,text:'Wind (km/h)'}}
+      }
+    }
+  });
+}
+
 fetch('forecast_data/forecast.json')
   .then(r=>r.json())
-  .then(data=>{
-    const container=document.getElementById('forecast');
-    if(!data.length){ container.innerHTML="No forecast available"; return; }
-
-    let html="<table><tr><th>Time</th><th>Icon</th><th>Temp (°C)</th><th>Rain (mm)</th><th>Cloud (%)</th><th>Wind km/h</th><th>Dir</th></tr>";
-    const chartTimes=[], temps=[], rain=[], wind=[];
-    data.forEach(d=>{
-      const t=new Date(d.time).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
-      const temp=d.Temperature??'N/A';
-      const r=d.Rainfall??'0';
-      const cloud=d.TotalCloudCover??'N/A';
-      const w=d.WindSpeed?Math.round(parseFloat(d.WindSpeed)*3.6):'N/A';
-      const deg=d.WindDirection?parseFloat(d.WindDirection):null;
-      const icon=d.WeatherSymbol3?`https://met.ie/Open_Data/icons/${d.WeatherSymbol3}.png`:"";
-
-      html+=`<tr><td>${t}</td><td>${icon?`<img class='icon' src='${icon}' alt=''>`:"—"}</td><td>${temp}</td><td>${r}</td><td>${cloud}</td><td>${w}</td><td>${degToCompass(deg)} ${degToArrow(deg)}</td></tr>`;
-
-      chartTimes.push(t); temps.push(parseFloat(temp)); rain.push(parseFloat(r)); wind.push(w==='N/A'?0:w);
-    });
-    html+="</table>";
-    container.innerHTML=html;
-
-    new Chart(document.getElementById('chart').getContext('2d'), {
-      type:'line',
-      data:{labels:chartTimes,datasets:[
-        {label:'Temp (°C)',data:temps,borderColor:'red',backgroundColor:'rgba(255,0,0,0.2)',yAxisID:'y1'},
-        {label:'Rain (mm)',data:rain,borderColor:'blue',backgroundColor:'rgba(0,0,255,0.2)',yAxisID:'y2'},
-        {label:'Wind (km/h)',data:wind,borderColor:'green',backgroundColor:'rgba(0,255,0,0.2)',yAxisID:'y3'}
-      ]},
-      options:{
-        responsive:true,
-        interaction:{mode:'index',intersect:false},
-        plugins:{legend:{position:'top'}},
-        scales:{
-          y1:{position:'left',title:{display:true,text:'Temp (°C)'}},
-          y2:{position:'right',grid:{drawOnChartArea:false},title:{display:true,text:'Rain (mm)'}},
-          y3:{position:'right',grid:{drawOnChartArea:false},title:{display:true,text:'Wind (km/h)'}}
-        }
-      }
-    });
-  })
-  .catch(err=>document.getElementById('forecast').innerHTML="Error loading forecast");
+  .then(renderForecast)
+  .catch(err=>{
+    document.getElementById('forecast').innerHTML="Error loading forecast";
+    console.error(err);
+  });
 </script>
 </body>
 </html>
