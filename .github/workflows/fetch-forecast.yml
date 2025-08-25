@@ -23,7 +23,7 @@ jobs:
       - name: Fetch and process forecast
         run: |
           python - << 'PYCODE'
-          import requests, json
+          import requests, json, os
           from datetime import datetime
           from bs4 import BeautifulSoup
 
@@ -31,7 +31,7 @@ jobs:
           resp = requests.get(url)
           resp.encoding = 'utf-8'
 
-          # Use BeautifulSoup to parse malformed XML safely
+          # Parse malformed XML safely
           soup = BeautifulSoup(resp.text, "lxml-xml")
 
           forecasts = []
@@ -41,11 +41,9 @@ jobs:
               ts = time.get("from")
               if not ts or ts in seen:
                   continue
-
               hour = datetime.fromisoformat(ts.replace("Z","+00:00")).hour
               if not (12 <= hour <= 18):
                   continue
-
               seen.add(ts)
               loc = time.find("location")
               if loc is None:
@@ -64,7 +62,11 @@ jobs:
               }
               forecasts.append(entry)
 
+          # Ensure directory exists
           output_file = "SLIM/SLIM2025/forecast.json"
+          os.makedirs(os.path.dirname(output_file), exist_ok=True)
+
+          # Write JSON
           with open(output_file, "w") as f:
               json.dump(forecasts, f, indent=2)
 
