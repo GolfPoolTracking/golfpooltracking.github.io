@@ -25,6 +25,7 @@ jobs:
           import json, datetime, re, sys
 
           def localname(el):
+              """Return local name of an Element (strip namespace)."""
               if el is None: return None
               tag = el.tag
               return tag.split('}')[-1] if '}' in tag else tag
@@ -35,6 +36,7 @@ jobs:
               t = el.text
               return t.strip() if isinstance(t, str) and t.strip() != '' else None
 
+          # parse XML
           try:
               tree = ET.parse('forecast_data/raw_forecast.xml')
               root = tree.getroot()
@@ -42,22 +44,27 @@ jobs:
               print("XML parse error:", e, file=sys.stderr)
               root = None
 
+          # target date range (26 Aug 2025)
           start = datetime.datetime(2025, 8, 26, 0, 0, 0)
           end   = datetime.datetime(2025, 8, 27, 0, 0, 0)
 
           found = []
 
           if root is not None:
+              # Collect candidate nodes: any element that has a 'time' attribute OR 'from' and 'to' OR contains start-valid-time child
               candidates = []
               for el in root.iter():
                   attribs = el.attrib
                   if 'time' in attribs or ('from' in attribs and 'to' in attribs):
                       candidates.append(el)
                       continue
+                  # check children for start-valid-time or starttime tags
                   for child in el:
                       if localname(child).lower() in ('start-valid-time','starttime','starttimeutc','start'):
                           candidates.append(el)
                           break
+
+              # deduplicate preserving order
               seen = set()
               uniq = []
               for c in candidates:
@@ -66,60 +73,82 @@ jobs:
                       uniq.append(c)
                       seen.add(tid)
 
+              # Try to extract time & parameters from each candidate
               for node in uniq:
+                  # find time string
                   time_str = None
+                  # check attributes first
                   if 'time' in node.attrib:
                       time_str = node.attrib.get('time')
                   elif 'from' in node.attrib:
                       time_str = node.attrib.get('from')
                   elif 'start' in node.attrib:
                       time_str = node.attrib.get('start')
+
+                  # check for child elements like start-valid-time
                   if not time_str:
                       for child in node:
                           if localname(child).lower() in ('start-valid-time','starttime','start'):
                               time_str = text_of(child)
                               break
+
                   if not time_str:
+                      # try to find descendant start-valid-time anywhere below
                       sv = node.find('.//{*}start-valid-time')
                       if sv is not None:
                           time_str = text_of(sv)
+
                   if not time_str:
                       continue
+
+                  # normalize ISO times (handle trailing Z)
                   try:
                       if time_str.endswith('Z'):
                           dt = datetime.datetime.fromisoformat(time_str.replace('Z', '+00:00'))
                       else:
                           dt = datetime.datetime.fromisoformat(time_str)
+                      # Convert aware datetime to naive UTC for comparison if needed
                       if dt.tzinfo is not None:
                           dt = dt.astimezone(datetime.timezone.utc).replace(tzinfo=None)
                   except Exception:
+                      # try trimming milliseconds or timezone if weird
                       try:
                           time_clean = re.sub(r'\+\d{2}:\d{2}$', '', time_str)
                           dt = datetime.datetime.fromisoformat(time_clean)
                       except Exception:
+                          # skip unparsable times
                           continue
+
                   if not (start <= dt < end):
                       continue
+
                   entry = {'time': time_str}
+
+                  # First try 'Parameter' style (name attribute + <value>)
                   params = []
                   for el in node.iter():
                       if localname(el).lower() == 'parameter':
                           params.append(el)
+
                   if params:
                       for p in params:
                           name = p.attrib.get('name') or p.attrib.get('id') or localname(p)
+                          # find a <value> child (namespace-agnostic)
                           val = None
                           for c in p:
                               if localname(c).lower() == 'value':
                                   val = text_of(c)
                                   break
                           if val is None:
+                              # fallback to text inside p
                               val = text_of(p)
                           if name and val is not None:
                               entry[name] = val
                   else:
+                      # Fallback: gather direct child elements (strip namespaces)
                       for child in node:
                           ln = localname(child)
+                          # if child has a <value> subelement, use that
                           val = None
                           for sub in child:
                               if localname(sub).lower() == 'value':
@@ -129,8 +158,10 @@ jobs:
                               val = text_of(child)
                           if val is not None:
                               entry[ln] = val
+
                   found.append(entry)
 
+          # if nothing found, create a helpful placeholder so UI always has something
           if not found:
               found = [{
                   "time": "2025-08-26T12:00:00Z",
@@ -142,6 +173,7 @@ jobs:
                   "WeatherSymbol3": "1"
               }]
 
+          # write JSON
           with open('forecast_data/forecast.json','w') as f:
               json.dump(found, f, indent=2)
           print(f"Wrote {len(found)} forecast entries to forecast_data/forecast.json")
