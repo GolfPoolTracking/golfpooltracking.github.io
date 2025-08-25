@@ -2,7 +2,7 @@ name: Fetch Met Éireann Forecast
 
 on:
   schedule:
-    - cron: '10 0 * * *'  # daily at 00:10 UTC
+    - cron: '0 * * * *'  # every hour at minute 0 UTC
   workflow_dispatch:      # allows manual trigger
 
 jobs:
@@ -28,9 +28,9 @@ jobs:
           tree = ET.parse('forecast_data/raw_forecast.xml')
           root = tree.getroot()
 
-          # Corrected start/end dates
+          # Valid start and end dates
           start = datetime.datetime(2025,8,28)
-          end   = datetime.datetime(2025,9,1)  # first day of Sept to include all of 28-31 Aug
+          end   = datetime.datetime(2025,9,1)
 
           forecasts = []
 
@@ -49,30 +49,32 @@ jobs:
 
               entry = {'time': time_str}
 
+              # Temperature
               temp = loc.find('temperature')
               if temp is not None:
                   entry['Temperature'] = temp.attrib.get('value')
 
+              # Wind
               winddir = loc.find('windDirection')
               if winddir is not None:
                   entry['WindDirection'] = winddir.attrib.get('deg')
 
               windspeed = loc.find('windSpeed')
               if windspeed is not None:
-                  # convert m/s to km/h
                   entry['WindSpeed'] = str(round(float(windspeed.attrib.get('mps')) * 3.6, 1))
 
-              precip = loc.find('precipitation')
+              # Precipitation: search all children of <time>
+              precip = time_el.find('.//precipitation')
               if precip is not None:
                   entry['Rainfall'] = precip.attrib.get('value')
 
-              # always assign symbol, default to "1" (sun) if missing
+              # Weather symbol
               symbol = loc.find('symbol')
               entry['WeatherSymbol3'] = symbol.attrib.get('number') if symbol is not None else "1"
 
               forecasts.append(entry)
 
-          # fallback if empty
+          # Fallback if empty
           if not forecasts:
               forecasts = [{
                   "time": "2025-08-28T12:00:00Z",
@@ -83,7 +85,7 @@ jobs:
                   "WeatherSymbol3": "1"
               }]
 
-          # split into Portsalon (28th) and Downings (29-31)
+          # Split into Portsalon (28th) and Downings (29-31)
           portsalon = [f for f in forecasts if f['time'].startswith('2025-08-28')]
           downings  = [f for f in forecasts if f['time'] > '2025-08-28']
 
