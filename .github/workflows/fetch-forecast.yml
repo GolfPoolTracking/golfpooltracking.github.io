@@ -2,9 +2,8 @@ name: Fetch Met Éireann Forecast
 
 on:
   schedule:
-    # Every day at 00:10 UTC
-    - cron: '10 0 * * *'
-  workflow_dispatch: # allows manual run
+    - cron: '10 0 * * *'  # daily at 00:10 UTC
+  workflow_dispatch:      # allows manual run
 
 jobs:
   fetch_forecast:
@@ -14,37 +13,51 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Fetch Met Éireann Forecast
+      - name: Fetch Met Éireann XML
         run: |
           mkdir -p forecast_data
           curl -s "http://openaccess.pf.api.met.ie/metno-wdb2ts/locationforecast?lat=55.267;long=-7.633" -o forecast_data/raw_forecast.xml
-          
-          # Convert XML to JSON using python
+
+      - name: Convert XML to JSON
+        run: |
           python3 - << 'EOF'
           import xml.etree.ElementTree as ET
-          import json
+          import json, datetime
+
           tree = ET.parse('forecast_data/raw_forecast.xml')
           root = tree.getroot()
 
-          # Only keep relevant forecast-time elements for 26 Aug 2025
-          import datetime
-          start = datetime.datetime(2025, 8, 26)
-          end = datetime.datetime(2025, 8, 27)
+          # Filter for 26 Aug 2025
+          start = datetime.datetime(2025,8,26)
+          end = datetime.datetime(2025,8,27)
           forecasts = []
 
+          # Iterate all forecast-time entries
           for ft in root.findall('.//forecast-time'):
-              t_str = ft.attrib['time']
-              t = datetime.datetime.fromisoformat(t_str)
+              t = datetime.datetime.fromisoformat(ft.attrib['time'])
               if not (start <= t < end):
                   continue
-              entry = {'time': t_str}
+              entry = {'time': ft.attrib['time']}
               for p in ft.findall('Parameter'):
                   name = p.attrib.get('name')
-                  value = p.findtext('value')
-                  entry[name] = value
+                  value_elem = p.find('value')
+                  if value_elem is not None:
+                      entry[name] = value_elem.text
               forecasts.append(entry)
 
-          with open('forecast_data/forecast.json', 'w') as f:
+          # If no data found, create at least a placeholder entry
+          if not forecasts:
+              forecasts.append({
+                  "time": "2025-08-26T12:00:00",
+                  "Temperature": "N/A",
+                  "Rainfall": "0.0",
+                  "TotalCloudCover": "N/A",
+                  "WindSpeed": "0",
+                  "WindDirection": "0",
+                  "WeatherSymbol3": "1"
+              })
+
+          with open('forecast_data/forecast.json','w') as f:
               json.dump(forecasts, f, indent=2)
           EOF
 
@@ -55,4 +68,3 @@ jobs:
           git add forecast_data/forecast.json
           git commit -m "Update forecast.json [skip ci]" || echo "No changes"
           git push
-
