@@ -4,50 +4,15 @@
   <meta charset="UTF-8">
   <title>Golf Trip Weather Forecast</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f5f7fa;
-      color: #333;
-      margin: 0;
-      padding: 20px;
-    }
-    h1 {
-      text-align: center;
-    }
-    .day-group {
-      margin-top: 30px;
-    }
-    .day-title {
-      font-size: 1.3em;
-      font-weight: bold;
-      margin-bottom: 12px;
-      color: #1a4d8f;
-    }
-    .forecast {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 16px;
-    }
-    .card {
-      background: white;
-      border-radius: 12px;
-      padding: 16px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-      text-align: center;
-    }
-    .time {
-      font-weight: bold;
-      margin-bottom: 8px;
-      font-size: 1.1em;
-    }
-    .icon {
-      font-size: 2em;
-      margin-bottom: 6px;
-      display: block;
-    }
-    .line {
-      margin: 4px 0;
-    }
+    body { font-family: Arial, sans-serif; background: #f5f7fa; color: #333; margin: 0; padding: 20px; }
+    h1 { text-align: center; }
+    .day-group { margin-top: 30px; }
+    .day-title { font-size: 1.3em; font-weight: bold; margin-bottom: 12px; color: #1a4d8f; }
+    .forecast { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+    .card { background: white; border-radius: 12px; padding: 16px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); text-align: center; }
+    .time { font-weight: bold; margin-bottom: 8px; font-size: 1.1em; }
+    .icon { font-size: 2em; margin-bottom: 6px; display: block; }
+    .line { margin: 4px 0; }
   </style>
 </head>
 <body>
@@ -57,12 +22,9 @@
 <script>
 async function loadForecast() {
   const container = document.getElementById("forecast");
-
   const weatherIcons = {
-    "1": "☀️", "2": "🌤️", "3": "⛅", "4": "🌥️",
-    "5": "☁️", "6": "🌧️", "7": "🌦️", "8": "🌩️",
-    "9": "🌨️", "10": "🌫️", "11": "🌪️", "12": "🌦️",
-    "13": "🌧️", "14": "🌩️", "15": "🌨️", "16": "🌫️"
+    "1":"☀️","2":"🌤️","3":"⛅","4":"🌥️","5":"☁️","6":"🌧️","7":"🌦️","8":"🌩️","9":"🌨️","10":"🌫️",
+    "11":"🌪️","12":"🌦️","13":"🌧️","14":"🌩️","15":"🌨️","16":"🌫️"
   };
 
   try {
@@ -70,9 +32,7 @@ async function loadForecast() {
       fetch("../../forecast_data/portsalon.json"),
       fetch("../../forecast_data/downings.json")
     ]);
-
     if (!portsalonRes.ok || !downingsRes.ok) throw new Error("Network response was not ok");
-
     const [portsalonData, downingsData] = await Promise.all([portsalonRes.json(), downingsRes.json()]);
 
     const schedule = [
@@ -88,18 +48,18 @@ async function loadForecast() {
       let entries = s.data.filter(f => {
         const dt = new Date(f.time);
         const dateStr = dt.toISOString().split("T")[0];
-        if (dateStr !== s.date) return false;
         const hour = dt.getUTCHours();
         const localHour = (hour + 1) % 24;
-        return localHour >= s.startHour && localHour < s.endHour;
+        return dateStr === s.date && localHour >= s.startHour && localHour < s.endHour;
       }).map(f => ({ ...f, localHour: ((new Date(f.time)).getUTCHours() + 1) % 24 }));
 
-      // Remove duplicate hours
+      // Remove duplicates per hour, keep first non-null WeatherSymbol3
       const uniqueEntries = [];
       const seenHours = new Set();
       for (const f of entries) {
         const key = f.localHour;
         if (!seenHours.has(key)) {
+          if (!f.WeatherSymbol3) f.WeatherSymbol3 = "1";
           uniqueEntries.push(f);
           seenHours.add(key);
         }
@@ -113,13 +73,12 @@ async function loadForecast() {
 
     container.innerHTML = Object.entries(grouped).map(([date, group]) => {
       const cards = group.entries.map(f => {
-        const timeStr = f.localHour.toString().padStart(2, "0") + ":00";
+        const timeStr = f.localHour.toString().padStart(2,"0") + ":00";
         const temp = f.Temperature ?? "N/A";
         const windKmh = f.WindSpeed ?? "N/A";
         const windDir = f.WindDirection ?? "?";
         const rain = f.Rainfall ?? "0";
         const icon = weatherIcons[f.WeatherSymbol3] || "❓";
-
         return `
           <div class="card">
             <span class="icon">${icon}</span>
@@ -132,14 +91,9 @@ async function loadForecast() {
       }).join("");
 
       const dayStr = new Date(group.entries[0].time)
-        .toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "short" });
+        .toLocaleDateString("en-GB",{weekday:"long", day:"numeric", month:"short"});
 
-      return `
-        <div class="day-group">
-          <div class="day-title">${dayStr} – ${group.location}</div>
-          <div class="forecast">${cards}</div>
-        </div>
-      `;
+      return `<div class="day-group"><div class="day-title">${dayStr} – ${group.location}</div><div class="forecast">${cards}</div></div>`;
     }).join("");
 
   } catch (err) {
