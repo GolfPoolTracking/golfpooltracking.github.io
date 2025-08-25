@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Weather Forecast</title>
+  <title>Golf Trip Weather Forecast</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -45,85 +45,91 @@
   </style>
 </head>
 <body>
-  <h1>Golf Trip Weather Forecast</h1>
-  <div id="forecast">Loading forecast...</div>
+<h1>Golf Trip Weather Forecast</h1>
+<div id="forecast">Loading forecast...</div>
 
-  <script>
-    async function loadForecast() {
-      const container = document.getElementById("forecast");
-      try {
-        const res = await fetch("../../forecast_data/forecast.json");
-        if (!res.ok) throw new Error("Network response was not ok");
-        const data = await res.json();
-        if (!data || !data.length) throw new Error("No forecast data");
+<script>
+async function loadForecast() {
+  const container = document.getElementById("forecast");
 
-        // Schedule definitions (28–31 Aug 2025)
-        const schedule = [
-          { date: "2025-08-28", startHour: 11, endHour: 19, location: "Portsalon" },
-          { date: "2025-08-29", startHour: 11, endHour: 19, location: "Downings" },
-          { date: "2025-08-30", startHour: 11, endHour: 19, location: "Downings" },
-          { date: "2025-08-31", startHour: 7,  endHour: 15, location: "Downings" }
-        ];
+  try {
+    // Load both JSONs
+    const [portsalonRes, downingsRes] = await Promise.all([
+      fetch("../../forecast_data/portsalon.json"),
+      fetch("../../forecast_data/downings.json")
+    ]);
 
-        // Group forecasts by date
-        const grouped = {};
+    if (!portsalonRes.ok || !downingsRes.ok) throw new Error("Network response was not ok");
 
-        for (const entry of data) {
-          const dt = new Date(entry.time);
-          const dateStr = dt.toISOString().split("T")[0];
-          const hour = dt.getUTCHours(); // UTC in JSON
-          const sched = schedule.find(s => s.date === dateStr);
-          if (!sched) continue;
+    const [portsalonData, downingsData] = await Promise.all([portsalonRes.json(), downingsRes.json()]);
 
-          // Ireland in late Aug = UTC+1
-          const localHour = (hour + 1) % 24;
+    // Define schedule
+    const schedule = [
+      { date: "2025-08-28", startHour: 11, endHour: 19, location: "Portsalon", data: portsalonData },
+      { date: "2025-08-29", startHour: 11, endHour: 19, location: "Downings", data: downingsData },
+      { date: "2025-08-30", startHour: 11, endHour: 19, location: "Downings", data: downingsData },
+      { date: "2025-08-31", startHour: 7,  endHour: 15, location: "Downings", data: downingsData }
+    ];
 
-          if (localHour >= sched.startHour && localHour < sched.endHour) {
-            if (!grouped[dateStr]) {
-              grouped[dateStr] = { location: sched.location, entries: [] };
-            }
-            grouped[dateStr].entries.push({ ...entry, localHour });
-          }
-        }
+    const grouped = {};
 
-        if (Object.keys(grouped).length === 0) throw new Error("No matching forecasts for schedule");
+    // Process schedule
+    for (const s of schedule) {
+      const entries = s.data.filter(f => {
+        const dt = new Date(f.time);
+        const dateStr = dt.toISOString().split("T")[0];
+        if (dateStr !== s.date) return false;
+        const hour = dt.getUTCHours();
+        const localHour = (hour + 1) % 24;
+        return localHour >= s.startHour && localHour < s.endHour;
+      }).map(f => ({ ...f, localHour: ((new Date(f.time)).getUTCHours() + 1) % 24 }));
 
-        // Render grouped output
-        container.innerHTML = Object.entries(grouped).map(([date, group]) => {
-          const first = new Date(group.entries[0].time);
-          const dayStr = first.toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "short" });
-
-          const cards = group.entries.map(f => {
-            const timeStr = f.localHour.toString().padStart(2, "0") + ":00";
-            const temp = f.Temperature ?? "N/A";
-            const windKmh = f.WindSpeed ? (parseFloat(f.WindSpeed) * 3.6).toFixed(1) : "N/A";
-            const windDir = f.WindDirection ?? "?";
-            const rain = f.Rainfall ?? "0";
-
-            return `
-              <div class="card">
-                <div class="time">${timeStr}</div>
-                <div class="line">🌡️ Temp: ${temp} °C</div>
-                <div class="line">💨 Wind: ${windKmh} km/h (${windDir}°)</div>
-                <div class="line">☔ Rain: ${rain} mm</div>
-              </div>
-            `;
-          }).join("");
-
-          return `
-            <div class="day-group">
-              <div class="day-title">${dayStr} – ${group.location}</div>
-              <div class="forecast">${cards}</div>
-            </div>
-          `;
-        }).join("");
-
-      } catch (err) {
-        container.textContent = "Error loading forecast: " + err.message;
+      if (entries.length > 0) {
+        grouped[s.date] = { location: s.location, entries };
       }
     }
 
-    loadForecast();
-  </script>
+    if (Object.keys(grouped).length === 0) throw new Error("No matching forecasts for schedule");
+
+    // Render grouped output
+    container.innerHTML = Object.entries(grouped).map(([date, group]) => {
+      // Sort by local hour
+      group.entries.sort((a, b) => a.localHour - b.localHour);
+
+      const dayStr = new Date(group.entries[0].time)
+        .toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "short" });
+
+      const cards = group.entries.map(f => {
+        const timeStr = f.localHour.toString().padStart(2, "0") + ":00";
+        const temp = f.Temperature ?? "N/A";
+        const windKmh = f.WindSpeed ?? "N/A";
+        const windDir = f.WindDirection ?? "?";
+        const rain = f.Rainfall ?? "0";
+
+        return `
+          <div class="card">
+            <div class="time">${timeStr}</div>
+            <div class="line">🌡️ Temp: ${temp} °C</div>
+            <div class="line">💨 Wind: ${windKmh} km/h (${windDir}°)</div>
+            <div class="line">☔ Rain: ${rain} mm</div>
+          </div>
+        `;
+      }).join("");
+
+      return `
+        <div class="day-group">
+          <div class="day-title">${dayStr} – ${group.location}</div>
+          <div class="forecast">${cards}</div>
+        </div>
+      `;
+    }).join("");
+
+  } catch (err) {
+    container.textContent = "Error loading forecast: " + err.message;
+  }
+}
+
+loadForecast();
+</script>
 </body>
 </html>
