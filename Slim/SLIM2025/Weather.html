@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Forecast: Portsalon 26 Aug 2025</title>
+</head>
+<body>
+<h1>Forecast: Portsalon — 26 Aug 2025</h1>
+<div id="forecast">Loading forecast…</div>
+
+<script>
+function degToCompass(deg){
+  const dirs = ["N","NNE","NE","ENE","E","ESE","SE","SSE","S","SSW","SW","WSW","W","WNW","NW","NNW"];
+  return dirs[Math.round(deg/22.5)%16];
+}
+function degToArrow(deg){
+  const arrows=["↑","↗","→","↘","↓","↙","←","↖"];
+  return arrows[Math.round(deg/45)%8];
+}
+
+fetch('forecast_data/forecast.json')
+  .then(r=>r.json())
+  .then(data=>{
+    const container=document.getElementById('forecast');
+    if(!data.length){ container.innerHTML="No forecast available"; return; }
+    let html="<table border='1' cellpadding='5'><tr><th>Time</th><th>Temp (°C)</th><th>Rain (mm)</th><th>Cloud (%)</th><th>Wind km/h</th><th>Dir</th></tr>";
+    data.forEach(d=>{
+      const t = new Date(d.time).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
+      const temp = d.Temperature??'N/A';
+      const rain = d.Rainfall??'0';
+      const cloud = d.TotalCloudCover??'N/A';
+      const wind = d.WindSpeed ? Math.round(parseFloat(d.WindSpeed)*3.6) : 'N/A';
+      const deg = d.WindDirection ? parseFloat(d.WindDirection) : null;
+      html+=`<tr><td>${t}</td><td>${temp}</td><td>${rain}</td><td>${cloud}</td><td>${wind}</td><td>${degToCompass(deg)} ${degToArrow(deg)}</td></tr>`;
+    });
+    html+="</table>";
+    container.innerHTML=html;
+  })
+  .catch(err=>document.getElementById('forecast').innerHTML="Error loading forecast");
+</script>
+</body>
+</html>
