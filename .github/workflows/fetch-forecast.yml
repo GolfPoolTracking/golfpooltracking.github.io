@@ -37,7 +37,7 @@ jobs:
           start = datetime.datetime(2025,8,28)
           end   = datetime.datetime(2025,9,1)
 
-          forecasts = {}  # key: hour string -> forecast dict
+          forecasts = {}
 
           for time_el in root.findall('.//time'):
               time_str = time_el.attrib.get('from')
@@ -51,7 +51,6 @@ jobs:
               hour_key = dt.strftime('%Y-%m-%dT%H:00:00Z')
               entry = forecasts.get(hour_key, {'time': hour_key})
 
-              # Extract location data (temperature, wind, symbol)
               loc = time_el.find('location')
               if loc is not None:
                   temp = loc.find('temperature')
@@ -69,7 +68,7 @@ jobs:
                   symbol = loc.find('symbol')
                   entry['WeatherSymbol3'] = symbol.attrib.get('number') if symbol is not None else "1"
 
-              # Extract precipitation even if separate
+              # Merge precipitation even if separate
               precip = time_el.find('precipitation')
               if precip is not None:
                   entry['Rainfall'] = precip.attrib.get('value')
@@ -87,7 +86,6 @@ jobs:
           portsalon = [v for k,v in sorted(forecasts.items()) if k.startswith('2025-08-28')]
           downings  = [v for k,v in sorted(forecasts.items()) if k > '2025-08-28']
 
-          # Write only if changed
           def write_if_changed(path, data):
               import os
               try:
