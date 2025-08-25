@@ -1,104 +1,81 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Golf Trip Weather Forecast</title>
-  <style>
-    body { font-family: Arial, sans-serif; background: #f5f7fa; color: #333; margin: 0; padding: 20px; }
-    h1 { text-align: center; }
-    .day-group { margin-top: 30px; }
-    .day-title { font-size: 1.3em; font-weight: bold; margin-bottom: 12px; color: #1a4d8f; }
-    .forecast { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
-    .card { background: white; border-radius: 12px; padding: 16px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); text-align: center; }
-    .time { font-weight: bold; margin-bottom: 8px; font-size: 1.1em; }
-    .icon { font-size: 2em; margin-bottom: 6px; display: block; }
-    .line { margin: 4px 0; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SLIM 2025 Forecast</title>
+<style>
+  body { font-family: Arial, sans-serif; background: #222; color: #fff; padding: 20px; }
+  h1 { text-align: center; }
+  .forecast-card { background: rgba(0,0,0,0.7); padding: 15px; margin: 10px 0; border-radius: 10px; display: flex; align-items: center; gap: 15px; }
+  .forecast-card img { width: 50px; height: 50px; }
+  .forecast-info { display: flex; flex-direction: column; }
+</style>
 </head>
 <body>
-<h1>Golf Trip Weather Forecast</h1>
-<div id="forecast">Loading forecast...</div>
+<h1>SLIM 2025 - Donegal Forecast</h1>
+<div id="forecast-container">Loading forecast...</div>
 
 <script>
 async function loadForecast() {
-  const container = document.getElementById("forecast");
-  const weatherIcons = {
-    "1":"☀️","2":"🌤️","3":"⛅","4":"🌥️","5":"☁️","6":"🌧️","7":"🌦️","8":"🌩️","9":"🌨️","10":"🌫️",
-    "11":"🌪️","12":"🌦️","13":"🌧️","14":"🌩️","15":"🌨️","16":"🌫️"
-  };
+    const container = document.getElementById('forecast-container');
+    container.innerHTML = '';
 
-  try {
-    const [portsalonRes, downingsRes] = await Promise.all([
-      fetch("../../forecast_data/portsalon.json"),
-      fetch("../../forecast_data/downings.json")
-    ]);
-    if (!portsalonRes.ok || !downingsRes.ok) throw new Error("Network response was not ok");
-    const [portsalonData, downingsData] = await Promise.all([portsalonRes.json(), downingsRes.json()]);
+    try {
+        const portsalonRes = await fetch('../../forecast_data/portsalon.json');
+        const downingsRes = await fetch('../../forecast_data/downings.json');
+        const portsalonData = await portsalonRes.json();
+        const downingsData = await downingsRes.json();
 
-    const schedule = [
-      { date: "2025-08-28", startHour: 11, endHour: 19, location: "Portsalon", data: portsalonData },
-      { date: "2025-08-29", startHour: 11, endHour: 19, location: "Downings", data: downingsData },
-      { date: "2025-08-30", startHour: 11, endHour: 19, location: "Downings", data: downingsData },
-      { date: "2025-08-31", startHour: 7,  endHour: 15, location: "Downings", data: downingsData }
-    ];
+        const allData = [
+            ...portsalonData.map(f => ({...f, location: 'Portsalon'})),
+            ...downingsData.map(f => ({...f, location: 'Downings'}))
+        ];
 
-    const grouped = {};
-
-    for (const s of schedule) {
-      let entries = s.data.filter(f => {
-        const dt = new Date(f.time);
-        const dateStr = dt.toISOString().split("T")[0];
-        const hour = dt.getUTCHours();
-        const localHour = (hour + 1) % 24;
-        return dateStr === s.date && localHour >= s.startHour && localHour < s.endHour;
-      }).map(f => ({ ...f, localHour: ((new Date(f.time)).getUTCHours() + 1) % 24 }));
-
-      // Remove duplicates per hour, keep first non-null WeatherSymbol3
-      const uniqueEntries = [];
-      const seenHours = new Set();
-      for (const f of entries) {
-        const key = f.localHour;
-        if (!seenHours.has(key)) {
-          if (!f.WeatherSymbol3) f.WeatherSymbol3 = "1";
-          uniqueEntries.push(f);
-          seenHours.add(key);
+        // Function to filter times according to your rules
+        function isInTimeRange(f) {
+            const dt = new Date(f.time);
+            const hour = dt.getUTCHours();
+            const day = dt.getUTCDate();
+            const loc = f.location;
+            if(loc === 'Portsalon' && day === 28) return hour >= 11 && hour <= 19;
+            if(loc === 'Downings' && (day === 29 || day === 30)) return hour >= 11 && hour <= 19;
+            if(loc === 'Downings' && day === 31) return hour >= 7 && hour <= 15;
+            return false;
         }
-      }
-      entries = uniqueEntries;
 
-      if (entries.length > 0) grouped[s.date] = { location: s.location, entries };
+        const filtered = allData.filter(isInTimeRange);
+
+        if(filtered.length === 0) {
+            container.innerHTML = 'No forecast available yet.';
+            return;
+        }
+
+        // Sort by datetime
+        filtered.sort((a,b) => new Date(a.time) - new Date(b.time));
+
+        filtered.forEach(f => {
+            const dt = new Date(f.time);
+            const dayName = dt.toLocaleDateString('en-GB', { weekday: 'long' });
+            const dateStr = dt.toLocaleDateString('en-GB');
+            const timeStr = dt.toLocaleTimeString('en-GB', { hour: '2-digit', minute:'2-digit' });
+
+            const card = document.createElement('div');
+            card.className = 'forecast-card';
+            card.innerHTML = `
+                <img src="https://www.met.ie/Open_Data/images/icons/${f.WeatherSymbol3}.png" alt="Weather">
+                <div class="forecast-info">
+                    <strong>${dayName}, ${dateStr}, ${timeStr} (${f.location})</strong>
+                    Temp: ${f.Temperature}°C | Rain: ${f.Rainfall}mm | Wind: ${f.WindSpeed} km/h ${f.WindDirection}°
+                </div>
+            `;
+            container.appendChild(card);
+        });
+
+    } catch (err) {
+        console.error(err);
+        container.innerHTML = 'Error loading forecast.';
     }
-
-    if (Object.keys(grouped).length === 0) throw new Error("No matching forecasts for schedule");
-
-    container.innerHTML = Object.entries(grouped).map(([date, group]) => {
-      const cards = group.entries.map(f => {
-        const timeStr = f.localHour.toString().padStart(2,"0") + ":00";
-        const temp = f.Temperature ?? "N/A";
-        const windKmh = f.WindSpeed ?? "N/A";
-        const windDir = f.WindDirection ?? "?";
-        const rain = f.Rainfall ?? "0";
-        const icon = weatherIcons[f.WeatherSymbol3] || "❓";
-        return `
-          <div class="card">
-            <span class="icon">${icon}</span>
-            <div class="time">${timeStr}</div>
-            <div class="line">🌡️ Temp: ${temp} °C</div>
-            <div class="line">💨 Wind: ${windKmh} km/h (${windDir}°)</div>
-            <div class="line">☔ Rain: ${rain} mm</div>
-          </div>
-        `;
-      }).join("");
-
-      const dayStr = new Date(group.entries[0].time)
-        .toLocaleDateString("en-GB",{weekday:"long", day:"numeric", month:"short"});
-
-      return `<div class="day-group"><div class="day-title">${dayStr} – ${group.location}</div><div class="forecast">${cards}</div></div>`;
-    }).join("");
-
-  } catch (err) {
-    container.textContent = "Error loading forecast: " + err.message;
-  }
 }
 
 loadForecast();
