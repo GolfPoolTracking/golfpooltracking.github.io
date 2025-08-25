@@ -3,7 +3,7 @@ name: Fetch Met Éireann Forecast
 on:
   schedule:
     - cron: '10 0 * * *'  # daily at 00:10 UTC
-  workflow_dispatch:      # manual trigger
+  workflow_dispatch:      # allows manual trigger
 
 jobs:
   fetch_forecast:
@@ -18,121 +18,65 @@ jobs:
           mkdir -p forecast_data
           curl -s "http://openaccess.pf.api.met.ie/metno-wdb2ts/locationforecast?lat=55.267;long=-7.633" -o forecast_data/raw_forecast.xml
 
-      - name: Convert XML to JSON (robust parser)
+      - name: Convert XML to JSON
         run: |
           python3 - <<'PY'
           import xml.etree.ElementTree as ET
-          import json, datetime, re, sys
+          import json
+          import datetime
 
-          def localname(el):
-              if el is None: return None
-              tag = el.tag
-              return tag.split('}')[-1] if '}' in tag else tag
+          tree = ET.parse('forecast_data/raw_forecast.xml')
+          root = tree.getroot()
 
-          def text_of(el):
-              if el is None:
-                  return None
-              t = el.text
-              return t.strip() if isinstance(t, str) and t.strip() != '' else None
+          start = datetime.datetime(2025,8,26)
+          end   = datetime.datetime(2025,8,27)
 
-          try:
-              tree = ET.parse('forecast_data/raw_forecast.xml')
-              root = tree.getroot()
-          except Exception as e:
-              print("XML parse error:", e, file=sys.stderr)
-              root = None
+          forecasts = []
 
-          start = datetime.datetime(2025, 8, 26, 0, 0, 0)
-          end   = datetime.datetime(2025, 8, 27, 0, 0, 0)
+          for time_el in root.findall('.//time'):
+              time_str = time_el.attrib.get('from')
+              if not time_str:
+                  continue
+              dt = datetime.datetime.fromisoformat(time_str.replace('Z','+00:00'))
+              dt_naive = dt.replace(tzinfo=None)
+              if not (start <= dt_naive < end):
+                  continue
 
-          found = []
+              loc = time_el.find('location')
+              if loc is None:
+                  continue
 
-          if root is not None:
-              candidates = []
-              for el in root.iter():
-                  attribs = el.attrib
-                  if 'time' in attribs or ('from' in attribs and 'to' in attribs):
-                      candidates.append(el)
-                      continue
-                  for child in el:
-                      if localname(child).lower() in ('start-valid-time','starttime','starttimeutc','start'):
-                          candidates.append(el)
-                          break
-              seen = set()
-              uniq = []
-              for c in candidates:
-                  tid = id(c)
-                  if tid not in seen:
-                      uniq.append(c)
-                      seen.add(tid)
+              entry = {'time': time_str}
 
-              for node in uniq:
-                  time_str = None
-                  if 'time' in node.attrib:
-                      time_str = node.attrib.get('time')
-                  elif 'from' in node.attrib:
-                      time_str = node.attrib.get('from')
-                  elif 'start' in node.attrib:
-                      time_str = node.attrib.get('start')
-                  if not time_str:
-                      for child in node:
-                          if localname(child).lower() in ('start-valid-time','starttime','start'):
-                              time_str = text_of(child)
-                              break
-                  if not time_str:
-                      sv = node.find('.//{*}start-valid-time')
-                      if sv is not None:
-                          time_str = text_of(sv)
-                  if not time_str:
-                      continue
-                  try:
-                      if time_str.endswith('Z'):
-                          dt = datetime.datetime.fromisoformat(time_str.replace('Z', '+00:00'))
-                      else:
-                          dt = datetime.datetime.fromisoformat(time_str)
-                      if dt.tzinfo is not None:
-                          dt = dt.astimezone(datetime.timezone.utc).replace(tzinfo=None)
-                  except Exception:
-                      try:
-                          time_clean = re.sub(r'\+\d{2}:\d{2}$', '', time_str)
-                          dt = datetime.datetime.fromisoformat(time_clean)
-                      except Exception:
-                          continue
-                  if not (start <= dt < end):
-                      continue
-                  entry = {'time': time_str}
-                  params = []
-                  for el in node.iter():
-                      if localname(el).lower() == 'parameter':
-                          params.append(el)
-                  if params:
-                      for p in params:
-                          name = p.attrib.get('name') or p.attrib.get('id') or localname(p)
-                          val = None
-                          for c in p:
-                              if localname(c).lower() == 'value':
-                                  val = text_of(c)
-                                  break
-                          if val is None:
-                              val = text_of(p)
-                          if name and val is not None:
-                              entry[name] = val
-                  else:
-                      for child in node:
-                          ln = localname(child)
-                          val = None
-                          for sub in child:
-                              if localname(sub).lower() == 'value':
-                                  val = text_of(sub)
-                                  break
-                          if val is None:
-                              val = text_of(child)
-                          if val is not None:
-                              entry[ln] = val
-                  found.append(entry)
+              temp = loc.find('temperature')
+              if temp is not None:
+                  entry['Temperature'] = temp.attrib.get('value')
 
-          if not found:
-              found = [{
+              winddir = loc.find('windDirection')
+              if winddir is not None:
+                  entry['WindDirection'] = winddir.attrib.get('deg')
+
+              windspeed = loc.find('windSpeed')
+              if windspeed is not None:
+                  entry['WindSpeed'] = windspeed.attrib.get('mps')
+
+              cloud = loc.find('cloudiness')
+              if cloud is not None:
+                  entry['TotalCloudCover'] = cloud.attrib.get('percent')
+
+              precip = loc.find('precipitation')
+              if precip is not None:
+                  entry['Rainfall'] = precip.attrib.get('value')
+
+              symbol = loc.find('symbol')
+              if symbol is not None:
+                  entry['WeatherSymbol3'] = symbol.attrib.get('number')
+
+              forecasts.append(entry)
+
+          # fallback if empty
+          if not forecasts:
+              forecasts = [{
                   "time": "2025-08-26T12:00:00Z",
                   "Temperature": "N/A",
                   "Rainfall": "0.0",
@@ -143,8 +87,8 @@ jobs:
               }]
 
           with open('forecast_data/forecast.json','w') as f:
-              json.dump(found, f, indent=2)
-          print(f"Wrote {len(found)} forecast entries to forecast_data/forecast.json")
+              json.dump(forecasts, f, indent=2)
+          print(f"Wrote {len(forecasts)} forecast entries to forecast_data/forecast.json")
           PY
 
       - name: Commit and push forecast.json
