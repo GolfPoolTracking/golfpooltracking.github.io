@@ -32,7 +32,7 @@ async function loadForecast() {
             ...downingsData.map(f => ({...f, location: 'Downings'}))
         ];
 
-        // Filter times according to your rules
+        // Filter hours according to your schedule
         function isInTimeRange(f) {
             const dt = new Date(f.time);
             const hour = dt.getUTCHours();
@@ -51,7 +51,7 @@ async function loadForecast() {
             return;
         }
 
-        // Remove duplicate hours (keep first occurrence)
+        // Remove duplicate hours (keep first)
         const uniqueHours = {};
         filtered.forEach(f => {
             const key = f.time.substring(0,13); // YYYY-MM-DDTHH
