@@ -2,7 +2,7 @@ name: Fetch Met Éireann Forecast
 
 on:
   schedule:
-    - cron: '10 0 * * *'  
+    - cron: '10 0 * * *'  # daily at 00:10 UTC
   workflow_dispatch:
 
 jobs:
@@ -37,8 +37,7 @@ jobs:
           start = datetime.datetime(2025,8,28)
           end   = datetime.datetime(2025,9,1)
 
-          forecasts = {}
-          # key: ISO hour string (YYYY-MM-DDTHH:00:00Z)
+          forecasts = {}  # key: hour string -> forecast dict
 
           for time_el in root.findall('.//time'):
               time_str = time_el.attrib.get('from')
@@ -50,30 +49,32 @@ jobs:
                   continue
 
               hour_key = dt.strftime('%Y-%m-%dT%H:00:00Z')
-
               entry = forecasts.get(hour_key, {'time': hour_key})
 
-              for child in time_el:
-                  if child.tag == 'location':
-                      temp = child.find('temperature')
-                      if temp is not None:
-                          entry['Temperature'] = temp.attrib.get('value')
+              # Extract location data (temperature, wind, symbol)
+              loc = time_el.find('location')
+              if loc is not None:
+                  temp = loc.find('temperature')
+                  if temp is not None:
+                      entry['Temperature'] = temp.attrib.get('value')
 
-                      winddir = child.find('windDirection')
-                      if winddir is not None:
-                          entry['WindDirection'] = winddir.attrib.get('deg')
+                  winddir = loc.find('windDirection')
+                  if winddir is not None:
+                      entry['WindDirection'] = winddir.attrib.get('deg')
 
-                      windspeed = child.find('windSpeed')
-                      if windspeed is not None:
-                          entry['WindSpeed'] = str(round(float(windspeed.attrib.get('mps')) * 3.6, 1))
+                  windspeed = loc.find('windSpeed')
+                  if windspeed is not None:
+                      entry['WindSpeed'] = str(round(float(windspeed.attrib.get('mps')) * 3.6, 1))
 
-                      symbol = child.find('symbol')
-                      entry['WeatherSymbol3'] = symbol.attrib.get('number') if symbol is not None else "1"
+                  symbol = loc.find('symbol')
+                  entry['WeatherSymbol3'] = symbol.attrib.get('number') if symbol is not None else "1"
 
-                  elif child.tag == 'precipitation':
-                      entry['Rainfall'] = child.attrib.get('value')
+              # Extract precipitation even if separate
+              precip = time_el.find('precipitation')
+              if precip is not None:
+                  entry['Rainfall'] = precip.attrib.get('value')
 
-              # Ensure defaults
+              # Defaults
               entry.setdefault('Temperature', 'N/A')
               entry.setdefault('WindSpeed', '0')
               entry.setdefault('WindDirection', '0')
@@ -86,6 +87,7 @@ jobs:
           portsalon = [v for k,v in sorted(forecasts.items()) if k.startswith('2025-08-28')]
           downings  = [v for k,v in sorted(forecasts.items()) if k > '2025-08-28']
 
+          # Write only if changed
           def write_if_changed(path, data):
               import os
               try:
