@@ -3,7 +3,7 @@ name: Fetch Met Éireann Forecast
 on:
   schedule:
     - cron: '10 0 * * *'  # daily at 00:10 UTC
-  workflow_dispatch:      # allows manual trigger
+  workflow_dispatch:
 
 jobs:
   fetch_forecast:
@@ -24,12 +24,18 @@ jobs:
           import xml.etree.ElementTree as ET
           import json
           import datetime
+          import sys
+          import hashlib
 
-          tree = ET.parse('forecast_data/raw_forecast.xml')
-          root = tree.getroot()
+          try:
+              tree = ET.parse('forecast_data/raw_forecast.xml')
+              root = tree.getroot()
+          except Exception as e:
+              print("Failed to parse XML:", e)
+              sys.exit(1)
 
           start = datetime.datetime(2025,8,28)
-          end   = datetime.datetime(2025,8,32)
+          end   = datetime.datetime(2025,9,1)
 
           forecasts = []
 
@@ -42,36 +48,39 @@ jobs:
               if not (start <= dt_naive < end):
                   continue
 
-              loc = time_el.find('location')
-              if loc is None:
-                  continue
-
+              # Prepare entry
               entry = {'time': time_str}
 
-              temp = loc.find('temperature')
-              if temp is not None:
-                  entry['Temperature'] = temp.attrib.get('value')
+              # Merge all possible children
+              for child in time_el:
+                  if child.tag == 'location':
+                      temp = child.find('temperature')
+                      if temp is not None:
+                          entry['Temperature'] = temp.attrib.get('value')
 
-              winddir = loc.find('windDirection')
-              if winddir is not None:
-                  entry['WindDirection'] = winddir.attrib.get('deg')
+                      winddir = child.find('windDirection')
+                      if winddir is not None:
+                          entry['WindDirection'] = winddir.attrib.get('deg')
 
-              windspeed = loc.find('windSpeed')
-              if windspeed is not None:
-                  # convert m/s to km/h
-                  entry['WindSpeed'] = str(round(float(windspeed.attrib.get('mps')) * 3.6, 1))
+                      windspeed = child.find('windSpeed')
+                      if windspeed is not None:
+                          entry['WindSpeed'] = str(round(float(windspeed.attrib.get('mps')) * 3.6, 1))
 
-              precip = loc.find('precipitation')
-              if precip is not None:
-                  entry['Rainfall'] = precip.attrib.get('value')
+                      symbol = child.find('symbol')
+                      entry['WeatherSymbol3'] = symbol.attrib.get('number') if symbol is not None else "1"
 
-              # always assign symbol, default to "1" (sun) if missing
-              symbol = loc.find('symbol')
-              entry['WeatherSymbol3'] = symbol.attrib.get('number') if symbol is not None else "1"
+                  elif child.tag == 'precipitation':
+                      entry['Rainfall'] = child.attrib.get('value')
+
+              # Ensure default values
+              entry.setdefault('Temperature', 'N/A')
+              entry.setdefault('WindSpeed', '0')
+              entry.setdefault('WindDirection', '0')
+              entry.setdefault('Rainfall', '0.0')
+              entry.setdefault('WeatherSymbol3', '1')
 
               forecasts.append(entry)
 
-          # fallback if empty
           if not forecasts:
               forecasts = [{
                   "time": "2025-08-28T12:00:00Z",
@@ -82,17 +91,27 @@ jobs:
                   "WeatherSymbol3": "1"
               }]
 
-          # split into Portsalon (28th) and Downings (29-31)
+          # Split JSON
           portsalon = [f for f in forecasts if f['time'].startswith('2025-08-28')]
           downings  = [f for f in forecasts if f['time'] > '2025-08-28']
 
-          with open('forecast_data/portsalon.json','w') as f:
-              json.dump(portsalon, f, indent=2)
+          # Function to write only if changed
+          def write_if_changed(path, data):
+              try:
+                  with open(path,'r') as f:
+                      old_hash = hashlib.md5(f.read().encode()).hexdigest()
+              except FileNotFoundError:
+                  old_hash = None
+              new_hash = hashlib.md5(json.dumps(data,sort_keys=True).encode()).hexdigest()
+              if old_hash != new_hash:
+                  with open(path,'w') as f:
+                      json.dump(data,f,indent=2)
+                  print(f"Wrote updated {path}")
+              else:
+                  print(f"No changes for {path}")
 
-          with open('forecast_data/downings.json','w') as f:
-              json.dump(downings, f, indent=2)
-
-          print(f"Wrote {len(portsalon)} Portsalon and {len(downings)} Downings entries")
+          write_if_changed('forecast_data/portsalon.json', portsalon)
+          write_if_changed('forecast_data/downings.json', downings)
           PY
 
       - name: Commit and push forecast.json
