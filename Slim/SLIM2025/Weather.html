@@ -6,105 +6,73 @@
   <style>
     body {
       font-family: Arial, sans-serif;
-      margin: 20px;
-      background: #f0f4f8;
+      background: #f5f7fa;
+      color: #333;
+      margin: 0;
+      padding: 20px;
     }
     h1 {
       text-align: center;
-      color: #2a4d69;
     }
-    #forecast {
+    .forecast {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 15px;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 16px;
       margin-top: 20px;
     }
     .card {
       background: white;
-      padding: 15px;
       border-radius: 12px;
+      padding: 16px;
       box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-      text-align: center;
     }
     .time {
       font-weight: bold;
-      margin-bottom: 10px;
-      color: #2a4d69;
+      margin-bottom: 8px;
+      font-size: 1.1em;
     }
-    .temp {
-      font-size: 1.5em;
-      margin: 5px 0;
-    }
-    .icon {
-      font-size: 2em;
-      margin: 5px 0;
-    }
-    .wind {
-      margin: 5px 0;
-    }
-    .rain {
-      margin: 5px 0;
+    .line {
+      margin: 4px 0;
     }
   </style>
 </head>
 <body>
-  <h1>Weather Forecast (26 Aug, 12–18)</h1>
-  <div id="forecast">Loading forecast...</div>
+  <h1>Weather Forecast</h1>
+  <div id="forecast" class="forecast">Loading forecast...</div>
 
   <script>
-    // Map Met Éireann symbol numbers to simple emojis/icons
-    const weatherIcons = {
-      "1": "☀️", // clear
-      "2": "🌤️", // partly cloudy
-      "3": "☁️", // cloudy
-      "4": "🌧️", // showers
-      "5": "🌦️", // rain
-      "6": "⛈️", // thunder
-      "7": "❄️", // snow
-      "8": "🌫️", // fog
-    };
-
-    // Convert wind direction (deg) to arrow
-    function windArrow(deg) {
-      if (!deg) return "❓";
-      const dirs = ["↑ N","↗ NE","→ E","↘ SE","↓ S","↙ SW","← W","↖ NW"];
-      return dirs[Math.round(deg / 45) % 8];
-    }
-
     async function loadForecast() {
+      const container = document.getElementById("forecast");
       try {
-        const res = await fetch("forecast_data/forecast.json");
-        if (!res.ok) throw new Error("HTTP " + res.status);
+        // go up 2 levels from SLIM/SLIM2025/ to reach forecast_data/
+        const res = await fetch("../../forecast_data/forecast.json");
+        if (!res.ok) throw new Error("Network response was not ok");
         const data = await res.json();
+        if (!data || !data.length) throw new Error("No forecast data");
 
-        if (!data || data.length === 0) {
-          document.getElementById("forecast").innerHTML = "<p>No forecast available yet.</p>";
-          return;
-        }
+        container.innerHTML = data.map(f => {
+          const time = new Date(f.time).toLocaleString([], { 
+            weekday: "short", 
+            hour: "2-digit", 
+            minute: "2-digit" 
+          });
 
-        document.getElementById("forecast").innerHTML = data.map(entry => {
-          const dt = new Date(entry.time);
-          const hour = dt.toLocaleTimeString([], {hour: "2-digit", minute: "2-digit"});
-          const temp = entry.Temperature ? `${entry.Temperature} °C` : "N/A";
-          const rain = entry.Rainfall ? `${entry.Rainfall} mm` : "0 mm";
-          const ws = entry.WindSpeed ? (parseFloat(entry.WindSpeed) * 3.6).toFixed(1) + " km/h" : "0 km/h";
-          const wd = entry.WindDirection ? windArrow(parseFloat(entry.WindDirection)) : "N/A";
-          const icon = weatherIcons[entry.WeatherSymbol3] || "❓";
+          const temp = f.Temperature ?? "N/A";
+          const windKmh = f.WindSpeed ? (parseFloat(f.WindSpeed) * 3.6).toFixed(1) : "N/A";
+          const windDir = f.WindDirection ?? "?";
+          const rain = f.Rainfall ?? "0";
 
           return `
             <div class="card">
-              <div class="time">${hour}</div>
-              <div class="icon">${icon}</div>
-              <div class="temp">${temp}</div>
-              <div class="wind">💨 ${ws} ${wd}</div>
-              <div class="rain">🌧️ ${rain}</div>
+              <div class="time">${time}</div>
+              <div class="line">🌡️ Temp: ${temp} °C</div>
+              <div class="line">💨 Wind: ${windKmh} km/h (${windDir}°)</div>
+              <div class="line">☔ Rain: ${rain} mm</div>
             </div>
           `;
         }).join("");
-
       } catch (err) {
-        console.error("Error loading forecast:", err);
-        document.getElementById("forecast").innerHTML = "<p>Error loading forecast.</p>";
+        container.textContent = "Error loading forecast: " + err.message;
       }
     }
 
