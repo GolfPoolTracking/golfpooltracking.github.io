@@ -1,100 +1,124 @@
-name: Fetch Met Éireann Forecast
+name: Update Forecast
 
 on:
   schedule:
-    - cron: '10 0 * * *'  # daily at 00:10 UTC
-  workflow_dispatch:      # allows manual trigger
+    - cron: "0 */3 * * *"   # every 3 hours
+  workflow_dispatch:        # allow manual trigger
 
 jobs:
-  fetch_forecast:
+  update:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout repo
         uses: actions/checkout@v3
 
-      - name: Fetch Met Éireann XML
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.x"
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Fetch & update forecast
         run: |
-          mkdir -p forecast_data
-          curl -s "http://openaccess.pf.api.met.ie/metno-wdb2ts/locationforecast?lat=55.267;long=-7.633" -o forecast_data/raw_forecast.xml
+          cat > update_forecast.py << 'EOF'
+import requests
+import xml.etree.ElementTree as ET
+import json
+from datetime import datetime, timedelta, timezone
 
-      - name: Convert XML to JSON
-        run: |
-          python3 - <<'PY'
-          import xml.etree.ElementTree as ET
-          import json
-          import datetime
+# Portsalon coordinates
+LAT, LON = 55.2670, -7.6330
+URL = f"https://metwdb-openaccess.ichec.ie/metno-wdb2ts/locationforecast?lat={LAT}&long={LON}"
 
-          tree = ET.parse('forecast_data/raw_forecast.xml')
-          root = tree.getroot()
+try:
+    resp = requests.get(URL, timeout=30)
+    resp.raise_for_status()
+    root = ET.fromstring(resp.content)
+except Exception as e:
+    print(f"Error fetching/parsing XML: {e}")
+    exit(1)
 
-          start = datetime.datetime(2025,8,26)
-          end   = datetime.datetime(2025,8,27)
+# Merge forecasts by timestamp
+forecasts = {}
+for time in root.findall(".//time[@datatype='forecast']"):
+    from_time = time.attrib.get("from")
+    loc = time.find("location")
+    if loc is None:
+        continue
 
-          forecasts = []
+    if from_time not in forecasts:
+        forecasts[from_time] = {
+            "time": from_time,
+            "temperature": None,
+            "windSpeed": None,
+            "windDir": None,
+            "symbol": None,
+            "precipitation": None,
+            "humidity": None,
+            "pressure": None,
+        }
 
-          for time_el in root.findall('.//time'):
-              time_str = time_el.attrib.get('from')
-              if not time_str:
-                  continue
-              dt = datetime.datetime.fromisoformat(time_str.replace('Z','+00:00'))
-              dt_naive = dt.replace(tzinfo=None)
-              if not (start <= dt_naive < end):
-                  continue
+    # Temperature
+    temp = loc.find("temperature")
+    if temp is not None:
+        forecasts[from_time]["temperature"] = float(temp.attrib["value"])
 
-              loc = time_el.find('location')
-              if loc is None:
-                  continue
+    # Wind
+    wind = loc.find("windSpeed")
+    if wind is not None:
+        forecasts[from_time]["windSpeed"] = float(wind.attrib["mps"])
+    wind_dir = loc.find("windDirection")
+    if wind_dir is not None:
+        forecasts[from_time]["windDir"] = wind_dir.attrib.get("name")
 
-              entry = {'time': time_str}
+    # Precipitation
+    prec = loc.find("precipitation")
+    if prec is not None:
+        forecasts[from_time]["precipitation"] = float(prec.attrib["value"])
 
-              temp = loc.find('temperature')
-              if temp is not None:
-                  entry['Temperature'] = temp.attrib.get('value')
+    # Symbol
+    sym = loc.find("symbol")
+    if sym is not None:
+        forecasts[from_time]["symbol"] = sym.attrib.get("id")
 
-              winddir = loc.find('windDirection')
-              if winddir is not None:
-                  entry['WindDirection'] = winddir.attrib.get('deg')
+    # Humidity
+    hum = loc.find("humidity")
+    if hum is not None:
+        forecasts[from_time]["humidity"] = float(hum.attrib["value"])
 
-              windspeed = loc.find('windSpeed')
-              if windspeed is not None:
-                  entry['WindSpeed'] = windspeed.attrib.get('mps')
+    # Pressure
+    press = loc.find("pressure")
+    if press is not None:
+        forecasts[from_time]["pressure"] = float(press.attrib["value"])
 
-              cloud = loc.find('cloudiness')
-              if cloud is not None:
-                  entry['TotalCloudCover'] = cloud.attrib.get('percent')
+# Convert dict → sorted list
+forecast_list = []
+for ts, data in forecasts.items():
+    dt = datetime.fromisoformat(ts.replace("Z", "+00:00"))
+    # Convert to Irish Standard Time (UTC+1 in summer, UTC in winter)
+    ist = dt.astimezone(timezone(timedelta(hours=1)))
+    if 12 <= ist.hour <= 18:  # Filter only between 12–18
+        data["localTime"] = ist.strftime("%Y-%m-%d %H:%M")
+        forecast_list.append(data)
 
-              precip = loc.find('precipitation')
-              if precip is not None:
-                  entry['Rainfall'] = precip.attrib.get('value')
+forecast_list.sort(key=lambda x: x["time"])
 
-              symbol = loc.find('symbol')
-              if symbol is not None:
-                  entry['WeatherSymbol3'] = symbol.attrib.get('number')
+# Save to JSON
+output_file = "SLIM/SLIM2025/forecast.json"
+with open(output_file, "w") as f:
+    json.dump(forecast_list, f, indent=2)
 
-              forecasts.append(entry)
-
-          # fallback if empty
-          if not forecasts:
-              forecasts = [{
-                  "time": "2025-08-26T12:00:00Z",
-                  "Temperature": "N/A",
-                  "Rainfall": "0.0",
-                  "TotalCloudCover": "N/A",
-                  "WindSpeed": "0",
-                  "WindDirection": "0",
-                  "WeatherSymbol3": "1"
-              }]
-
-          with open('forecast_data/forecast.json','w') as f:
-              json.dump(forecasts, f, indent=2)
-          print(f"Wrote {len(forecasts)} forecast entries to forecast_data/forecast.json")
-          PY
+print(f"Saved {len(forecast_list)} forecast entries to {output_file}")
+EOF
+          python update_forecast.py
 
       - name: Commit and push forecast.json
         run: |
           git config --local user.name "github-actions[bot]"
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
-          git add forecast_data/forecast.json
+          git add SLIM/SLIM2025/forecast.json
           git commit -m "Update forecast.json [skip ci]" || echo "No changes"
           git push
