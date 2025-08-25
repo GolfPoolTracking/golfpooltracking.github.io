@@ -33,11 +33,17 @@
       border-radius: 12px;
       padding: 16px;
       box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      text-align: center;
     }
     .time {
       font-weight: bold;
       margin-bottom: 8px;
       font-size: 1.1em;
+    }
+    .icon {
+      font-size: 2em;
+      margin-bottom: 6px;
+      display: block;
     }
     .line {
       margin: 4px 0;
@@ -52,8 +58,14 @@
 async function loadForecast() {
   const container = document.getElementById("forecast");
 
+  const weatherIcons = {
+    "1": "☀️", "2": "🌤️", "3": "⛅", "4": "🌥️",
+    "5": "☁️", "6": "🌧️", "7": "🌦️", "8": "🌩️",
+    "9": "🌨️", "10": "🌫️", "11": "🌪️", "12": "🌦️",
+    "13": "🌧️", "14": "🌩️", "15": "🌨️", "16": "🌫️"
+  };
+
   try {
-    // Load both JSONs
     const [portsalonRes, downingsRes] = await Promise.all([
       fetch("../../forecast_data/portsalon.json"),
       fetch("../../forecast_data/downings.json")
@@ -63,7 +75,6 @@ async function loadForecast() {
 
     const [portsalonData, downingsData] = await Promise.all([portsalonRes.json(), downingsRes.json()]);
 
-    // Define schedule
     const schedule = [
       { date: "2025-08-28", startHour: 11, endHour: 19, location: "Portsalon", data: portsalonData },
       { date: "2025-08-29", startHour: 11, endHour: 19, location: "Downings", data: downingsData },
@@ -73,9 +84,8 @@ async function loadForecast() {
 
     const grouped = {};
 
-    // Process schedule
     for (const s of schedule) {
-      const entries = s.data.filter(f => {
+      let entries = s.data.filter(f => {
         const dt = new Date(f.time);
         const dateStr = dt.toISOString().split("T")[0];
         if (dateStr !== s.date) return false;
@@ -84,30 +94,35 @@ async function loadForecast() {
         return localHour >= s.startHour && localHour < s.endHour;
       }).map(f => ({ ...f, localHour: ((new Date(f.time)).getUTCHours() + 1) % 24 }));
 
-      if (entries.length > 0) {
-        grouped[s.date] = { location: s.location, entries };
+      // Remove duplicate hours
+      const uniqueEntries = [];
+      const seenHours = new Set();
+      for (const f of entries) {
+        const key = f.localHour;
+        if (!seenHours.has(key)) {
+          uniqueEntries.push(f);
+          seenHours.add(key);
+        }
       }
+      entries = uniqueEntries;
+
+      if (entries.length > 0) grouped[s.date] = { location: s.location, entries };
     }
 
     if (Object.keys(grouped).length === 0) throw new Error("No matching forecasts for schedule");
 
-    // Render grouped output
     container.innerHTML = Object.entries(grouped).map(([date, group]) => {
-      // Sort by local hour
-      group.entries.sort((a, b) => a.localHour - b.localHour);
-
-      const dayStr = new Date(group.entries[0].time)
-        .toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "short" });
-
       const cards = group.entries.map(f => {
         const timeStr = f.localHour.toString().padStart(2, "0") + ":00";
         const temp = f.Temperature ?? "N/A";
         const windKmh = f.WindSpeed ?? "N/A";
         const windDir = f.WindDirection ?? "?";
         const rain = f.Rainfall ?? "0";
+        const icon = weatherIcons[f.WeatherSymbol3] || "❓";
 
         return `
           <div class="card">
+            <span class="icon">${icon}</span>
             <div class="time">${timeStr}</div>
             <div class="line">🌡️ Temp: ${temp} °C</div>
             <div class="line">💨 Wind: ${windKmh} km/h (${windDir}°)</div>
@@ -115,6 +130,9 @@ async function loadForecast() {
           </div>
         `;
       }).join("");
+
+      const dayStr = new Date(group.entries[0].time)
+        .toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "short" });
 
       return `
         <div class="day-group">
