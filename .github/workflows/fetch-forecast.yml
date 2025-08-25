@@ -18,86 +18,54 @@ jobs:
           python-version: "3.x"
 
       - name: Install dependencies
-        run: pip install requests defusedxml
+        run: pip install requests beautifulsoup4 lxml
 
       - name: Fetch and process forecast
         run: |
           python - << 'PYCODE'
           import requests, json
           from datetime import datetime
-          import xml.etree.ElementTree as ET
-          from defusedxml.ElementTree import fromstring
+          from bs4 import BeautifulSoup
 
           url = "https://www.met.ie/Open_Data/xml/PointForecasts/55.2670,-7.6330.xml"
           resp = requests.get(url)
           resp.encoding = 'utf-8'
-          xml_text = resp.text
 
-          # Basic sanitization: remove control characters
-          import re
-          xml_text = re.sub(r'[\x00-\x08\x0B\x0C\x0E-\x1F]', '', xml_text)
-
-          # Parse XML with defusedxml (safer)
-          try:
-              root = fromstring(xml_text)
-          except ET.ParseError as e:
-              print(f"XML parse failed: {e}")
-              exit(1)
+          # Use BeautifulSoup to parse malformed XML safely
+          soup = BeautifulSoup(resp.text, "lxml-xml")
 
           forecasts = []
           seen = set()
 
-          # Navigate to <time> elements
-          product = root.find('product')
-          if product is None:
-              print("No product element found in XML")
-              exit(1)
-
-          for time in product.findall('time'):
-              ts = time.get('from')
+          for time in soup.find_all("time"):
+              ts = time.get("from")
               if not ts or ts in seen:
                   continue
-              hour = datetime.fromisoformat(ts.replace('Z', '+00:00')).hour
+
+              hour = datetime.fromisoformat(ts.replace("Z","+00:00")).hour
               if not (12 <= hour <= 18):
                   continue
 
               seen.add(ts)
-              loc = time.find('location')
+              loc = time.find("location")
               if loc is None:
                   continue
 
-              entry = {}
-              # temperature
-              t = loc.find('temperature')
-              entry['temperature'] = float(t.get('value')) if t is not None else None
-
-              # wind
-              ws = loc.find('windSpeed')
-              wd = loc.find('windDirection')
-              entry['windSpeed'] = float(ws.get('mps')) if ws is not None else None
-              entry['windDir'] = wd.get('name') if wd is not None else None
-              gust = loc.find('windGust')
-              entry['gust'] = float(gust.get('mps')) if gust is not None else None
-
-              # humidity & pressure
-              hum = loc.find('humidity')
-              pres = loc.find('pressure')
-              entry['humidity'] = float(hum.get('value')) if hum is not None else None
-              entry['pressure'] = float(pres.get('value')) if pres is not None else None
-
-              # precipitation
-              prec = loc.find('precipitation')
-              entry['precipitation'] = float(prec.get('value')) if prec is not None else 0
-
-              # symbol
-              sym = loc.find('symbol')
-              entry['symbol'] = sym.get('id') if sym is not None else None
-
-              entry['time'] = ts
+              entry = {
+                  "time": ts,
+                  "temperature": float(loc.find("temperature")["value"]) if loc.find("temperature") else None,
+                  "windSpeed": float(loc.find("windSpeed")["mps"]) if loc.find("windSpeed") else None,
+                  "windDir": loc.find("windDirection")["name"] if loc.find("windDirection") else None,
+                  "gust": float(loc.find("windGust")["mps"]) if loc.find("windGust") else None,
+                  "humidity": float(loc.find("humidity")["value"]) if loc.find("humidity") else None,
+                  "pressure": float(loc.find("pressure")["value"]) if loc.find("pressure") else None,
+                  "precipitation": float(loc.find("precipitation")["value"]) if loc.find("precipitation") else 0,
+                  "symbol": loc.find("symbol")["id"] if loc.find("symbol") else None
+              }
               forecasts.append(entry)
 
           output_file = "SLIM/SLIM2025/forecast.json"
-          with open(output_file, 'w') as f:
+          with open(output_file, "w") as f:
               json.dump(forecasts, f, indent=2)
 
           print(f"Saved {len(forecasts)} forecast entries to {output_file}")
