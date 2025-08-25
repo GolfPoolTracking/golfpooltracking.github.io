@@ -1,5 +1,11 @@
 [
-  {"time":"2025-08-26T06:00:00","Temperature":"15.0","Rainfall":"0.0","TotalCloudCover":"20","WindSpeed":"4.0","WindDirection":"90","WeatherSymbol3":"1"},
-  {"time":"2025-08-26T12:00:00","Temperature":"18.0","Rainfall":"0.2","TotalCloudCover":"10","WindSpeed":"5.0","WindDirection":"135","WeatherSymbol3":"2"},
-  {"time":"2025-08-26T18:00:00","Temperature":"16.0","Rainfall":"0.0","TotalCloudCover":"30","WindSpeed":"3.5","WindDirection":"180","WeatherSymbol3":"3"}
+  {
+    "time": "2025-08-26T12:00:00",
+    "Temperature": "N/A",
+    "Rainfall": "0.0",
+    "TotalCloudCover": "N/A",
+    "WindSpeed": "0",
+    "WindDirection": "0",
+    "WeatherSymbol3": "1"
+  }
 ]
