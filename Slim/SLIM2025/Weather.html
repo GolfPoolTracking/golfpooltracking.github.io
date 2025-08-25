@@ -1,134 +1,114 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Weather Forecast - Portsalon</title>
-<style>
-  body { font-family: Arial, sans-serif; background: #222; color: #fff; padding: 20px; }
-  h1 { text-align: center; margin-bottom: 20px; }
-  table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-  th, td { padding: 8px 12px; border: 1px solid #555; text-align: center; }
-  th { background: #444; }
-  td { background: #333; }
-  .arrow { display: inline-block; transform: rotate(0deg); }
-  .bar {
-    display: inline-block;
-    height: 14px;
-    background-color: #ffd700;
-    vertical-align: middle;
-    margin-left: 4px;
-    border-radius: 3px;
-  }
-  .rain-bar { background-color: #00bfff; }
-</style>
+  <meta charset="UTF-8">
+  <title>Weather Forecast</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      background: #f0f4f8;
+    }
+    h1 {
+      text-align: center;
+      color: #2a4d69;
+    }
+    #forecast {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      margin-top: 20px;
+    }
+    .card {
+      background: white;
+      padding: 15px;
+      border-radius: 12px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+    .time {
+      font-weight: bold;
+      margin-bottom: 10px;
+      color: #2a4d69;
+    }
+    .temp {
+      font-size: 1.5em;
+      margin: 5px 0;
+    }
+    .icon {
+      font-size: 2em;
+      margin: 5px 0;
+    }
+    .wind {
+      margin: 5px 0;
+    }
+    .rain {
+      margin: 5px 0;
+    }
+  </style>
 </head>
 <body>
+  <h1>Weather Forecast (26 Aug, 12–18)</h1>
+  <div id="forecast">Loading forecast...</div>
 
-<h1>Weather Forecast - Portsalon (26 Aug 2025)</h1>
-<p id="status">Loading forecast data...</p>
-<table id="forecast-table" style="display:none;">
-  <thead>
-    <tr>
-      <th>Time (Local)</th>
-      <th>Temperature (°C)</th>
-      <th>Rainfall (mm)</th>
-      <th>Cloud Cover (%)</th>
-      <th>Wind Speed (m/s)</th>
-      <th>Wind Direction</th>
-      <th>Weather Symbol</th>
-    </tr>
-  </thead>
-  <tbody id="forecast-body"></tbody>
-</table>
+  <script>
+    // Map Met Éireann symbol numbers to simple emojis/icons
+    const weatherIcons = {
+      "1": "☀️", // clear
+      "2": "🌤️", // partly cloudy
+      "3": "☁️", // cloudy
+      "4": "🌧️", // showers
+      "5": "🌦️", // rain
+      "6": "⛈️", // thunder
+      "7": "❄️", // snow
+      "8": "🌫️", // fog
+    };
 
-<script>
-function formatLocalTime(utcString) {
-  const date = new Date(utcString);
-  // Ireland: UTC+1 in summer, but JS Date automatically handles timezone offset
-  const options = { weekday:'short', hour:'2-digit', minute:'2-digit' };
-  return date.toLocaleString('en-IE', options);
-}
-
-fetch('../../forecast_data/forecast.json')
-  .then(resp => resp.json())
-  .then(data => {
-    if (!data || !data.length) {
-      document.getElementById('status').textContent = "No forecast available yet.";
-      return;
+    // Convert wind direction (deg) to arrow
+    function windArrow(deg) {
+      if (!deg) return "❓";
+      const dirs = ["↑ N","↗ NE","→ E","↘ SE","↓ S","↙ SW","← W","↖ NW"];
+      return dirs[Math.round(deg / 45) % 8];
     }
 
-    const tbody = document.getElementById('forecast-body');
-    data.forEach(entry => {
-      const tr = document.createElement('tr');
+    async function loadForecast() {
+      try {
+        const res = await fetch("forecast_data/forecast.json");
+        if (!res.ok) throw new Error("HTTP " + res.status);
+        const data = await res.json();
 
-      // Time
-      const timeTd = document.createElement('td');
-      timeTd.textContent = formatLocalTime(entry.time) || 'N/A';
-      tr.appendChild(timeTd);
+        if (!data || data.length === 0) {
+          document.getElementById("forecast").innerHTML = "<p>No forecast available yet.</p>";
+          return;
+        }
 
-      // Temperature with bar
-      const tempTd = document.createElement('td');
-      const temp = entry.Temperature || 'N/A';
-      tempTd.textContent = temp;
-      if(!isNaN(temp)){
-        const bar = document.createElement('span');
-        bar.className = 'bar';
-        bar.style.width = `${Math.min(Math.max(temp*5,0),100)}px`; // scale
-        tempTd.appendChild(bar);
+        document.getElementById("forecast").innerHTML = data.map(entry => {
+          const dt = new Date(entry.time);
+          const hour = dt.toLocaleTimeString([], {hour: "2-digit", minute: "2-digit"});
+          const temp = entry.Temperature ? `${entry.Temperature} °C` : "N/A";
+          const rain = entry.Rainfall ? `${entry.Rainfall} mm` : "0 mm";
+          const ws = entry.WindSpeed ? (parseFloat(entry.WindSpeed) * 3.6).toFixed(1) + " km/h" : "0 km/h";
+          const wd = entry.WindDirection ? windArrow(parseFloat(entry.WindDirection)) : "N/A";
+          const icon = weatherIcons[entry.WeatherSymbol3] || "❓";
+
+          return `
+            <div class="card">
+              <div class="time">${hour}</div>
+              <div class="icon">${icon}</div>
+              <div class="temp">${temp}</div>
+              <div class="wind">💨 ${ws} ${wd}</div>
+              <div class="rain">🌧️ ${rain}</div>
+            </div>
+          `;
+        }).join("");
+
+      } catch (err) {
+        console.error("Error loading forecast:", err);
+        document.getElementById("forecast").innerHTML = "<p>Error loading forecast.</p>";
       }
-      tr.appendChild(tempTd);
+    }
 
-      // Rainfall with bar
-      const rainTd = document.createElement('td');
-      const rain = entry.Rainfall || '0.0';
-      rainTd.textContent = rain;
-      if(!isNaN(rain)){
-        const bar = document.createElement('span');
-        bar.className = 'bar rain-bar';
-        bar.style.width = `${Math.min(rain*10,100)}px`; // scale
-        rainTd.appendChild(bar);
-      }
-      tr.appendChild(rainTd);
-
-      // Cloud Cover
-      const cloudTd = document.createElement('td');
-      cloudTd.textContent = entry.TotalCloudCover || 'N/A';
-      tr.appendChild(cloudTd);
-
-      // Wind Speed
-      const wsTd = document.createElement('td');
-      wsTd.textContent = entry.WindSpeed || '0';
-      tr.appendChild(wsTd);
-
-      // Wind Direction with arrow
-      const wdTd = document.createElement('td');
-      const arrow = document.createElement('span');
-      arrow.className = 'arrow';
-      arrow.textContent = '↑';
-      if(entry.WindDirection){
-        arrow.style.transform = `rotate(${entry.WindDirection}deg)`;
-      }
-      wdTd.appendChild(arrow);
-      tr.appendChild(wdTd);
-
-      // Weather Symbol
-      const wsymTd = document.createElement('td');
-      const symbolMap = { '1': '☀️', '2': '⛅', '3': '☁️', '4': '🌧️', '5': '⛈️', '6': '🌨️', '7': '🌫️' };
-      wsymTd.textContent = symbolMap[entry.WeatherSymbol3] || '❔';
-      tr.appendChild(wsymTd);
-
-      tbody.appendChild(tr);
-    });
-
-    document.getElementById('status').style.display = 'none';
-    document.getElementById('forecast-table').style.display = 'table';
-  })
-  .catch(err => {
-    console.error(err);
-    document.getElementById('status').textContent = "Error loading forecast.";
-  });
-</script>
-
+    loadForecast();
+  </script>
 </body>
 </html>
