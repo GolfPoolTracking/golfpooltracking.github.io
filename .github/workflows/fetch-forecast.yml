@@ -2,7 +2,7 @@ name: Fetch Met Éireann Forecast
 
 on:
   schedule:
-    - cron: '0 * * * *'  # every hour at minute 0 UTC
+    - cron: '10 0 * * *'  # daily at 00:10 UTC
   workflow_dispatch:      # allows manual trigger
 
 jobs:
