@@ -1,290 +1,44 @@
 [
   {
-    "time": "2025-08-26T00:00:00Z",
-    "Temperature": "14.4",
-    "WindDirection": "156.5",
-    "WindSpeed": "6.9",
-    "TotalCloudCover": "99.2"
-  },
-  {
-    "time": "2025-08-26T01:00:00Z",
-    "Temperature": "14.6",
-    "WindDirection": "160.8",
-    "WindSpeed": "6.6",
-    "TotalCloudCover": "100.0"
-  },
-  {
-    "time": "2025-08-26T00:00:00Z",
-    "Rainfall": "0.0",
-    "WeatherSymbol3": "3"
-  },
-  {
-    "time": "2025-08-26T02:00:00Z",
-    "Temperature": "14.8",
-    "WindDirection": "163.5",
-    "WindSpeed": "6.4",
-    "TotalCloudCover": "98.1"
-  },
-  {
-    "time": "2025-08-26T01:00:00Z",
-    "Rainfall": "0.0",
-    "WeatherSymbol3": "4"
-  },
-  {
-    "time": "2025-08-26T03:00:00Z",
-    "Temperature": "15.2",
-    "WindDirection": "165.8",
-    "WindSpeed": "6.5",
-    "TotalCloudCover": "99.5"
-  },
-  {
-    "time": "2025-08-26T02:00:00Z",
-    "Rainfall": "0.0",
-    "WeatherSymbol3": "4"
-  },
-  {
-    "time": "2025-08-26T04:00:00Z",
-    "Temperature": "15.4",
-    "WindDirection": "161.2",
-    "WindSpeed": "5.8",
-    "TotalCloudCover": "100.0"
-  },
-  {
-    "time": "2025-08-26T03:00:00Z",
-    "Rainfall": "0.0",
-    "WeatherSymbol3": "4"
-  },
-  {
-    "time": "2025-08-26T05:00:00Z",
-    "Temperature": "14.7",
-    "WindDirection": "181.0",
-    "WindSpeed": "5.4",
-    "TotalCloudCover": "2.8"
-  },
-  {
-    "time": "2025-08-26T04:00:00Z",
-    "Rainfall": "0.0",
-    "WeatherSymbol3": "3"
-  },
-  {
-    "time": "2025-08-26T06:00:00Z",
-    "Temperature": "14.5",
-    "WindDirection": "161.1",
-    "WindSpeed": "6.5",
-    "TotalCloudCover": "15.3"
-  },
-  {
-    "time": "2025-08-26T05:00:00Z",
-    "Rainfall": "0.0",
-    "WeatherSymbol3": "2"
-  },
-  {
-    "time": "2025-08-26T07:00:00Z",
-    "Temperature": "15.1",
-    "WindDirection": "169.4",
-    "WindSpeed": "6.3",
-    "TotalCloudCover": "9.0"
-  },
-  {
-    "time": "2025-08-26T06:00:00Z",
-    "Rainfall": "0.0",
-    "WeatherSymbol3": "1"
-  },
-  {
-    "time": "2025-08-26T08:00:00Z",
-    "Temperature": "16.0",
-    "WindDirection": "168.3",
-    "WindSpeed": "6.9",
-    "TotalCloudCover": "99.6"
-  },
-  {
-    "time": "2025-08-26T07:00:00Z",
-    "Rainfall": "0.0",
-    "WeatherSymbol3": "3"
-  },
-  {
-    "time": "2025-08-26T09:00:00Z",
-    "Temperature": "17.1",
-    "WindDirection": "177.6",
-    "WindSpeed": "7.5",
-    "TotalCloudCover": "3.1"
-  },
-  {
-    "time": "2025-08-26T08:00:00Z",
-    "Rainfall": "0.0",
-    "WeatherSymbol3": "1"
-  },
-  {
-    "time": "2025-08-26T10:00:00Z",
-    "Temperature": "16.9",
-    "WindDirection": "186.8",
-    "WindSpeed": "7.8",
-    "TotalCloudCover": "98.1"
-  },
-  {
-    "time": "2025-08-26T09:00:00Z",
-    "Rainfall": "0.0",
-    "WeatherSymbol3": "4"
-  },
-  {
-    "time": "2025-08-26T11:00:00Z",
-    "Temperature": "17.6",
-    "WindDirection": "187.2",
-    "WindSpeed": "7.8",
-    "TotalCloudCover": "61.8"
-  },
-  {
-    "time": "2025-08-26T10:00:00Z",
-    "Rainfall": "0.0",
-    "WeatherSymbol3": "3"
-  },
-  {
     "time": "2025-08-26T12:00:00Z",
     "Temperature": "18.6",
     "WindDirection": "194.9",
-    "WindSpeed": "7.2",
-    "TotalCloudCover": "94.3"
-  },
-  {
-    "time": "2025-08-26T11:00:00Z",
-    "Rainfall": "0.0",
-    "WeatherSymbol3": "4"
+    "WindSpeed": "7.2"
   },
   {
     "time": "2025-08-26T13:00:00Z",
     "Temperature": "18.2",
     "WindDirection": "187.7",
-    "WindSpeed": "7.1",
-    "TotalCloudCover": "99.4"
-  },
-  {
-    "time": "2025-08-26T12:00:00Z",
-    "Rainfall": "0.0",
-    "WeatherSymbol3": "4"
+    "WindSpeed": "7.1"
   },
   {
     "time": "2025-08-26T14:00:00Z",
     "Temperature": "17.4",
     "WindDirection": "198.3",
-    "WindSpeed": "6.0",
-    "TotalCloudCover": "100.0"
-  },
-  {
-    "time": "2025-08-26T13:00:00Z",
-    "Rainfall": "0.5",
-    "WeatherSymbol3": "9"
+    "WindSpeed": "6.0"
   },
   {
     "time": "2025-08-26T15:00:00Z",
     "Temperature": "16.9",
     "WindDirection": "209.8",
-    "WindSpeed": "6.5",
-    "TotalCloudCover": "100.0"
-  },
-  {
-    "time": "2025-08-26T14:00:00Z",
-    "Rainfall": "0.6",
-    "WeatherSymbol3": "9"
+    "WindSpeed": "6.5"
   },
   {
     "time": "2025-08-26T16:00:00Z",
     "Temperature": "16.3",
     "WindDirection": "201.5",
-    "WindSpeed": "4.8",
-    "TotalCloudCover": "100.0"
-  },
-  {
-    "time": "2025-08-26T15:00:00Z",
-    "Rainfall": "0.5",
-    "WeatherSymbol3": "9"
+    "WindSpeed": "4.8"
   },
   {
     "time": "2025-08-26T17:00:00Z",
     "Temperature": "17.5",
     "WindDirection": "212.8",
-    "WindSpeed": "6.1",
-    "TotalCloudCover": "70.6"
-  },
-  {
-    "time": "2025-08-26T16:00:00Z",
-    "Rainfall": "0.2",
-    "WeatherSymbol3": "40"
+    "WindSpeed": "6.1"
   },
   {
     "time": "2025-08-26T18:00:00Z",
     "Temperature": "16.8",
     "WindDirection": "207.0",
-    "WindSpeed": "5.4",
-    "TotalCloudCover": "67.1"
-  },
-  {
-    "time": "2025-08-26T17:00:00Z",
-    "Rainfall": "0.1",
-    "WeatherSymbol3": "40"
-  },
-  {
-    "time": "2025-08-26T19:00:00Z",
-    "Temperature": "16.2",
-    "WindDirection": "185.1",
-    "WindSpeed": "4.1",
-    "TotalCloudCover": "58.7"
-  },
-  {
-    "time": "2025-08-26T18:00:00Z",
-    "Rainfall": "0.0",
-    "WeatherSymbol3": "3"
-  },
-  {
-    "time": "2025-08-26T20:00:00Z",
-    "Temperature": "15.1",
-    "WindDirection": "179.6",
-    "WindSpeed": "4.7",
-    "TotalCloudCover": "60.6"
-  },
-  {
-    "time": "2025-08-26T19:00:00Z",
-    "Rainfall": "0.0",
-    "WeatherSymbol3": "3"
-  },
-  {
-    "time": "2025-08-26T21:00:00Z",
-    "Temperature": "14.6",
-    "WindDirection": "158.8",
-    "WindSpeed": "5.5",
-    "TotalCloudCover": "39.1"
-  },
-  {
-    "time": "2025-08-26T20:00:00Z",
-    "Rainfall": "0.0",
-    "WeatherSymbol3": "3"
-  },
-  {
-    "time": "2025-08-26T22:00:00Z",
-    "Temperature": "14.4",
-    "WindDirection": "162.2",
-    "WindSpeed": "5.3",
-    "TotalCloudCover": "19.5"
-  },
-  {
-    "time": "2025-08-26T21:00:00Z",
-    "Rainfall": "0.0",
-    "WeatherSymbol3": "2"
-  },
-  {
-    "time": "2025-08-26T23:00:00Z",
-    "Temperature": "13.8",
-    "WindDirection": "153.5",
-    "WindSpeed": "5.8",
-    "TotalCloudCover": "0.3"
-  },
-  {
-    "time": "2025-08-26T22:00:00Z",
-    "Rainfall": "0.0",
-    "WeatherSymbol3": "1"
-  },
-  {
-    "time": "2025-08-26T23:00:00Z",
-    "Rainfall": "0.0",
-    "WeatherSymbol3": "1"
+    "WindSpeed": "5.4"
   }
 ]
