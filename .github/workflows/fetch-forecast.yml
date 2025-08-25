@@ -17,17 +17,23 @@ jobs:
         with:
           python-version: "3.x"
 
+      - name: Install dependencies
+        run: pip install requests xmltodict
+
       - name: Fetch and process forecast
         run: |
-          pip install requests xmltodict
-
           python - << 'PYCODE'
           import requests, xmltodict, json
           from datetime import datetime
 
           url = "https://www.met.ie/Open_Data/xml/PointForecasts/55.2670,-7.6330.xml"
-          xml_data = requests.get(url).text
-          data = xmltodict.parse(xml_data)
+          resp = requests.get(url)
+          resp.encoding = 'utf-8'
+
+          # sanitize XML: replace & with &amp; (common cause of ExpatError)
+          xml_text = resp.text.replace("& ", "&amp; ")
+
+          data = xmltodict.parse(xml_text)
 
           forecasts = []
           seen = set()
@@ -38,7 +44,7 @@ jobs:
 
               if 12 <= hour <= 18 and ts not in seen:
                   seen.add(ts)
-                  loc = time["location"]
+                  loc = time.get("location", {})
                   entry = {
                       "time": ts,
                       "temperature": loc.get("temperature", {}).get("@value"),
@@ -52,8 +58,11 @@ jobs:
                   }
                   forecasts.append(entry)
 
-          with open("SLIM/SLIM2025/forecast.json", "w") as f:
+          output_file = "SLIM/SLIM2025/forecast.json"
+          with open(output_file, "w") as f:
               json.dump(forecasts, f, indent=2)
+
+          print(f"Saved {len(forecasts)} forecast entries to {output_file}")
           PYCODE
 
       - name: Commit and push
