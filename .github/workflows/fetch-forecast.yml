@@ -1,4 +1,4 @@
-name: Fetch Met Éireann Forecasts
+name: Fetch Met Éireann Forecast
 
 on:
   schedule:
@@ -13,98 +13,92 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Fetch Met Éireann XMLs
+      - name: Fetch Met Éireann XML
         run: |
           mkdir -p forecast_data
-          # Portsalon (lat=55.200, long=-7.633)
-          curl -s "http://openaccess.pf.api.met.ie/metno-wdb2ts/locationforecast?lat=55.200;long=-7.633" -o forecast_data/raw_portsalon.xml
-          # Downings (lat=55.183, long=-7.833)
-          curl -s "http://openaccess.pf.api.met.ie/metno-wdb2ts/locationforecast?lat=55.183;long=-7.833" -o forecast_data/raw_downings.xml
+          curl -s "http://openaccess.pf.api.met.ie/metno-wdb2ts/locationforecast?lat=55.267;long=-7.633" -o forecast_data/raw_forecast.xml
 
-      - name: Convert XMLs to JSON
+      - name: Convert XML to JSON
         run: |
           python3 - <<'PY'
           import xml.etree.ElementTree as ET
           import json
           import datetime
 
-          def process_file(xml_path, json_path, start, end):
-              tree = ET.parse(xml_path)
-              root = tree.getroot()
+          tree = ET.parse('forecast_data/raw_forecast.xml')
+          root = tree.getroot()
 
-              forecasts = []
-              for time_el in root.findall('.//time'):
-                  time_str = time_el.attrib.get('from')
-                  if not time_str:
-                      continue
-                  dt = datetime.datetime.fromisoformat(time_str.replace('Z','+00:00'))
-                  dt_naive = dt.replace(tzinfo=None)
-                  if not (start <= dt_naive < end):
-                      continue
-
-                  hour = dt_naive.hour
-                  if not (11 <= hour <= 19):  # restrict to 11am–7pm
-                      continue
-
-                  loc = time_el.find('location')
-                  if loc is None:
-                      continue
-
-                  entry = {'time': time_str}
-
-                  temp = loc.find('temperature')
-                  if temp is not None:
-                      entry['Temperature'] = temp.attrib.get('value')
-
-                  winddir = loc.find('windDirection')
-                  if winddir is not None:
-                      entry['WindDirection'] = winddir.attrib.get('deg')
-
-                  windspeed = loc.find('windSpeed')
-                  if windspeed is not None:
-                      # Convert m/s to km/h
-                      try:
-                          entry['WindSpeed'] = str(round(float(windspeed.attrib.get('mps')) * 3.6, 1))
-                      except:
-                          entry['WindSpeed'] = windspeed.attrib.get('mps')
-
-                  precip = loc.find('precipitation')
-                  if precip is not None:
-                      entry['Rainfall'] = precip.attrib.get('value')
-
-                  symbol = loc.find('symbol')
-                  if symbol is not None:
-                      entry['WeatherSymbol3'] = symbol.attrib.get('number')
-
-                  forecasts.append(entry)
-
-              # fallback if empty
-              if not forecasts:
-                  forecasts = [{
-                      "time": start.isoformat() + "Z",
-                      "Temperature": "N/A",
-                      "Rainfall": "0.0",
-                      "WindSpeed": "0",
-                      "WindDirection": "0",
-                      "WeatherSymbol3": "1"
-                  }]
-
-              with open(json_path,'w') as f:
-                  json.dump(forecasts, f, indent=2)
-              print(f"Wrote {len(forecasts)} forecast entries to {json_path}")
-
-          # Define forecast period (update as needed)
           start = datetime.datetime(2025,8,28)
-          end   = datetime.datetime(2025,9,1)
+          end   = datetime.datetime(2025,8,32)
 
-          process_file("forecast_data/raw_portsalon.xml", "forecast_data/portsalon.json", start, end)
-          process_file("forecast_data/raw_downings.xml", "forecast_data/downings.json", start, end)
+          forecasts = []
+
+          for time_el in root.findall('.//time'):
+              time_str = time_el.attrib.get('from')
+              if not time_str:
+                  continue
+              dt = datetime.datetime.fromisoformat(time_str.replace('Z','+00:00'))
+              dt_naive = dt.replace(tzinfo=None)
+              if not (start <= dt_naive < end):
+                  continue
+
+              loc = time_el.find('location')
+              if loc is None:
+                  continue
+
+              entry = {'time': time_str}
+
+              temp = loc.find('temperature')
+              if temp is not None:
+                  entry['Temperature'] = temp.attrib.get('value')
+
+              winddir = loc.find('windDirection')
+              if winddir is not None:
+                  entry['WindDirection'] = winddir.attrib.get('deg')
+
+              windspeed = loc.find('windSpeed')
+              if windspeed is not None:
+                  # convert m/s to km/h
+                  entry['WindSpeed'] = str(round(float(windspeed.attrib.get('mps')) * 3.6, 1))
+
+              precip = loc.find('precipitation')
+              if precip is not None:
+                  entry['Rainfall'] = precip.attrib.get('value')
+
+              # always assign symbol, default to "1" (sun) if missing
+              symbol = loc.find('symbol')
+              entry['WeatherSymbol3'] = symbol.attrib.get('number') if symbol is not None else "1"
+
+              forecasts.append(entry)
+
+          # fallback if empty
+          if not forecasts:
+              forecasts = [{
+                  "time": "2025-08-28T12:00:00Z",
+                  "Temperature": "N/A",
+                  "Rainfall": "0.0",
+                  "WindSpeed": "0",
+                  "WindDirection": "0",
+                  "WeatherSymbol3": "1"
+              }]
+
+          # split into Portsalon (28th) and Downings (29-31)
+          portsalon = [f for f in forecasts if f['time'].startswith('2025-08-28')]
+          downings  = [f for f in forecasts if f['time'] > '2025-08-28']
+
+          with open('forecast_data/portsalon.json','w') as f:
+              json.dump(portsalon, f, indent=2)
+
+          with open('forecast_data/downings.json','w') as f:
+              json.dump(downings, f, indent=2)
+
+          print(f"Wrote {len(portsalon)} Portsalon and {len(downings)} Downings entries")
           PY
 
-      - name: Commit and push forecasts
+      - name: Commit and push forecast.json
         run: |
           git config --local user.name "github-actions[bot]"
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git add forecast_data/portsalon.json forecast_data/downings.json
-          git commit -m "Update forecasts [skip ci]" || echo "No changes"
+          git commit -m "Update forecast.json [skip ci]" || echo "No changes"
           git push
