@@ -14,11 +14,19 @@
     h1 {
       text-align: center;
     }
+    .day-group {
+      margin-top: 30px;
+    }
+    .day-title {
+      font-size: 1.3em;
+      font-weight: bold;
+      margin-bottom: 12px;
+      color: #1a4d8f;
+    }
     .forecast {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
       gap: 16px;
-      margin-top: 20px;
     }
     .card {
       background: white;
@@ -38,7 +46,7 @@
 </head>
 <body>
   <h1>Golf Trip Weather Forecast</h1>
-  <div id="forecast" class="forecast">Loading forecast...</div>
+  <div id="forecast">Loading forecast...</div>
 
   <script>
     async function loadForecast() {
@@ -49,56 +57,63 @@
         const data = await res.json();
         if (!data || !data.length) throw new Error("No forecast data");
 
-        // Schedule definitions
+        // Schedule definitions (28–31 Aug 2025)
         const schedule = [
-          { date: "2025-09-04", startHour: 11, endHour: 19, location: "Portsalon" },
-          { date: "2025-09-05", startHour: 11, endHour: 19, location: "Downings" },
-          { date: "2025-09-06", startHour: 11, endHour: 19, location: "Downings" },
-          { date: "2025-09-07", startHour: 7,  endHour: 15, location: "Downings" }
+          { date: "2025-08-28", startHour: 11, endHour: 19, location: "Portsalon" },
+          { date: "2025-08-29", startHour: 11, endHour: 19, location: "Downings" },
+          { date: "2025-08-30", startHour: 11, endHour: 19, location: "Downings" },
+          { date: "2025-08-31", startHour: 7,  endHour: 15, location: "Downings" }
         ];
 
-        const filtered = [];
+        // Group forecasts by date
+        const grouped = {};
 
         for (const entry of data) {
           const dt = new Date(entry.time);
           const dateStr = dt.toISOString().split("T")[0];
-          const hour = dt.getUTCHours(); // JSON times are UTC
-
+          const hour = dt.getUTCHours(); // UTC in JSON
           const sched = schedule.find(s => s.date === dateStr);
           if (!sched) continue;
 
-          // shift hours if necessary (Met Éireann is UTC, Ireland in Sep = UTC+1)
+          // Ireland in late Aug = UTC+1
           const localHour = (hour + 1) % 24;
 
           if (localHour >= sched.startHour && localHour < sched.endHour) {
-            filtered.push({
-              ...entry,
-              localHour,
-              location: sched.location,
-              date: dateStr
-            });
+            if (!grouped[dateStr]) {
+              grouped[dateStr] = { location: sched.location, entries: [] };
+            }
+            grouped[dateStr].entries.push({ ...entry, localHour });
           }
         }
 
-        if (!filtered.length) throw new Error("No matching forecasts for schedule");
+        if (Object.keys(grouped).length === 0) throw new Error("No matching forecasts for schedule");
 
-        container.innerHTML = filtered.map(f => {
-          const dt = new Date(f.time);
-          const options = { weekday: "short", day: "numeric", month: "short" };
-          const dayStr = dt.toLocaleDateString("en-GB", options);
+        // Render grouped output
+        container.innerHTML = Object.entries(grouped).map(([date, group]) => {
+          const first = new Date(group.entries[0].time);
+          const dayStr = first.toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "short" });
 
-          const timeStr = f.localHour.toString().padStart(2, "0") + ":00";
-          const temp = f.Temperature ?? "N/A";
-          const windKmh = f.WindSpeed ? (parseFloat(f.WindSpeed) * 3.6).toFixed(1) : "N/A";
-          const windDir = f.WindDirection ?? "?";
-          const rain = f.Rainfall ?? "0";
+          const cards = group.entries.map(f => {
+            const timeStr = f.localHour.toString().padStart(2, "0") + ":00";
+            const temp = f.Temperature ?? "N/A";
+            const windKmh = f.WindSpeed ? (parseFloat(f.WindSpeed) * 3.6).toFixed(1) : "N/A";
+            const windDir = f.WindDirection ?? "?";
+            const rain = f.Rainfall ?? "0";
+
+            return `
+              <div class="card">
+                <div class="time">${timeStr}</div>
+                <div class="line">🌡️ Temp: ${temp} °C</div>
+                <div class="line">💨 Wind: ${windKmh} km/h (${windDir}°)</div>
+                <div class="line">☔ Rain: ${rain} mm</div>
+              </div>
+            `;
+          }).join("");
 
           return `
-            <div class="card">
-              <div class="time">${dayStr} @ ${timeStr} (${f.location})</div>
-              <div class="line">🌡️ Temp: ${temp} °C</div>
-              <div class="line">💨 Wind: ${windKmh} km/h (${windDir}°)</div>
-              <div class="line">☔ Rain: ${rain} mm</div>
+            <div class="day-group">
+              <div class="day-title">${dayStr} – ${group.location}</div>
+              <div class="forecast">${cards}</div>
             </div>
           `;
         }).join("");
