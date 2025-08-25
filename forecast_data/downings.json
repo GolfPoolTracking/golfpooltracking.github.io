@@ -4,599 +4,799 @@
     "Temperature": "14.0",
     "WindDirection": "154.3",
     "WindSpeed": "21.2",
-    "WeatherSymbol3": "1"
+    "WeatherSymbol3": "1",
+    "Rainfall": "0.0"
   },
   {
     "time": "2025-08-28T01:00:00Z",
     "Temperature": "13.4",
     "WindDirection": "178.7",
     "WindSpeed": "22.7",
-    "WeatherSymbol3": "1"
+    "WeatherSymbol3": "1",
+    "Rainfall": "0.0"
   },
   {
     "time": "2025-08-28T00:00:00Z",
-    "Rainfall": "0.0",
-    "WeatherSymbol3": "3"
+    "WeatherSymbol3": "3",
+    "Temperature": "N/A",
+    "WindSpeed": "0",
+    "WindDirection": "0",
+    "Rainfall": "0.0"
   },
   {
     "time": "2025-08-28T02:00:00Z",
     "Temperature": "13.3",
     "WindDirection": "174.7",
     "WindSpeed": "24.5",
-    "WeatherSymbol3": "1"
+    "WeatherSymbol3": "1",
+    "Rainfall": "0.0"
   },
   {
     "time": "2025-08-28T01:00:00Z",
-    "Rainfall": "0.0",
-    "WeatherSymbol3": "4"
+    "WeatherSymbol3": "4",
+    "Temperature": "N/A",
+    "WindSpeed": "0",
+    "WindDirection": "0",
+    "Rainfall": "0.0"
   },
   {
     "time": "2025-08-28T03:00:00Z",
     "Temperature": "13.4",
     "WindDirection": "171.5",
     "WindSpeed": "25.9",
-    "WeatherSymbol3": "1"
+    "WeatherSymbol3": "1",
+    "Rainfall": "0.0"
   },
   {
     "time": "2025-08-28T02:00:00Z",
-    "Rainfall": "0.1",
-    "WeatherSymbol3": "46"
+    "WeatherSymbol3": "46",
+    "Temperature": "N/A",
+    "WindSpeed": "0",
+    "WindDirection": "0",
+    "Rainfall": "0.0"
   },
   {
     "time": "2025-08-28T04:00:00Z",
     "Temperature": "13.4",
     "WindDirection": "169.4",
     "WindSpeed": "25.6",
-    "WeatherSymbol3": "1"
+    "WeatherSymbol3": "1",
+    "Rainfall": "0.0"
   },
   {
     "time": "2025-08-28T03:00:00Z",
-    "Rainfall": "0.1",
-    "WeatherSymbol3": "46"
+    "WeatherSymbol3": "46",
+    "Temperature": "N/A",
+    "WindSpeed": "0",
+    "WindDirection": "0",
+    "Rainfall": "0.0"
   },
   {
     "time": "2025-08-28T05:00:00Z",
     "Temperature": "13.5",
     "WindDirection": "166.7",
     "WindSpeed": "25.2",
-    "WeatherSymbol3": "1"
+    "WeatherSymbol3": "1",
+    "Rainfall": "0.0"
   },
   {
     "time": "2025-08-28T04:00:00Z",
-    "Rainfall": "0.2",
-    "WeatherSymbol3": "46"
+    "WeatherSymbol3": "46",
+    "Temperature": "N/A",
+    "WindSpeed": "0",
+    "WindDirection": "0",
+    "Rainfall": "0.0"
   },
   {
     "time": "2025-08-28T06:00:00Z",
     "Temperature": "13.5",
     "WindDirection": "165.0",
     "WindSpeed": "26.3",
-    "WeatherSymbol3": "1"
+    "WeatherSymbol3": "1",
+    "Rainfall": "0.0"
   },
   {
     "time": "2025-08-28T05:00:00Z",
-    "Rainfall": "0.2",
-    "WeatherSymbol3": "46"
+    "WeatherSymbol3": "46",
+    "Temperature": "N/A",
+    "WindSpeed": "0",
+    "WindDirection": "0",
+    "Rainfall": "0.0"
   },
   {
     "time": "2025-08-28T07:00:00Z",
     "Temperature": "13.5",
     "WindDirection": "163.7",
     "WindSpeed": "25.9",
-    "WeatherSymbol3": "1"
+    "WeatherSymbol3": "1",
+    "Rainfall": "0.0"
   },
   {
     "time": "2025-08-28T06:00:00Z",
-    "Rainfall": "0.1",
-    "WeatherSymbol3": "46"
+    "WeatherSymbol3": "46",
+    "Temperature": "N/A",
+    "WindSpeed": "0",
+    "WindDirection": "0",
+    "Rainfall": "0.0"
   },
   {
     "time": "2025-08-28T08:00:00Z",
     "Temperature": "13.9",
     "WindDirection": "163.7",
     "WindSpeed": "26.6",
-    "WeatherSymbol3": "1"
+    "WeatherSymbol3": "1",
+    "Rainfall": "0.0"
   },
   {
     "time": "2025-08-28T07:00:00Z",
-    "Rainfall": "0.1",
-    "WeatherSymbol3": "46"
+    "WeatherSymbol3": "46",
+    "Temperature": "N/A",
+    "WindSpeed": "0",
+    "WindDirection": "0",
+    "Rainfall": "0.0"
   },
   {
     "time": "2025-08-28T09:00:00Z",
     "Temperature": "14.4",
     "WindDirection": "167.1",
     "WindSpeed": "25.9",
-    "WeatherSymbol3": "1"
+    "WeatherSymbol3": "1",
+    "Rainfall": "0.0"
   },
   {
     "time": "2025-08-28T08:00:00Z",
-    "Rainfall": "0.2",
-    "WeatherSymbol3": "46"
+    "WeatherSymbol3": "46",
+    "Temperature": "N/A",
+    "WindSpeed": "0",
+    "WindDirection": "0",
+    "Rainfall": "0.0"
   },
   {
     "time": "2025-08-28T10:00:00Z",
     "Temperature": "15.0",
     "WindDirection": "165.4",
     "WindSpeed": "27.0",
-    "WeatherSymbol3": "1"
+    "WeatherSymbol3": "1",
+    "Rainfall": "0.0"
   },
   {
     "time": "2025-08-28T09:00:00Z",
-    "Rainfall": "0.2",
-    "WeatherSymbol3": "46"
+    "WeatherSymbol3": "46",
+    "Temperature": "N/A",
+    "WindSpeed": "0",
+    "WindDirection": "0",
+    "Rainfall": "0.0"
   },
   {
     "time": "2025-08-28T11:00:00Z",
     "Temperature": "16.0",
     "WindDirection": "165.6",
     "WindSpeed": "26.6",
-    "WeatherSymbol3": "1"
+    "WeatherSymbol3": "1",
+    "Rainfall": "0.0"
   },
   {
     "time": "2025-08-28T10:00:00Z",
-    "Rainfall": "0.3",
-    "WeatherSymbol3": "9"
+    "WeatherSymbol3": "9",
+    "Temperature": "N/A",
+    "WindSpeed": "0",
+    "WindDirection": "0",
+    "Rainfall": "0.0"
   },
   {
     "time": "2025-08-28T12:00:00Z",
     "Temperature": "16.4",
     "WindDirection": "168.7",
     "WindSpeed": "29.2",
-    "WeatherSymbol3": "1"
+    "WeatherSymbol3": "1",
+    "Rainfall": "0.0"
   },
   {
     "time": "2025-08-28T11:00:00Z",
-    "Rainfall": "0.5",
-    "WeatherSymbol3": "9"
+    "WeatherSymbol3": "9",
+    "Temperature": "N/A",
+    "WindSpeed": "0",
+    "WindDirection": "0",
+    "Rainfall": "0.0"
   },
   {
     "time": "2025-08-28T13:00:00Z",
     "Temperature": "15.6",
     "WindDirection": "164.6",
     "WindSpeed": "25.6",
-    "WeatherSymbol3": "1"
+    "WeatherSymbol3": "1",
+    "Rainfall": "0.0"
   },
   {
     "time": "2025-08-28T12:00:00Z",
-    "Rainfall": "0.6",
-    "WeatherSymbol3": "9"
+    "WeatherSymbol3": "9",
+    "Temperature": "N/A",
+    "WindSpeed": "0",
+    "WindDirection": "0",
+    "Rainfall": "0.0"
   },
   {
     "time": "2025-08-28T14:00:00Z",
     "Temperature": "15.0",
     "WindDirection": "155.4",
     "WindSpeed": "27.0",
-    "WeatherSymbol3": "1"
+    "WeatherSymbol3": "1",
+    "Rainfall": "0.0"
   },
   {
     "time": "2025-08-28T13:00:00Z",
-    "Rainfall": "0.5",
-    "WeatherSymbol3": "9"
+    "WeatherSymbol3": "9",
+    "Temperature": "N/A",
+    "WindSpeed": "0",
+    "WindDirection": "0",
+    "Rainfall": "0.0"
   },
   {
     "time": "2025-08-28T15:00:00Z",
     "Temperature": "14.3",
     "WindDirection": "161.2",
     "WindSpeed": "25.9",
-    "WeatherSymbol3": "1"
+    "WeatherSymbol3": "1",
+    "Rainfall": "0.0"
   },
   {
     "time": "2025-08-28T14:00:00Z",
-    "Rainfall": "0.5",
-    "WeatherSymbol3": "9"
+    "WeatherSymbol3": "9",
+    "Temperature": "N/A",
+    "WindSpeed": "0",
+    "WindDirection": "0",
+    "Rainfall": "0.0"
   },
   {
     "time": "2025-08-28T16:00:00Z",
     "Temperature": "15.2",
     "WindDirection": "174.4",
     "WindSpeed": "18.7",
-    "WeatherSymbol3": "1"
+    "WeatherSymbol3": "1",
+    "Rainfall": "0.0"
   },
   {
     "time": "2025-08-28T15:00:00Z",
-    "Rainfall": "0.3",
-    "WeatherSymbol3": "9"
+    "WeatherSymbol3": "9",
+    "Temperature": "N/A",
+    "WindSpeed": "0",
+    "WindDirection": "0",
+    "Rainfall": "0.0"
   },
   {
     "time": "2025-08-28T17:00:00Z",
     "Temperature": "15.0",
     "WindDirection": "210.8",
     "WindSpeed": "16.6",
-    "WeatherSymbol3": "1"
+    "WeatherSymbol3": "1",
+    "Rainfall": "0.0"
   },
   {
     "time": "2025-08-28T16:00:00Z",
-    "Rainfall": "0.2",
-    "WeatherSymbol3": "46"
+    "WeatherSymbol3": "46",
+    "Temperature": "N/A",
+    "WindSpeed": "0",
+    "WindDirection": "0",
+    "Rainfall": "0.0"
   },
   {
     "time": "2025-08-28T18:00:00Z",
     "Temperature": "14.5",
     "WindDirection": "234.6",
     "WindSpeed": "17.3",
-    "WeatherSymbol3": "1"
+    "WeatherSymbol3": "1",
+    "Rainfall": "0.0"
   },
   {
     "time": "2025-08-28T17:00:00Z",
-    "Rainfall": "0.0",
-    "WeatherSymbol3": "3"
+    "WeatherSymbol3": "3",
+    "Temperature": "N/A",
+    "WindSpeed": "0",
+    "WindDirection": "0",
+    "Rainfall": "0.0"
   },
   {
     "time": "2025-08-28T19:00:00Z",
     "Temperature": "14.0",
     "WindDirection": "232.4",
     "WindSpeed": "17.6",
-    "WeatherSymbol3": "1"
+    "WeatherSymbol3": "1",
+    "Rainfall": "0.0"
   },
   {
     "time": "2025-08-28T18:00:00Z",
-    "Rainfall": "0.0",
-    "WeatherSymbol3": "3"
+    "WeatherSymbol3": "3",
+    "Temperature": "N/A",
+    "WindSpeed": "0",
+    "WindDirection": "0",
+    "Rainfall": "0.0"
   },
   {
     "time": "2025-08-28T20:00:00Z",
     "Temperature": "13.5",
     "WindDirection": "202.9",
     "WindSpeed": "15.8",
-    "WeatherSymbol3": "1"
+    "WeatherSymbol3": "1",
+    "Rainfall": "0.0"
   },
   {
     "time": "2025-08-28T19:00:00Z",
-    "Rainfall": "0.0",
-    "WeatherSymbol3": "3"
+    "WeatherSymbol3": "3",
+    "Temperature": "N/A",
+    "WindSpeed": "0",
+    "WindDirection": "0",
+    "Rainfall": "0.0"
   },
   {
     "time": "2025-08-28T21:00:00Z",
     "Temperature": "13.0",
     "WindDirection": "196.7",
     "WindSpeed": "14.4",
-    "WeatherSymbol3": "1"
+    "WeatherSymbol3": "1",
+    "Rainfall": "0.0"
   },
   {
     "time": "2025-08-28T20:00:00Z",
-    "Rainfall": "0.0",
-    "WeatherSymbol3": "3"
+    "WeatherSymbol3": "3",
+    "Temperature": "N/A",
+    "WindSpeed": "0",
+    "WindDirection": "0",
+    "Rainfall": "0.0"
   },
   {
     "time": "2025-08-28T22:00:00Z",
     "Temperature": "12.7",
     "WindDirection": "183.0",
     "WindSpeed": "14.0",
-    "WeatherSymbol3": "1"
+    "WeatherSymbol3": "1",
+    "Rainfall": "0.0"
   },
   {
     "time": "2025-08-28T21:00:00Z",
-    "Rainfall": "0.0",
-    "WeatherSymbol3": "3"
+    "WeatherSymbol3": "3",
+    "Temperature": "N/A",
+    "WindSpeed": "0",
+    "WindDirection": "0",
+    "Rainfall": "0.0"
   },
   {
     "time": "2025-08-28T23:00:00Z",
     "Temperature": "12.8",
     "WindDirection": "168.4",
     "WindSpeed": "16.2",
-    "WeatherSymbol3": "1"
+    "WeatherSymbol3": "1",
+    "Rainfall": "0.0"
   },
   {
     "time": "2025-08-28T22:00:00Z",
-    "Rainfall": "0.0",
-    "WeatherSymbol3": "3"
+    "WeatherSymbol3": "3",
+    "Temperature": "N/A",
+    "WindSpeed": "0",
+    "WindDirection": "0",
+    "Rainfall": "0.0"
   },
   {
     "time": "2025-08-29T00:00:00Z",
     "Temperature": "12.9",
     "WindDirection": "162.2",
     "WindSpeed": "15.1",
-    "WeatherSymbol3": "1"
+    "WeatherSymbol3": "1",
+    "Rainfall": "0.0"
   },
   {
     "time": "2025-08-28T23:00:00Z",
-    "Rainfall": "0.1",
-    "WeatherSymbol3": "46"
+    "WeatherSymbol3": "46",
+    "Temperature": "N/A",
+    "WindSpeed": "0",
+    "WindDirection": "0",
+    "Rainfall": "0.0"
   },
   {
     "time": "2025-08-29T01:00:00Z",
     "Temperature": "12.7",
     "WindDirection": "167.4",
     "WindSpeed": "11.2",
-    "WeatherSymbol3": "1"
+    "WeatherSymbol3": "1",
+    "Rainfall": "0.0"
   },
   {
     "time": "2025-08-29T00:00:00Z",
-    "Rainfall": "0.1",
-    "WeatherSymbol3": "40"
+    "WeatherSymbol3": "40",
+    "Temperature": "N/A",
+    "WindSpeed": "0",
+    "WindDirection": "0",
+    "Rainfall": "0.0"
   },
   {
     "time": "2025-08-29T02:00:00Z",
     "Temperature": "12.4",
     "WindDirection": "173.7",
     "WindSpeed": "6.5",
-    "WeatherSymbol3": "1"
+    "WeatherSymbol3": "1",
+    "Rainfall": "0.0"
   },
   {
     "time": "2025-08-29T01:00:00Z",
-    "Rainfall": "0.0",
-    "WeatherSymbol3": "3"
+    "WeatherSymbol3": "3",
+    "Temperature": "N/A",
+    "WindSpeed": "0",
+    "WindDirection": "0",
+    "Rainfall": "0.0"
   },
   {
     "time": "2025-08-29T03:00:00Z",
     "Temperature": "12.6",
     "WindDirection": "268.6",
     "WindSpeed": "3.6",
-    "WeatherSymbol3": "1"
+    "WeatherSymbol3": "1",
+    "Rainfall": "0.0"
   },
   {
     "time": "2025-08-29T02:00:00Z",
-    "Rainfall": "0.0",
-    "WeatherSymbol3": "4"
+    "WeatherSymbol3": "4",
+    "Temperature": "N/A",
+    "WindSpeed": "0",
+    "WindDirection": "0",
+    "Rainfall": "0.0"
   },
   {
     "time": "2025-08-29T04:00:00Z",
     "Temperature": "13.0",
     "WindDirection": "333.4",
     "WindSpeed": "8.3",
-    "WeatherSymbol3": "1"
+    "WeatherSymbol3": "1",
+    "Rainfall": "0.0"
   },
   {
     "time": "2025-08-29T03:00:00Z",
-    "Rainfall": "0.0",
-    "WeatherSymbol3": "4"
+    "WeatherSymbol3": "4",
+    "Temperature": "N/A",
+    "WindSpeed": "0",
+    "WindDirection": "0",
+    "Rainfall": "0.0"
   },
   {
     "time": "2025-08-29T05:00:00Z",
     "Temperature": "13.5",
     "WindDirection": "339.1",
     "WindSpeed": "10.4",
-    "WeatherSymbol3": "1"
+    "WeatherSymbol3": "1",
+    "Rainfall": "0.0"
   },
   {
     "time": "2025-08-29T04:00:00Z",
-    "Rainfall": "0.1",
-    "WeatherSymbol3": "46"
+    "WeatherSymbol3": "46",
+    "Temperature": "N/A",
+    "WindSpeed": "0",
+    "WindDirection": "0",
+    "Rainfall": "0.0"
   },
   {
     "time": "2025-08-29T06:00:00Z",
     "Temperature": "13.5",
     "WindDirection": "315.4",
     "WindSpeed": "9.7",
-    "WeatherSymbol3": "1"
+    "WeatherSymbol3": "1",
+    "Rainfall": "0.0"
   },
   {
     "time": "2025-08-29T05:00:00Z",
-    "Rainfall": "0.1",
-    "WeatherSymbol3": "40"
+    "WeatherSymbol3": "40",
+    "Temperature": "N/A",
+    "WindSpeed": "0",
+    "WindDirection": "0",
+    "Rainfall": "0.0"
   },
   {
     "time": "2025-08-29T09:00:00Z",
     "Temperature": "15.3",
     "WindDirection": "315.8",
     "WindSpeed": "18.4",
-    "WeatherSymbol3": "1"
+    "WeatherSymbol3": "1",
+    "Rainfall": "0.0"
   },
   {
     "time": "2025-08-29T06:00:00Z",
-    "Rainfall": "0.5",
-    "WeatherSymbol3": "40"
+    "WeatherSymbol3": "40",
+    "Temperature": "N/A",
+    "WindSpeed": "0",
+    "WindDirection": "0",
+    "Rainfall": "0.0"
   },
   {
     "time": "2025-08-29T12:00:00Z",
     "Temperature": "15.5",
     "WindDirection": "307.2",
     "WindSpeed": "21.2",
-    "WeatherSymbol3": "1"
+    "WeatherSymbol3": "1",
+    "Rainfall": "0.0"
   },
   {
     "time": "2025-08-29T09:00:00Z",
-    "Rainfall": "0.9",
-    "WeatherSymbol3": "5"
+    "WeatherSymbol3": "5",
+    "Temperature": "N/A",
+    "WindSpeed": "0",
+    "WindDirection": "0",
+    "Rainfall": "0.0"
   },
   {
     "time": "2025-08-29T15:00:00Z",
     "Temperature": "15.4",
     "WindDirection": "283.7",
     "WindSpeed": "21.6",
-    "WeatherSymbol3": "1"
+    "WeatherSymbol3": "1",
+    "Rainfall": "0.0"
   },
   {
     "time": "2025-08-29T12:00:00Z",
-    "Rainfall": "1.0",
-    "WeatherSymbol3": "9"
+    "WeatherSymbol3": "9",
+    "Temperature": "N/A",
+    "WindSpeed": "0",
+    "WindDirection": "0",
+    "Rainfall": "0.0"
   },
   {
     "time": "2025-08-29T18:00:00Z",
     "Temperature": "14.7",
     "WindDirection": "266.2",
     "WindSpeed": "26.6",
-    "WeatherSymbol3": "1"
+    "WeatherSymbol3": "1",
+    "Rainfall": "0.0"
   },
   {
     "time": "2025-08-29T15:00:00Z",
-    "Rainfall": "0.8",
-    "WeatherSymbol3": "5"
+    "WeatherSymbol3": "5",
+    "Temperature": "N/A",
+    "WindSpeed": "0",
+    "WindDirection": "0",
+    "Rainfall": "0.0"
   },
   {
     "time": "2025-08-29T21:00:00Z",
     "Temperature": "13.3",
     "WindDirection": "248.0",
     "WindSpeed": "17.6",
-    "WeatherSymbol3": "1"
+    "WeatherSymbol3": "1",
+    "Rainfall": "0.0"
   },
   {
     "time": "2025-08-29T18:00:00Z",
-    "Rainfall": "0.0",
-    "WeatherSymbol3": "2"
+    "WeatherSymbol3": "2",
+    "Temperature": "N/A",
+    "WindSpeed": "0",
+    "WindDirection": "0",
+    "Rainfall": "0.0"
   },
   {
     "time": "2025-08-30T00:00:00Z",
     "Temperature": "12.7",
     "WindDirection": "213.8",
     "WindSpeed": "12.6",
-    "WeatherSymbol3": "1"
+    "WeatherSymbol3": "1",
+    "Rainfall": "0.0"
   },
   {
     "time": "2025-08-29T21:00:00Z",
-    "Rainfall": "0.0",
-    "WeatherSymbol3": "3"
+    "WeatherSymbol3": "3",
+    "Temperature": "N/A",
+    "WindSpeed": "0",
+    "WindDirection": "0",
+    "Rainfall": "0.0"
   },
   {
     "time": "2025-08-30T03:00:00Z",
     "Temperature": "11.8",
     "WindDirection": "178.5",
     "WindSpeed": "12.6",
-    "WeatherSymbol3": "1"
+    "WeatherSymbol3": "1",
+    "Rainfall": "0.0"
   },
   {
     "time": "2025-08-30T00:00:00Z",
-    "Rainfall": "0.0",
-    "WeatherSymbol3": "2"
+    "WeatherSymbol3": "2",
+    "Temperature": "N/A",
+    "WindSpeed": "0",
+    "WindDirection": "0",
+    "Rainfall": "0.0"
   },
   {
     "time": "2025-08-30T06:00:00Z",
     "Temperature": "12.1",
     "WindDirection": "161.6",
     "WindSpeed": "16.2",
-    "WeatherSymbol3": "1"
+    "WeatherSymbol3": "1",
+    "Rainfall": "0.0"
   },
   {
     "time": "2025-08-30T03:00:00Z",
-    "Rainfall": "0.3",
-    "WeatherSymbol3": "46"
+    "WeatherSymbol3": "46",
+    "Temperature": "N/A",
+    "WindSpeed": "0",
+    "WindDirection": "0",
+    "Rainfall": "0.0"
   },
   {
     "time": "2025-08-30T09:00:00Z",
     "Temperature": "13.2",
     "WindDirection": "173.3",
     "WindSpeed": "15.1",
-    "WeatherSymbol3": "1"
+    "WeatherSymbol3": "1",
+    "Rainfall": "0.0"
   },
   {
     "time": "2025-08-30T06:00:00Z",
-    "Rainfall": "1.6",
-    "WeatherSymbol3": "9"
+    "WeatherSymbol3": "9",
+    "Temperature": "N/A",
+    "WindSpeed": "0",
+    "WindDirection": "0",
+    "Rainfall": "0.0"
   },
   {
     "time": "2025-08-30T12:00:00Z",
     "Temperature": "13.6",
     "WindDirection": "211.8",
     "WindSpeed": "14.0",
-    "WeatherSymbol3": "1"
+    "WeatherSymbol3": "1",
+    "Rainfall": "0.0"
   },
   {
     "time": "2025-08-30T09:00:00Z",
-    "Rainfall": "1.7",
-    "WeatherSymbol3": "9"
+    "WeatherSymbol3": "9",
+    "Temperature": "N/A",
+    "WindSpeed": "0",
+    "WindDirection": "0",
+    "Rainfall": "0.0"
   },
   {
     "time": "2025-08-30T15:00:00Z",
     "Temperature": "13.5",
     "WindDirection": "235.3",
     "WindSpeed": "11.9",
-    "WeatherSymbol3": "1"
+    "WeatherSymbol3": "1",
+    "Rainfall": "0.0"
   },
   {
     "time": "2025-08-30T12:00:00Z",
-    "Rainfall": "2.8",
-    "WeatherSymbol3": "10"
+    "WeatherSymbol3": "10",
+    "Temperature": "N/A",
+    "WindSpeed": "0",
+    "WindDirection": "0",
+    "Rainfall": "0.0"
   },
   {
     "time": "2025-08-30T18:00:00Z",
     "Temperature": "13.2",
     "WindDirection": "247.8",
     "WindSpeed": "12.2",
-    "WeatherSymbol3": "1"
+    "WeatherSymbol3": "1",
+    "Rainfall": "0.0"
   },
   {
     "time": "2025-08-30T15:00:00Z",
-    "Rainfall": "2.4",
-    "WeatherSymbol3": "9"
+    "WeatherSymbol3": "9",
+    "Temperature": "N/A",
+    "WindSpeed": "0",
+    "WindDirection": "0",
+    "Rainfall": "0.0"
   },
   {
     "time": "2025-08-30T21:00:00Z",
     "Temperature": "12.9",
     "WindDirection": "270.2",
     "WindSpeed": "10.4",
-    "WeatherSymbol3": "1"
+    "WeatherSymbol3": "1",
+    "Rainfall": "0.0"
   },
   {
     "time": "2025-08-30T18:00:00Z",
-    "Rainfall": "1.1",
-    "WeatherSymbol3": "9"
+    "WeatherSymbol3": "9",
+    "Temperature": "N/A",
+    "WindSpeed": "0",
+    "WindDirection": "0",
+    "Rainfall": "0.0"
   },
   {
     "time": "2025-08-31T00:00:00Z",
     "Temperature": "13.3",
     "WindDirection": "296.0",
     "WindSpeed": "14.0",
-    "WeatherSymbol3": "1"
+    "WeatherSymbol3": "1",
+    "Rainfall": "0.0"
   },
   {
     "time": "2025-08-30T21:00:00Z",
-    "Rainfall": "1.0",
-    "WeatherSymbol3": "9"
+    "WeatherSymbol3": "9",
+    "Temperature": "N/A",
+    "WindSpeed": "0",
+    "WindDirection": "0",
+    "Rainfall": "0.0"
   },
   {
     "time": "2025-08-31T03:00:00Z",
     "Temperature": "13.4",
     "WindDirection": "302.1",
     "WindSpeed": "22.3",
-    "WeatherSymbol3": "1"
+    "WeatherSymbol3": "1",
+    "Rainfall": "0.0"
   },
   {
     "time": "2025-08-31T00:00:00Z",
-    "Rainfall": "3.0",
-    "WeatherSymbol3": "10"
+    "WeatherSymbol3": "10",
+    "Temperature": "N/A",
+    "WindSpeed": "0",
+    "WindDirection": "0",
+    "Rainfall": "0.0"
   },
   {
     "time": "2025-08-31T06:00:00Z",
     "Temperature": "12.9",
     "WindDirection": "298.0",
     "WindSpeed": "16.2",
-    "WeatherSymbol3": "1"
+    "WeatherSymbol3": "1",
+    "Rainfall": "0.0"
   },
   {
     "time": "2025-08-31T03:00:00Z",
-    "Rainfall": "1.8",
-    "WeatherSymbol3": "9"
+    "WeatherSymbol3": "9",
+    "Temperature": "N/A",
+    "WindSpeed": "0",
+    "WindDirection": "0",
+    "Rainfall": "0.0"
   },
   {
     "time": "2025-08-31T09:00:00Z",
     "Temperature": "13.9",
     "WindDirection": "298.3",
     "WindSpeed": "18.7",
-    "WeatherSymbol3": "1"
+    "WeatherSymbol3": "1",
+    "Rainfall": "0.0"
   },
   {
     "time": "2025-08-31T06:00:00Z",
-    "Rainfall": "1.7",
-    "WeatherSymbol3": "9"
+    "WeatherSymbol3": "9",
+    "Temperature": "N/A",
+    "WindSpeed": "0",
+    "WindDirection": "0",
+    "Rainfall": "0.0"
   },
   {
     "time": "2025-08-31T12:00:00Z",
     "Temperature": "14.5",
     "WindDirection": "284.7",
     "WindSpeed": "21.2",
-    "WeatherSymbol3": "1"
+    "WeatherSymbol3": "1",
+    "Rainfall": "0.0"
   },
   {
     "time": "2025-08-31T09:00:00Z",
-    "Rainfall": "1.2",
-    "WeatherSymbol3": "9"
+    "WeatherSymbol3": "9",
+    "Temperature": "N/A",
+    "WindSpeed": "0",
+    "WindDirection": "0",
+    "Rainfall": "0.0"
   },
   {
     "time": "2025-08-31T18:00:00Z",
     "Temperature": "14.6",
     "WindDirection": "296.3",
     "WindSpeed": "17.3",
-    "WeatherSymbol3": "1"
+    "WeatherSymbol3": "1",
+    "Rainfall": "0.0"
   },
   {
     "time": "2025-08-31T12:00:00Z",
-    "Rainfall": "0.6",
-    "WeatherSymbol3": "46"
+    "WeatherSymbol3": "46",
+    "Temperature": "N/A",
+    "WindSpeed": "0",
+    "WindDirection": "0",
+    "Rainfall": "0.0"
   },
   {
     "time": "2025-08-31T18:00:00Z",
-    "Rainfall": "0.8",
-    "WeatherSymbol3": "40"
+    "WeatherSymbol3": "40",
+    "Temperature": "N/A",
+    "WindSpeed": "0",
+    "WindDirection": "0",
+    "Rainfall": "0.0"
   }
 ]
