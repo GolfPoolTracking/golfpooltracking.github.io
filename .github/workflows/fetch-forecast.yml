@@ -28,18 +28,10 @@ jobs:
               "Downings_31Aug": (55.1948628, -7.8369654),
           }
 
-          start_dates = {
-              "Portsalon_28Aug": "2025-08-28",
-              "Downings_29Aug": "2025-08-29",
-              "Downings_30Aug": "2025-08-30",
-              "Downings_31Aug": "2025-08-31",
-          }
-
           forecasts = []
 
           for group, (lat, lon) in coords.items():
               url = f"http://openaccess.pf.api.met.ie/metno-wdb2ts/locationforecast?lat={lat};long={lon}"
-  
               try:
                   r = requests.get(url, timeout=10)
                   r.raise_for_status()
@@ -48,26 +40,33 @@ jobs:
                   print(f"Error fetching {group}: {e}")
                   continue
 
-              for time_item in root.findall(".//forecast/time"):
+              # Parse XML: <time><location>...</location></time>
+              for time_item in root.findall(".//time"):
                   t = time_item.attrib.get("from")
+                  if not t:
+                      continue
                   hour = int(t[11:13])
                   if not (7 <= hour <= 19):
                       continue
 
-                  temp = time_item.find(".//temperature")
-                  rain = time_item.find(".//precipitation")
-                  wind_speed = time_item.find(".//windSpeed")
-                  wind_dir = time_item.find(".//windDirection")
-                  weather_symbol = time_item.find(".//symbol")
+                  loc = time_item.find("location")
+                  if loc is None:
+                      continue
+
+                  temp = loc.find("temperature")
+                  rain = loc.find("precipitation")
+                  wind_speed = loc.find("windSpeed")
+                  wind_dir = loc.find("windDirection")
+                  symbol = loc.find("symbol")
 
                   forecasts.append({
                       "group": group,
                       "time": t,
                       "Temperature": round(float(temp.attrib["value"]), 1) if temp is not None else None,
-                      "WindDirection": round(float(wind_dir.attrib["deg"]), 0) if wind_dir is not None else None,
+                      "WindDirection": round(float(wind_dir.attrib.get("deg",0)), 0) if wind_dir is not None else None,
                       "WindSpeed": round(float(wind_speed.attrib.get("mps",0))*3.6,1) if wind_speed is not None else None,
                       "Rainfall": round(float(rain.attrib.get("value",0)),2) if rain is not None else 0,
-                      "WeatherSymbol": weather_symbol.attrib.get("number") if weather_symbol is not None else "01"
+                      "WeatherSymbol": symbol.attrib.get("number") if symbol is not None else "01"
                   })
 
           output = {
