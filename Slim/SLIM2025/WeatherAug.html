@@ -37,6 +37,7 @@
     font-weight: bold;
     margin-right: 6px;
     vertical-align: middle;
+    transform-origin: center;
   }
 </style>
 </head>
@@ -63,42 +64,47 @@ fetch('../../forecast_data/forecast.json')
     for (const group in groups) {
       const divGroup = document.createElement('div');
       divGroup.className = 'day-group';
-      let title = group.replace('_', ' ');
+      const title = group.replace('_', ' ');
       divGroup.innerHTML = `<div class="day-title">${title}</div>`;
 
       const cardsDiv = document.createElement('div');
       cardsDiv.className = 'forecast-cards';
 
       groups[group].forEach(f => {
+        const dt = new Date(f.time);
+        const hour = dt.getHours();
+        // Only show 7am-7pm
+        if (hour < 7 || hour > 19) return;
+
         const card = document.createElement('div');
         card.className = 'card';
 
-        // Determine wind direction compass
+        // Wind compass
         const deg = f.WindDirection ?? 0;
         const compass = ["N","NE","E","SE","S","SW","W","NW"];
         const index = Math.floor(((deg + 22.5) % 360)/45);
         const dir = compass[index];
 
-        // Weather symbol mapping
+        // Weather symbol
         let symbol = f.WeatherSymbol3 ?? "01";
-        symbol = symbol.padStart(2, '0');
-
-        // Determine day/night suffix if provided (otherwise use plain number)
+        symbol = symbol.padStart(2,'0');
         let suffix = '';
-        if (symbol.length === 2 && ["d","n"].includes(symbol.slice(-1))) {
+        // check for day/night in original symbol (01d/01n)
+        if (symbol.length === 3 && ['d','n'].includes(symbol.slice(-1))) {
           suffix = symbol.slice(-1);
           symbol = symbol.slice(0,2);
         }
-
         const iconUrl = `https://www.met.ie/cms/assets/uploads/2018/01/${symbol}${suffix}.png`;
 
-        // Card HTML
         card.innerHTML = `
-          <div>${new Date(f.time).getHours()}:00</div>
+          <div>${hour}:00</div>
           <img class="weather-icon" src="${iconUrl}" alt="weather">
           <div>Temp: ${f.Temperature ?? 'N/A'}°C</div>
           <div>Rain: ${f.Rainfall ?? 0} mm</div>
-          <div><span class="wind-arrow" style="transform:rotate(${deg}deg)">🡡</span>${dir} ${Math.round(f.WindSpeed ?? 0)} km/h</div>
+          <div>
+            <span class="wind-arrow" style="transform:rotate(${deg}deg)">🡡</span>
+            ${dir} ${Math.round(f.WindSpeed ?? 0)} km/h
+          </div>
         `;
         cardsDiv.appendChild(card);
       });
