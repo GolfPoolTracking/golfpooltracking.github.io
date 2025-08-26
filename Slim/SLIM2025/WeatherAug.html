@@ -17,13 +17,9 @@
       padding: 1rem;
       text-align: center;
     }
-    header h1 {
-      margin: 0;
-    }
-    .timestamp {
-      font-size: 0.9rem;
-      color: #ddd;
-    }
+    header h1 { margin: 0; }
+    .timestamp { font-size: 0.9rem; color: #ddd; }
+
     .day-group {
       margin: 1.5rem;
       padding: 1rem;
@@ -51,27 +47,21 @@
       padding: 0.8rem;
       text-align: center;
       box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      position: relative;
     }
-    .card img {
-      width: 60px;
-      height: 60px;
+    .card img { width: 60px; height: 60px; }
+    .time { font-weight: bold; margin-bottom: 0.3rem; }
+    .temp { font-size: 1.2rem; margin: 0.3rem 0; }
+    .wind { font-size: 0.9rem; margin: 0.2rem 0; display: flex; align-items: center; justify-content: center; gap: 0.2rem; }
+    .wind-arrow {
+      display: inline-block;
+      width: 16px; height: 16px;
+      border: solid #333;
+      border-width: 0 2px 2px 0;
+      padding: 2px;
+      transform: rotate(0deg);
     }
-    .time {
-      font-weight: bold;
-      margin-bottom: 0.3rem;
-    }
-    .temp {
-      font-size: 1.2rem;
-      margin: 0.3rem 0;
-    }
-    .wind {
-      font-size: 0.9rem;
-      margin: 0.2rem 0;
-    }
-    .rain {
-      font-size: 0.9rem;
-      margin: 0.2rem 0;
-    }
+    .rain { font-size: 0.9rem; margin: 0.2rem 0; }
   </style>
 </head>
 <body>
@@ -83,6 +73,12 @@
   <div id="forecast"></div>
 
   <script>
+    const weatherCodeMap = {
+      "00":"☀️","01":"🌤","02":"⛅","03":"🌥","04":"☁️",
+      "05":"🌧","06":"🌧","07":"🌦","08":"⛈","09":"🌩",
+      "10":"❄️","11":"🌫","12":"🌪"
+    };
+
     function degToCompass(num) {
       const val = Math.floor((num / 22.5) + 0.5);
       const dirs = ["N","NNE","NE","ENE","E","ESE","SE","SSE",
@@ -90,20 +86,8 @@
       return dirs[val % 16];
     }
 
-    function getIconUrl(symbolCode, localHour) {
-      if (!symbolCode) return "";
-      // Try to follow met.ie convention: 01d.png, 01n.png, or 01.png
-      let base = symbolCode.replace(/[^0-9]/g, ""); // e.g. "01"
-      let suffix = "";
-
-      if (symbolCode.includes("day") || (localHour >= 7 && localHour <= 19)) {
-        suffix = "d";
-      } else if (symbolCode.includes("night") || (localHour < 7 || localHour > 19)) {
-        suffix = "n";
-      }
-
-      let url = `https://www.met.ie/cms/assets/uploads/2018/01/${base}${suffix}.png`;
-      return url;
+    function getIcon(symbolCode) {
+      return weatherCodeMap[symbolCode] || "❓";
     }
 
     async function loadForecast() {
@@ -112,8 +96,7 @@
         if (!res.ok) throw new Error("Failed to load forecast");
         const data = await res.json();
 
-        document.getElementById("timestamp").textContent = 
-          "Updated: " + data.timestamp;
+        document.getElementById("timestamp").textContent = "Updated: " + new Date(data.timestamp).toLocaleString();
 
         const container = document.getElementById("forecast");
         container.innerHTML = "";
@@ -143,13 +126,10 @@
 
             const timeDiv = document.createElement("div");
             timeDiv.className = "time";
-            timeDiv.textContent = f.time;
+            timeDiv.textContent = new Date(f.time).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
 
-            const img = document.createElement("img");
-            let hourMatch = f.time.match(/(\d{2}):(\d{2})/);
-            let hour = hourMatch ? parseInt(hourMatch[1]) : 12;
-            img.src = getIconUrl(f.WeatherSymbol3 || "01", hour);
-            img.alt = "Weather";
+            const iconDiv = document.createElement("div");
+            iconDiv.textContent = getIcon(f.WeatherSymbol3);
 
             const tempDiv = document.createElement("div");
             tempDiv.className = "temp";
@@ -159,7 +139,11 @@
             windDiv.className = "wind";
             if (f.WindDirection != null && f.WindSpeed != null) {
               const dir = degToCompass(f.WindDirection);
-              windDiv.textContent = `Wind: ${Math.round(f.WindSpeed)} km/h ${dir}`;
+              const arrow = document.createElement("span");
+              arrow.className = "wind-arrow";
+              arrow.style.transform = `rotate(${f.WindDirection}deg)`;
+              windDiv.textContent = `${Math.round(f.WindSpeed)} km/h ${dir} `;
+              windDiv.appendChild(arrow);
             } else {
               windDiv.textContent = "Wind: -";
             }
@@ -169,7 +153,7 @@
             rainDiv.textContent = `Rain: ${f.Rainfall ?? 0} mm`;
 
             card.appendChild(timeDiv);
-            card.appendChild(img);
+            card.appendChild(iconDiv);
             card.appendChild(tempDiv);
             card.appendChild(windDiv);
             card.appendChild(rainDiv);
