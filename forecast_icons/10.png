@@ -7,7 +7,7 @@
         <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta id="token" name="token" content="lmNxnhfJY687UZOenNi2mgqmO5A7KuZvD6VtQFF6" />
+<meta id="token" name="token" content="5OG4rol9oHvmBCvPGPAuJAndMIUCPU2ep9Hrhe1d" />
 <meta property="og:url" content="https://www.met.ie/cms/assets/uploads/2018/01/10.png" />
 <meta property="og:type" content="website" />
 <meta property="og:title"  content="Met Éireann - The Irish Meteorological Service" />
@@ -35,8 +35,8 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.2/jquery.fancybox.css" />
         <script>
-    window.Laravel = {"csrfToken":"lmNxnhfJY687UZOenNi2mgqmO5A7KuZvD6VtQFF6"};
-    window.cdnUrl = "https://cdn-b.metweb.ie";
+    window.Laravel = {"csrfToken":"5OG4rol9oHvmBCvPGPAuJAndMIUCPU2ep9Hrhe1d"};
+    window.cdnUrl = "https://cdn-a.metweb.ie";
     window.cdnVersion = "8004";
 
 </script>
@@ -1257,7 +1257,7 @@
     <script src="https://cdn-b.metweb.ie/js/typeahead.js"></script>
     <script src="https://cdn-b.metweb.ie/js/openlayers.js"></script>
 
-            <script src="/js/app-min.js?v=1756244087"></script>
+            <script src="/js/app-min.js?v=1756244701"></script>
     
     <script>
     jQuery('.carousel').carousel({ interval: false });
