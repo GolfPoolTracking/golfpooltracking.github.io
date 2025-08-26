@@ -8,6 +8,7 @@ on:
 jobs:
   fetch_forecast:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -38,10 +39,10 @@ jobs:
 
           # Configuration for each day/course
           locations = [
-            {"file": "forecast_data/raw_portsalon.xml", "group": "Portsalon_28Aug", "date": datetime.date(2025,8,28), "hours": range(7,20)},
-            {"file": "forecast_data/raw_downings.xml", "group": "Old Tom Morris_29Aug", "date": datetime.date(2025,8,29), "hours": range(7,20)},
-            {"file": "forecast_data/raw_downings.xml", "group": "St Patrick's_30Aug", "date": datetime.date(2025,8,30), "hours": range(7,20)},
-            {"file": "forecast_data/raw_downings.xml", "group": "Sandy Hills_31Aug", "date": datetime.date(2025,8,31), "hours": range(7,16)},
+              {"file": "forecast_data/raw_portsalon.xml", "group": "Portsalon_28Aug", "date": datetime.date(2025,8,28), "hours": range(7,20)},
+              {"file": "forecast_data/raw_downings.xml", "group": "Old Tom Morris_29Aug", "date": datetime.date(2025,8,29), "hours": range(7,20)},
+              {"file": "forecast_data/raw_downings.xml", "group": "St Patrick's_30Aug", "date": datetime.date(2025,8,30), "hours": range(7,20)},
+              {"file": "forecast_data/raw_downings.xml", "group": "Sandy Hills_31Aug", "date": datetime.date(2025,8,31), "hours": range(7,16)},
           ]
 
           forecasts = []
@@ -62,24 +63,35 @@ jobs:
                           continue
 
                       loc_data = t.get("location", {})
-                      # Build forecast entry
                       entry = {"group": loc["group"], "time": dt.isoformat()}
 
                       # Temperature
                       temp = loc_data.get("temperature", {})
                       if isinstance(temp, dict):
-                          entry["Temperature"] = float(temp.get("@value", "N/A"))
+                          try:
+                              entry["Temperature"] = float(temp.get("@value"))
+                          except (TypeError, ValueError):
+                              entry["Temperature"] = None
 
                       # Wind
                       winddir = loc_data.get("windDirection", {})
-                      entry["WindDirection"] = float(winddir.get("@deg", "0"))
-                      windspd = loc_data.get("windSpeed", {})
-                      entry["WindSpeed"] = float(windspd.get("@mps", "0")) * 3.6  # m/s -> km/h
+                      try:
+                          entry["WindDirection"] = float(winddir.get("@deg", 0))
+                      except (TypeError, ValueError):
+                          entry["WindDirection"] = None
 
-                      # Rain (precipitation)
+                      windspd = loc_data.get("windSpeed", {})
+                      try:
+                          entry["WindSpeed"] = float(windspd.get("@mps", 0)) * 3.6  # m/s -> km/h
+                      except (TypeError, ValueError):
+                          entry["WindSpeed"] = None
+
+                      # Rainfall
                       precip = loc_data.get("precipitation", {})
-                      if isinstance(precip, dict):
-                          entry["Rainfall"] = float(precip.get("@value", "0"))
+                      try:
+                          entry["Rainfall"] = float(precip.get("@value", 0))
+                      except (TypeError, ValueError):
+                          entry["Rainfall"] = None
 
                       # Weather symbol
                       symbol = loc_data.get("symbol", {})
