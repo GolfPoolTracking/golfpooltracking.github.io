@@ -1,10 +1,30 @@
+name: Fetch Met Éireann Forecast
+
+on:
+  schedule:
+    - cron: '10 0 * * *'  # daily at 00:10 UTC
+  workflow_dispatch:      # allows manual trigger
+
+jobs:
+  fetch_forecast:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Install Python dependencies
+        run: |
+          python3 -m pip install --upgrade pip
+          pip install requests
+
       - name: Fetch & Convert Forecasts
         run: |
           mkdir -p forecast_data
           python3 - <<'PY'
           import requests, xml.etree.ElementTree as ET, json, datetime
 
-          # Locations and corresponding date ranges
+          # Locations and date ranges
           locations = {
               "Portsalon_28Aug": (55.192, -7.633, datetime.datetime(2025,8,28,11), datetime.datetime(2025,8,28,19)),
               "Downings_29Aug": (55.267, -7.633, datetime.datetime(2025,8,29,11), datetime.datetime(2025,8,29,19)),
@@ -20,7 +40,6 @@
               resp.raise_for_status()
               root = ET.fromstring(resp.content)
 
-              # Use a dict keyed by time to combine multiple measurements into one entry
               time_dict = {}
 
               for time_el in root.findall(".//time"):
@@ -41,12 +60,10 @@
 
                   entry = time_dict[key]
 
-                  # Temperature
                   temp = loc_el.find("temperature")
                   if temp is not None:
                       entry["Temperature"] = float(temp.attrib.get("value", entry.get("Temperature", 0)))
 
-                  # Wind
                   winddir = loc_el.find("windDirection")
                   if winddir is not None:
                       entry["WindDirection"] = float(winddir.attrib.get("deg", entry.get("WindDirection", 0)))
@@ -54,22 +71,18 @@
                   windspeed = loc_el.find("windSpeed")
                   if windspeed is not None:
                       mps = float(windspeed.attrib.get("mps", 0))
-                      entry["WindSpeed"] = round(mps * 3.6)  # km/h
+                      entry["WindSpeed"] = round(mps * 3.6)
 
-                  # Rain
                   precip = loc_el.find("precipitation")
                   if precip is not None:
                       entry["Rainfall"] = float(precip.attrib.get("value", entry.get("Rainfall", 0)))
 
-                  # Symbol
                   symbol = loc_el.find("symbol")
                   if symbol is not None:
                       entry["WeatherSymbol3"] = symbol.attrib.get("number", entry.get("WeatherSymbol3", "1"))
 
-              # Add all combined entries to list
               all_forecasts.extend(time_dict.values())
 
-          # Write JSON with timestamp
           result = {
               "timestamp": datetime.datetime.utcnow().isoformat() + "Z",
               "forecasts": all_forecasts
@@ -79,3 +92,11 @@
               json.dump(result, f, indent=2)
           print(f"Wrote {len(all_forecasts)} forecast entries to forecast.json")
           PY
+
+      - name: Commit and push forecast.json
+        run: |
+          git config --local user.name "github-actions[bot]"
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git add forecast_data/forecast.json
+          git commit -m "Update forecast.json [skip ci]" || echo "No changes"
+          git push
