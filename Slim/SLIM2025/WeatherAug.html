@@ -28,67 +28,114 @@ img.weather-icon{width:50px; height:50px;}
 <div id="forecast"></div>
 
 <script>
+// Convert degrees to compass
 function degToCompass(num){
   const val=Math.floor((num/22.5)+0.5);
   const dirs=["N","NNE","NE","ENE","E","ESE","SE","SSE","S","SSW","SW","WSW","W","WNW","NW","NNW"];
   return dirs[val%16];
 }
+
+// Get local hour from ISO timestamp
 function getLocalHour(time){ return new Date(time).getHours(); }
+
+// Check if a local file exists (synchronous)
+function fileExists(path){
+  try {
+    const xhr = new XMLHttpRequest();
+    xhr.open('HEAD', path, false);
+    xhr.send();
+    return xhr.status != 404;
+  } catch(e){ return false; }
+}
+
+// Get the appropriate icon
 function getIconUrl(symbol,hour){
   if(!symbol) return "../../forecast_icons/00.png";
-  let num=String(symbol).padStart(2,"0");
-  let suffix=(hour>=7 && hour<=19)?"d":"n";
-  return `../../forecast_icons/${num}${suffix}.png`;
+  let num = String(symbol).padStart(2,"0");
+  const suffix = (hour>=7 && hour<=19) ? "d" : "n";
+  const variants = [`${num}${suffix}.png`, `${num}.png`];
+  for(const v of variants){
+    const path = `../../forecast_icons/${v}`;
+    if(fileExists(path)) return path;
+  }
+  return "../../forecast_icons/00.png";
 }
 
 async function loadForecast(){
   try{
-    const res=await fetch("../../forecast_data/forecast.json");
+    const res = await fetch("../../forecast_data/forecast.json");
     if(!res.ok) throw new Error("Failed to load forecast");
-    const data=await res.json();
+    const data = await res.json();
 
-    document.getElementById("timestamp").textContent="Updated: "+new Date(data.timestamp).toLocaleString();
+    document.getElementById("timestamp").textContent = "Updated: "+new Date(data.timestamp).toLocaleString();
 
-    const container=document.getElementById("forecast");
+    const container = document.getElementById("forecast");
     container.innerHTML="";
 
-    const grouped={};
+    // Group forecasts by group name
+    const grouped = {};
     for(const f of data.forecasts){
       if(!grouped[f.group]) grouped[f.group]=[];
       grouped[f.group].push(f);
     }
 
     for(const [group, forecasts] of Object.entries(grouped)){
+      // Sort by time
       forecasts.sort((a,b)=>new Date(a.time)-new Date(b.time));
 
-      const dayDiv=document.createElement("div"); dayDiv.className="day-group";
-      const title=document.createElement("div"); title.className="day-title"; title.textContent=group.replace("_"," "); 
+      // Remove duplicates (just in case)
+      const seen = new Set();
+      const unique = [];
+      forecasts.forEach(f=>{
+        if(!seen.has(f.time)){
+          seen.add(f.time);
+          unique.push(f);
+        }
+      });
+
+      const dayDiv = document.createElement("div");
+      dayDiv.className="day-group";
+      const title = document.createElement("div");
+      title.className="day-title";
+      title.textContent = group.replace("_"," ");
       dayDiv.appendChild(title);
 
-      const cards=document.createElement("div"); cards.className="forecast-cards";
+      const cards = document.createElement("div");
+      cards.className="forecast-cards";
 
-      forecasts.forEach(f=>{
-        const card=document.createElement("div"); card.className="card";
-        const hour=getLocalHour(f.time);
+      unique.forEach(f=>{
+        const card = document.createElement("div");
+        card.className="card";
 
-        const timeDiv=document.createElement("div"); timeDiv.className="time";
-        timeDiv.textContent=new Date(f.time).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
+        const hour = getLocalHour(f.time);
 
-        const iconImg=document.createElement("img"); iconImg.className="weather-icon";
-        iconImg.src=getIconUrl(f.WeatherSymbol,hour); iconImg.alt="Weather";
+        const timeDiv = document.createElement("div");
+        timeDiv.className="time";
+        timeDiv.textContent = new Date(f.time).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
 
-        const tempDiv=document.createElement("div"); tempDiv.className="temp";
-        tempDiv.textContent=(f.Temperature ?? "-")+"°C";
+        const iconImg = document.createElement("img");
+        iconImg.className="weather-icon";
+        iconImg.src = getIconUrl(f.WeatherSymbol,hour);
+        iconImg.alt="Weather";
 
-        const windDiv=document.createElement("div"); windDiv.className="wind";
+        const tempDiv = document.createElement("div");
+        tempDiv.className="temp";
+        tempDiv.textContent = (f.Temperature ?? "-")+"°C";
+
+        const windDiv = document.createElement("div");
+        windDiv.className="wind";
         if(f.WindDirection!=null && f.WindSpeed!=null){
-          const dir=degToCompass(f.WindDirection);
-          const arrow=document.createElement("span"); arrow.className="wind-arrow"; arrow.style.transform=`rotate(${f.WindDirection}deg)`;
-          windDiv.textContent=`${Math.round(f.WindSpeed)} km/h ${dir} `; windDiv.appendChild(arrow);
+          const dir = degToCompass(f.WindDirection);
+          const arrow = document.createElement("span");
+          arrow.className="wind-arrow";
+          arrow.style.transform=`rotate(${f.WindDirection}deg)`;
+          windDiv.textContent = `${Math.round(f.WindSpeed)} km/h ${dir} `;
+          windDiv.appendChild(arrow);
         } else { windDiv.textContent="Wind: -"; }
 
-        const rainDiv=document.createElement("div"); rainDiv.className="rain";
-        rainDiv.textContent=`Rain: ${f.Rainfall ?? 0} mm`;
+        const rainDiv = document.createElement("div");
+        rainDiv.className="rain";
+        rainDiv.textContent = `Rain: ${f.Rainfall ?? 0} mm`;
 
         card.appendChild(timeDiv);
         card.appendChild(iconImg);
