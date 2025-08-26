@@ -35,22 +35,21 @@ function degToArrow(num) {
   return arrows[val % 8];
 }
 
-// Returns both main icon URL and fallback URL
 function getIconUrl(symbolNumber, hour) {
-  if (!symbolNumber) return {url: "", fallback: ""};
+  if (!symbolNumber) return { url: "", fallback: "" };
   const numStr = String(symbolNumber).padStart(2,'0');
   let suffix = "";
   if (hour !== undefined) {
-    suffix = (hour >= 6 && hour < 18) ? "d" : "n";
+    suffix = (hour >= 6 && hour < 18) ? "d" : "n"; // day 6–17
   }
   const urlWithSuffix = `https://www.met.ie/cms/assets/uploads/2018/01/${numStr}${suffix}.png`;
   const urlNoSuffix = `https://www.met.ie/cms/assets/uploads/2018/01/${numStr}.png`;
-  return {url: urlWithSuffix, fallback: urlNoSuffix};
+  return { url: urlWithSuffix, fallback: urlNoSuffix };
 }
 
 async function loadForecast() {
   try {
-    const resp = await fetch("../../forecast_data/forecast.json");
+    const resp = await fetch("../forecast_data/forecast.json");
     if (!resp.ok) throw new Error("Fetch failed");
     const data = await resp.json();
 
@@ -101,11 +100,13 @@ async function loadForecast() {
         const windArrow = degToArrow(e.WindDirection);
         const wind = (e.WindSpeed !== undefined) ? `${Math.round(e.WindSpeed)} km/h ${windDir} ${windArrow}` : "";
 
+        const rainText = e.Rainfall !== undefined ? `Rain: ${e.Rainfall} mm` : '';
+
         card.innerHTML = `
           <h3>${timeStr}</h3>
           <div>${e.Temperature !== undefined ? e.Temperature + '°C' : ''}</div>
           <div>${iconTag}</div>
-          <div>${e.Rainfall !== undefined ? 'Rain: ' + e.Rainfall + ' mm' : ''}</div>
+          <div>${rainText}</div>
           <div class="wind">${wind}</div>
         `;
         cardsDiv.appendChild(card);
