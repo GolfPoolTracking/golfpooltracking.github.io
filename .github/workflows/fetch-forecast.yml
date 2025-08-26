@@ -3,7 +3,7 @@ name: Fetch Met Éireann Forecast
 on:
   schedule:
     - cron: '0 * * * *'  # Every hour on the hour UTC
-  workflow_dispatch:      # Allows manual trigger
+  workflow_dispatch:
 
 jobs:
   fetch_forecast:
@@ -26,23 +26,20 @@ jobs:
           import datetime
           import pytz
 
-          # Load XML
           tree = ET.parse('forecast_data/raw_forecast.xml')
           root = tree.getroot()
 
           tz = pytz.UTC
-          # Adjust date range if needed
           start = datetime.datetime(2025, 8, 28, tzinfo=tz)
           end   = datetime.datetime(2025, 8, 31, 23, 59, tzinfo=tz)
 
-          forecasts = []
+          forecasts_dict = {}
 
           for time_el in root.findall('.//time'):
               time_str = time_el.attrib.get('from')
               if not time_str:
                   continue
 
-              # Parse time with timezone
               dt = datetime.datetime.fromisoformat(time_str.replace('Z', '+00:00'))
               if not (start <= dt <= end):
                   continue
@@ -51,7 +48,7 @@ jobs:
               if loc is None:
                   continue
 
-              # Determine group based on date
+              # Determine group
               day = dt.day
               group = None
               if day == 28: group = "Portsalon_28Aug"
@@ -59,42 +56,41 @@ jobs:
               elif day == 30: group = "Downings_30Aug"
               elif day == 31: group = "Downings_31Aug"
 
-              entry = {'group': group, 'time': dt.isoformat()}
+              key = group + "_" + dt.isoformat()
+              if key not in forecasts_dict:
+                  forecasts_dict[key] = {'group': group, 'time': dt.isoformat()}
 
-              # Temperature
+              entry = forecasts_dict[key]
+
+              # Merge values
               temp = loc.find('temperature')
-              entry['Temperature'] = float(temp.attrib.get('value')) if temp is not None else None
+              if temp is not None:
+                  entry['Temperature'] = float(temp.attrib.get('value', entry.get('Temperature', 0)))
 
-              # Wind
               winddir = loc.find('windDirection')
-              entry['WindDirection'] = float(winddir.attrib.get('deg')) if winddir is not None else None
+              if winddir is not None:
+                  entry['WindDirection'] = float(winddir.attrib.get('deg', entry.get('WindDirection', 0)))
+
               windspeed = loc.find('windSpeed')
-              entry['WindSpeed'] = float(windspeed.attrib.get('mps',0)) * 3.6 if windspeed is not None else None  # convert m/s to km/h
+              if windspeed is not None:
+                  entry['WindSpeed'] = float(windspeed.attrib.get('mps', 0)) * 3.6  # m/s -> km/h
 
-              # Precipitation
               precip = loc.find('precipitation')
-              entry['Rainfall'] = float(precip.attrib.get('value', 0)) if precip is not None else 0.0
+              if precip is not None:
+                  entry['Rainfall'] = float(precip.attrib.get('value', entry.get('Rainfall', 0)))
 
-              # Weather symbol
               symbol = loc.find('symbol')
-              entry['WeatherSymbol3'] = symbol.attrib.get('number') if symbol is not None else None
+              if symbol is not None:
+                  entry['WeatherSymbol3'] = symbol.attrib.get('number', entry.get('WeatherSymbol3'))
 
-              forecasts.append(entry)
+          forecasts = list(forecasts_dict.values())
 
-          # Remove duplicates by group + time
-          merged = {}
-          for f in forecasts:
-              key = f['group'] + "_" + f['time']
-              merged[key] = f
-          forecasts = list(merged.values())
-
-          # Build final JSON
           output = {
               "timestamp": datetime.datetime.now(tz).isoformat(),
               "forecasts": forecasts
           }
 
-          with open('forecast_data/forecast.json','w') as f:
+          with open('forecast_data/forecast.json', 'w') as f:
               json.dump(output, f, indent=2)
 
           print(f"Wrote {len(forecasts)} forecast entries to forecast_data/forecast.json")
