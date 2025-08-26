@@ -1,0 +1,112 @@
+name: Fetch Met Éireann Forecast 4-7 Sep
+
+on:
+  schedule:
+    - cron: '0 * * * *'  # every hour on the hour UTC
+  workflow_dispatch:
+
+jobs:
+  fetch_forecast_sep:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Install dependencies
+        run: |
+          python3 -m pip install --upgrade pip
+          pip install requests xmltodict pytz
+
+      - name: Fetch Met Éireann XML
+        run: |
+          mkdir -p forecast_data
+          curl -s "http://openaccess.pf.api.met.ie/metno-wdb2ts/locationforecast?lat=55.267;long=-7.633" -o forecast_data/raw_forecast_sep.xml
+
+      - name: Convert XML to JSON
+        run: |
+          python3 - <<'PYCODE'
+          import xml.etree.ElementTree as ET
+          import json
+          import datetime
+          import pytz
+
+          tree = ET.parse('forecast_data/raw_forecast_sep.xml')
+          root = tree.getroot()
+
+          tz = datetime.timezone.utc
+          groups = {
+              "Portsalon_4Sep": (datetime.datetime(2025,9,4,11,0, tzinfo=tz), datetime.datetime(2025,9,4,19,0, tzinfo=tz)),
+              "OldTomMorris_5Sep": (datetime.datetime(2025,9,5,11,0, tzinfo=tz), datetime.datetime(2025,9,5,19,0, tzinfo=tz)),
+              "StPatricks_6Sep": (datetime.datetime(2025,9,6,11,0, tzinfo=tz), datetime.datetime(2025,9,6,19,0, tzinfo=tz)),
+              "SandyHills_7Sep": (datetime.datetime(2025,9,7,7,0, tzinfo=tz), datetime.datetime(2025,9,7,15,0, tzinfo=tz))
+          }
+
+          forecasts = []
+          seen = set()
+
+          for time_el in root.findall('.//time'):
+              time_str = time_el.attrib.get('from')
+              if not time_str:
+                  continue
+              dt = datetime.datetime.fromisoformat(time_str.replace('Z', '+00:00'))
+
+              loc = time_el.find('location')
+              if loc is None:
+                  continue
+
+              group_name = None
+              for gname, (start_dt, end_dt) in groups.items():
+                  if start_dt <= dt <= end_dt:
+                      group_name = gname
+                      break
+              if not group_name:
+                  continue
+
+              key = (group_name, dt)
+              if key in seen:
+                  continue
+              seen.add(key)
+
+              entry = {"group": group_name, "time": dt.isoformat()}
+
+              temp = loc.find('temperature')
+              if temp is not None:
+                  entry['Temperature'] = round(float(temp.attrib.get('value',0)),1)
+
+              winddir = loc.find('windDirection')
+              if winddir is not None:
+                  entry['WindDirection'] = float(winddir.attrib.get('deg',0))
+
+              windspeed = loc.find('windSpeed')
+              if windspeed is not None:
+                  entry['WindSpeed'] = round(float(windspeed.attrib.get('mps',0))*3.6)
+
+              precip = loc.find('precipitation')
+              if precip is not None:
+                  entry['Rainfall'] = round(float(precip.attrib.get('value',0)),1)
+
+              symbol = loc.find('symbol')
+              if symbol is not None:
+                  entry['WeatherSymbol3'] = symbol.attrib.get('number')
+
+              forecasts.append(entry)
+
+          if not forecasts:
+              forecasts = [{"group":"Portsalon_4Sep","time":datetime.datetime.now(tz).isoformat(),
+                            "Temperature":"N/A","Rainfall":0,"WindSpeed":0,"WindDirection":0,"WeatherSymbol3":"1"}]
+
+          out = {"timestamp": datetime.datetime.now(tz).isoformat(), "forecasts": forecasts}
+
+          with open('forecast_data/forecast_sep.json','w') as f:
+              json.dump(out, f, indent=2)
+          print(f"Wrote {len(forecasts)} forecast entries to forecast_data/forecast_sep.json")
+          PYCODE
+
+      - name: Commit and push forecast_sep.json
+        run: |
+          git config --local user.name "github-actions[bot]"
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git add forecast_data/forecast_sep.json
+          git commit -m "Update forecast_sep.json [skip ci]" || echo "No changes"
+          git push
