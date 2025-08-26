@@ -1,90 +1,154 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SLIM 2025 Forecast</title>
-<style>
-  body { font-family: Arial, sans-serif; background: #222; color: #fff; padding: 20px; }
-  h1 { text-align: center; margin-bottom: 30px; }
-  .forecast-card { background: rgba(0,0,0,0.7); padding: 15px; margin: 10px 0; border-radius: 10px; display: flex; align-items: center; gap: 15px; }
-  .forecast-card img { width: 50px; height: 50px; }
-  .forecast-info { display: flex; flex-direction: column; }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Golf Forecast</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f4f8;
+      margin: 0;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .day {
+      margin-bottom: 40px;
+    }
+    .day h2 {
+      text-align: left;
+      margin-bottom: 10px;
+      border-bottom: 2px solid #ccc;
+      padding-bottom: 5px;
+    }
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 15px;
+    }
+    .card {
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      padding: 15px;
+      text-align: center;
+    }
+    .time {
+      font-size: 1.2em;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+    .weather-icon {
+      width: 48px;
+      height: 48px;
+      margin: 0 auto 10px;
+    }
+    .detail {
+      font-size: 0.9em;
+      margin: 5px 0;
+    }
+  </style>
 </head>
 <body>
-<h1>SLIM 2025 - Donegal Forecast</h1>
-<div id="forecast-container">Loading forecast...</div>
+  <h1>Golf Weather Forecast</h1>
+  <div id="forecast"></div>
 
-<script>
-async function loadForecast() {
-    const container = document.getElementById('forecast-container');
-    container.innerHTML = '';
+  <script>
+    async function loadForecast() {
+      try {
+        const response = await fetch('forecast_data/forecast.json');
+        if (!response.ok) throw new Error("Failed to load forecast.json");
 
-    try {
-        const portsalonRes = await fetch('../../forecast_data/portsalon.json');
-        const downingsRes = await fetch('../../forecast_data/downings.json');
-        const portsalonData = await portsalonRes.json();
-        const downingsData = await downingsRes.json();
+        const data = await response.json();
 
-        const allData = [
-            ...portsalonData.map(f => ({...f, location: 'Portsalon'})),
-            ...downingsData.map(f => ({...f, location: 'Downings'}))
+        // Define sessions
+        const sessions = [
+          { location: "Portsalon", date: "2025-08-28", start: 11, end: 19 },
+          { location: "Downings", date: "2025-08-29", start: 11, end: 19 },
+          { location: "Downings", date: "2025-08-30", start: 11, end: 19 },
+          { location: "Downings", date: "2025-08-31", start: 7, end: 15 },
         ];
 
-        // Filter hours according to your schedule
-        function isInTimeRange(f) {
-            const dt = new Date(f.time);
+        const container = document.getElementById("forecast");
+        container.innerHTML = "";
+
+        for (const session of sessions) {
+          const dayDiv = document.createElement("div");
+          dayDiv.className = "day";
+
+          const dateObj = new Date(session.date);
+          const dayName = dateObj.toLocaleDateString("en-GB", { weekday: "long" });
+          const title = document.createElement("h2");
+          title.textContent = `${dayName} ${session.date} – ${session.location}`;
+          dayDiv.appendChild(title);
+
+          const cardsDiv = document.createElement("div");
+          cardsDiv.className = "cards";
+
+          const filtered = data.filter(entry => {
+            const dt = new Date(entry.time);
             const hour = dt.getUTCHours();
-            const day = dt.getUTCDate();
-            const loc = f.location;
-            if(loc === 'Portsalon' && day === 28) return hour >= 11 && hour <= 19;
-            if(loc === 'Downings' && (day === 29 || day === 30)) return hour >= 11 && hour <= 19;
-            if(loc === 'Downings' && day === 31) return hour >= 7 && hour <= 15;
-            return false;
+            const dateStr = dt.toISOString().slice(0,10);
+            return dateStr === session.date && hour >= session.start && hour < session.end;
+          });
+
+          filtered.forEach(entry => {
+            const card = document.createElement("div");
+            card.className = "card";
+
+            const timeDiv = document.createElement("div");
+            timeDiv.className = "time";
+            const dt = new Date(entry.time);
+            timeDiv.textContent = dt.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" });
+            card.appendChild(timeDiv);
+
+            // Weather symbol
+            if (entry.WeatherSymbol3) {
+              const img = document.createElement("img");
+              img.className = "weather-icon";
+              img.src = `https://api.met.no/weatherapi/weathericon/2.0/icon/${entry.WeatherSymbol3}.svg`;
+              img.alt = "Weather icon";
+              card.appendChild(img);
+            }
+
+            // Temperature
+            const tempDiv = document.createElement("div");
+            tempDiv.className = "detail";
+            tempDiv.textContent = `Temp: ${entry.Temperature}°C`;
+            card.appendChild(tempDiv);
+
+            // ✅ Rainfall (show range if available)
+            const rainDiv = document.createElement("div");
+            rainDiv.className = "detail";
+            if (typeof entry.Rainfall === "object" && entry.Rainfall.min && entry.Rainfall.max) {
+              rainDiv.textContent = `Rain: ${entry.Rainfall.min}–${entry.Rainfall.max} mm`;
+            } else {
+              rainDiv.textContent = `Rain: ${entry.Rainfall} mm`;
+            }
+            card.appendChild(rainDiv);
+
+            // Wind
+            const windDiv = document.createElement("div");
+            windDiv.className = "detail";
+            windDiv.textContent = `Wind: ${entry.WindSpeed} km/h (${entry.WindDirection}°)`;
+            card.appendChild(windDiv);
+
+            cardsDiv.appendChild(card);
+          });
+
+          dayDiv.appendChild(cardsDiv);
+          container.appendChild(dayDiv);
         }
-
-        const filtered = allData.filter(isInTimeRange);
-
-        if(filtered.length === 0) {
-            container.innerHTML = 'No forecast available yet.';
-            return;
-        }
-
-        // Remove duplicate hours (keep first)
-        const uniqueHours = {};
-        filtered.forEach(f => {
-            const key = f.time.substring(0,13); // YYYY-MM-DDTHH
-            if(!uniqueHours[key]) uniqueHours[key] = f;
-        });
-
-        const sorted = Object.values(uniqueHours).sort((a,b) => new Date(a.time) - new Date(b.time));
-
-        sorted.forEach(f => {
-            const dt = new Date(f.time);
-            const dayName = dt.toLocaleDateString('en-GB', { weekday: 'long' });
-            const dateStr = dt.toLocaleDateString('en-GB');
-            const timeStr = dt.toLocaleTimeString('en-GB', { hour: '2-digit', minute:'2-digit' });
-
-            const card = document.createElement('div');
-            card.className = 'forecast-card';
-            card.innerHTML = `
-                <img src="https://www.met.ie/Open_Data/images/icons/${f.WeatherSymbol3}.png" alt="Weather">
-                <div class="forecast-info">
-                    <strong>${dayName}, ${dateStr}, ${timeStr} (${f.location})</strong>
-                    Temp: ${f.Temperature}°C | Rain: ${f.Rainfall}mm | Wind: ${f.WindSpeed} km/h ${f.WindDirection}°
-                </div>
-            `;
-            container.appendChild(card);
-        });
-
-    } catch (err) {
+      } catch (err) {
         console.error(err);
-        container.innerHTML = 'Error loading forecast.';
+        document.getElementById("forecast").innerHTML = "<p style='color:red;'>Error loading forecast</p>";
+      }
     }
-}
 
-loadForecast();
-</script>
+    loadForecast();
+  </script>
 </body>
 </html>
