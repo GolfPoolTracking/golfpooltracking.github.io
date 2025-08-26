@@ -1,176 +1,102 @@
-name: Fetch Met Éireann Forecasts
+name: Fetch Met Éireann Forecast
 
 on:
   schedule:
-    - cron: '10 0 * * *'  # daily at 00:10 UTC
-  workflow_dispatch:
+    - cron: '10 0 * * *'   # every day at 00:10 UTC
+  workflow_dispatch:        # manual trigger
 
 jobs:
   fetch_forecast:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.x"
-
-      - name: Install Python deps
-        run: |
-          python -m pip install --upgrade pip
-          pip install beautifulsoup4 lxml
-
-      - name: Fetch Met Éireann XMLs
+      - name: Fetch & Convert Forecasts
         run: |
           mkdir -p forecast_data
-          # Portsalon (adjust lat/long if you prefer)
-          curl -s "http://openaccess.pf.api.met.ie/metno-wdb2ts/locationforecast?lat=55.200;long=-7.633" -o forecast_data/raw_portsalon.xml
-          # Downings (adjust lat/long if you prefer)
-          curl -s "http://openaccess.pf.api.met.ie/metno-wdb2ts/locationforecast?lat=55.183;long=-7.833" -o forecast_data/raw_downings.xml
+          python3 - <<'PY'
+          import requests, xml.etree.ElementTree as ET, json, datetime
 
-      - name: Convert XML -> JSON (robust merging of precipitation)
-        run: |
-          python - <<'PY'
-          import os, json, hashlib, sys
-          from bs4 import BeautifulSoup
-          import datetime
+          # Locations
+          locations = {
+              "Portsalon": (55.192, -7.633),   # 4th Sep
+              "Downings": (55.267, -7.633),   # 5–7 Sep
+          }
 
-          # date window (inclusive start, exclusive end)
-          START = datetime.datetime(2025, 8, 28)
-          END   = datetime.datetime(2025, 9, 1)
+          # Date ranges
+          date_ranges = {
+              "Portsalon_4Sep": (datetime.datetime(2025,9,4,11), datetime.datetime(2025,9,4,19)),
+              "Downings_5Sep": (datetime.datetime(2025,9,5,11), datetime.datetime(2025,9,5,19)),
+              "Downings_6Sep": (datetime.datetime(2025,9,6,11), datetime.datetime(2025,9,6,19)),
+              "Downings_7Sep": (datetime.datetime(2025,9,7,7), datetime.datetime(2025,9,7,15)),
+          }
 
-          def assign_precip(entry, pr_tag):
-              """Store precipitation as {min,max} if present, else value float."""
-              if not pr_tag:
-                  return
-              minv = pr_tag.get('minvalue')
-              maxv = pr_tag.get('maxvalue')
-              val  = pr_tag.get('value')
-              if minv is not None and maxv is not None:
-                  try:
-                      entry['Rainfall'] = { "min": float(minv), "max": float(maxv) }
-                  except:
-                      entry['Rainfall'] = { "min": minv, "max": maxv }
-              elif val is not None:
-                  try:
-                      entry['Rainfall'] = float(val)
-                  except:
-                      entry['Rainfall'] = val
+          all_forecasts = []
 
-          def parse_xml_file(path):
-              with open(path, 'r', encoding='utf-8') as f:
-                  xml = f.read()
-              soup = BeautifulSoup(xml, 'lxml-xml')
-              forecasts = {}  # key = 'YYYY-MM-DDTHH:00:00Z' -> merged dict
+          for label, (start, end) in date_ranges.items():
+              loc_name = label.split("_")[0]
+              lat, lon = locations[loc_name]
 
-              for time_el in soup.find_all('time'):
-                  time_str = time_el.get('from')
-                  if not time_str:
-                      continue
-                  try:
-                      dt = datetime.datetime.fromisoformat(time_str.replace('Z', '+00:00'))
-                  except Exception:
-                      # skip unparsable timestamps
-                      continue
-                  dt_naive = dt.replace(tzinfo=None)
-                  if not (START <= dt_naive < END):
-                      continue
+              url = f"http://openaccess.pf.api.met.ie/metno-wdb2ts/locationforecast?lat={lat};long={lon}"
+              resp = requests.get(url)
+              resp.raise_for_status()
 
-                  hour_key = dt.strftime('%Y-%m-%dT%H:00:00Z')
-                  entry = forecasts.get(hour_key, {'time': hour_key})
+              root = ET.fromstring(resp.content)
+              for time_el in root.findall(".//time"):
+                  time_str = time_el.attrib.get("from")
+                  if not time_str: continue
 
-                  # location block: temperature, wind, symbol, maybe precipitation
-                  loc = time_el.find('location')
-                  if loc:
-                      temp = loc.find('temperature')
-                      if temp and temp.get('value') is not None:
-                          try:
-                              entry['Temperature'] = float(temp['value'])
-                          except:
-                              entry['Temperature'] = temp['value']
+                  dt = datetime.datetime.fromisoformat(time_str.replace("Z","+00:00")).replace(tzinfo=None)
+                  if not (start <= dt <= end): continue
 
-                      ws = loc.find('windSpeed')
-                      if ws and ws.get('mps') is not None:
-                          try:
-                              entry['WindSpeed'] = round(float(ws['mps']) * 3.6, 1)
-                          except:
-                              entry['WindSpeed'] = ws['mps']
+                  loc = time_el.find("location")
+                  if loc is None: continue
 
-                      wd = loc.find('windDirection')
-                      if wd and wd.get('deg') is not None:
-                          try:
-                              entry['WindDirection'] = float(wd['deg'])
-                          except:
-                              entry['WindDirection'] = wd['deg']
+                  entry = {
+                      "group": label,
+                      "time": dt.isoformat(),
+                  }
 
-                      sym = loc.find('symbol')
-                      if sym and sym.get('number') is not None:
-                          entry['WeatherSymbol3'] = sym['number']
+                  temp = loc.find("temperature")
+                  if temp is not None:
+                      entry["Temperature"] = float(temp.attrib.get("value", "0"))
 
-                      # precipitation sometimes under location
-                      pr_loc = loc.find('precipitation')
-                      if pr_loc:
-                          assign_precip(entry, pr_loc)
+                  winddir = loc.find("windDirection")
+                  if winddir is not None:
+                      entry["WindDirection"] = float(winddir.attrib.get("deg", "0"))
 
-                  # precipitation may be a direct child of time
-                  pr = time_el.find('precipitation')
-                  if pr:
-                      assign_precip(entry, pr)
+                  windspeed = loc.find("windSpeed")
+                  if windspeed is not None:
+                      mps = float(windspeed.attrib.get("mps", "0"))
+                      entry["WindSpeed"] = round(mps * 3.6)   # convert to km/h
 
-                  # defaults (will be overwritten if real data exists)
-                  entry.setdefault('Temperature', None)
-                  entry.setdefault('WindSpeed', 0)
-                  entry.setdefault('WindDirection', 0)
-                  entry.setdefault('Rainfall', None)
-                  entry.setdefault('WeatherSymbol3', '1')
+                  precip = loc.find("precipitation")
+                  if precip is not None:
+                      entry["Rainfall"] = float(precip.attrib.get("value", "0"))
 
-                  forecasts[hour_key] = entry
+                  symbol = loc.find("symbol")
+                  if symbol is not None:
+                      entry["WeatherSymbol3"] = symbol.attrib.get("number")
 
-              return forecasts
+                  all_forecasts.append(entry)
 
-          # Parse both files
-          p_forecasts = parse_xml_file('forecast_data/raw_portsalon.xml') if os.path.exists('forecast_data/raw_portsalon.xml') else {}
-          d_forecasts = parse_xml_file('forecast_data/raw_downings.xml') if os.path.exists('forecast_data/raw_downings.xml') else {}
+          # Write JSON with timestamp
+          result = {
+              "timestamp": datetime.datetime.utcnow().isoformat() + "Z",
+              "forecasts": all_forecasts
+          }
 
-          # helper: sorted list from dict filtered by date prefix
-          def slice_by_date_prefix(fdict, prefix):
-              return [v for k,v in sorted(fdict.items()) if k.startswith(prefix)]
-
-          # Portsalon = 2025-08-28 ; Downings = 2025-08-29..31
-          portsalon_out = slice_by_date_prefix(p_forecasts, '2025-08-28')
-          # for downings include entries from the downings parse that are after 2025-08-28
-          downings_out = [v for k,v in sorted(d_forecasts.items()) if k > '2025-08-28' ]
-
-          # Ensure directory
-          os.makedirs('forecast_data', exist_ok=True)
-
-          def write_if_changed(path, data):
-              new_hash = hashlib.md5(json.dumps(data, sort_keys=True).encode()).hexdigest()
-              old_hash = None
-              try:
-                  with open(path,'r', encoding='utf-8') as f:
-                      old_hash = hashlib.md5(f.read().encode()).hexdigest()
-              except FileNotFoundError:
-                  pass
-              if new_hash != old_hash:
-                  with open(path,'w', encoding='utf-8') as f:
-                      json.dump(data, f, indent=2)
-                  print("WROTE", path)
-              else:
-                  print("UNCHANGED", path)
-
-          write_if_changed('forecast_data/portsalon.json', portsalon_out)
-          write_if_changed('forecast_data/downings.json', downings_out)
-
-          print("Done.")
+          with open("forecast_data/forecast.json","w") as f:
+              json.dump(result, f, indent=2)
+          print(f"Wrote {len(all_forecasts)} entries to forecast.json")
           PY
 
-      - name: Commit and push JSON
+      - name: Commit forecast.json
         run: |
           git config --local user.name "github-actions[bot]"
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
-          git add forecast_data/portsalon.json forecast_data/downings.json
-          git commit -m "Update forecasts [skip ci]" || echo "No changes"
+          git add forecast_data/forecast.json
+          git commit -m "Update forecast.json [skip ci]" || echo "No changes"
           git push
