@@ -1,127 +1,116 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SLIM 2025 - Weather Forecast</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #222;
-      color: #fff;
-      padding: 20px;
-    }
-    h1 {
-      text-align: center;
-      margin-bottom: 5px;
-    }
-    #timestamp {
-      text-align: center;
-      font-size: 0.9rem;
-      margin-bottom: 20px;
-      color: #ccc;
-    }
-    .day-group {
-      margin-bottom: 30px;
-    }
-    .day-title {
-      font-size: 1.3rem;
-      color: #ffd700;
-      margin-bottom: 10px;
-      border-bottom: 2px solid rgba(255,215,0,0.6);
-      padding-bottom: 4px;
-    }
-    .forecast-cards {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-    .card {
-      background: rgba(0,0,0,0.7);
-      padding: 12px;
-      border-radius: 8px;
-      width: 120px;
-      text-align: center;
-      box-shadow: 1px 1px 6px #000;
-    }
-    .weather-icon {
-      width: 50px;
-      height: 50px;
-      margin-bottom: 6px;
-    }
-    .wind-arrow {
-      display: inline-block;
-      font-size: 1.6rem;   /* bigger arrow */
-      font-weight: bold;   /* bolder */
-      margin-right: 6px;
-      vertical-align: middle;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SLIM 2025 - Weather Forecast</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: #222;
+    color: #fff;
+    padding: 20px;
+  }
+  h1 { text-align: center; margin-bottom: 5px; }
+  #timestamp { text-align: center; font-size: 0.9rem; margin-bottom: 20px; color: #ccc; }
+  .day-group { margin-bottom: 30px; }
+  .day-title {
+    font-size: 1.3rem;
+    color: #ffd700;
+    margin-bottom: 10px;
+    border-bottom: 2px solid rgba(255,215,0,0.6);
+    padding-bottom: 4px;
+  }
+  .forecast-cards { display: flex; flex-wrap: wrap; gap: 10px; }
+  .card {
+    background: rgba(0,0,0,0.7);
+    padding: 12px;
+    border-radius: 8px;
+    width: 120px;
+    text-align: center;
+    box-shadow: 1px 1px 6px #000;
+  }
+  .weather-icon { width: 50px; height: 50px; margin-bottom: 6px; }
+  .wind-arrow {
+    display: inline-block;
+    font-size: 1.6rem;
+    font-weight: bold;
+    margin-right: 6px;
+    vertical-align: middle;
+  }
+</style>
 </head>
 <body>
-  <h1>SLIM 2025 - Weather Forecast</h1>
-  <div id="timestamp"></div>
-  <div id="forecast"></div>
+<h1>SLIM 2025 - Weather Forecast</h1>
+<div id="timestamp"></div>
+<div id="forecast"></div>
 
-  <script>
-    fetch('../../forecast_data/forecast.json')
-      .then(res => res.json())
-      .then(data => {
-        const container = document.getElementById('forecast');
-        const ts = document.getElementById('timestamp');
-        ts.textContent = 'Forecast timestamp: ' + data.timestamp;
+<script>
+fetch('../../forecast_data/forecast.json')
+  .then(res => res.json())
+  .then(data => {
+    const container = document.getElementById('forecast');
+    const ts = document.getElementById('timestamp');
+    ts.textContent = 'Forecast timestamp: ' + data.timestamp;
 
-        // Group forecasts by day/course
-        const groups = {};
-        data.forecasts.forEach(f => {
-          if (!groups[f.group]) groups[f.group] = [];
-          groups[f.group].push(f);
-        });
+    // Group forecasts by day/course
+    const groups = {};
+    data.forecasts.forEach(f => {
+      if (!groups[f.group]) groups[f.group] = [];
+      groups[f.group].push(f);
+    });
 
-        for (const group in groups) {
-          const divGroup = document.createElement('div');
-          divGroup.className = 'day-group';
+    for (const group in groups) {
+      const divGroup = document.createElement('div');
+      divGroup.className = 'day-group';
+      let title = group.replace('_', ' ');
+      divGroup.innerHTML = `<div class="day-title">${title}</div>`;
 
-          // Format group name nicely
-          let title = group.replace('_', ' ');
-          divGroup.innerHTML = `<div class="day-title">${title}</div>`;
+      const cardsDiv = document.createElement('div');
+      cardsDiv.className = 'forecast-cards';
 
-          const cardsDiv = document.createElement('div');
-          cardsDiv.className = 'forecast-cards';
+      groups[group].forEach(f => {
+        const card = document.createElement('div');
+        card.className = 'card';
 
-          groups[group].forEach(f => {
-            const card = document.createElement('div');
-            card.className = 'card';
+        // Determine wind direction compass
+        const deg = f.WindDirection ?? 0;
+        const compass = ["N","NE","E","SE","S","SW","W","NW"];
+        const index = Math.floor(((deg + 22.5) % 360)/45);
+        const dir = compass[index];
 
-            // Determine wind direction as compass
-            const deg = f.WindDirection || 0;
-            const compass = ["N","NE","E","SE","S","SW","W","NW"];
-            const index = Math.floor(((deg + 22.5) % 360)/45);
-            const dir = compass[index];
+        // Weather symbol mapping
+        let symbol = f.WeatherSymbol3 ?? "01";
+        symbol = symbol.padStart(2, '0');
 
-            // Weather symbol
-            let symbol = f.WeatherSymbol3 || "01";
-            symbol = symbol.padStart(2,'0');
-            const iconUrl = `https://www.met.ie/cms/assets/uploads/2018/01/${symbol}.png`;
-
-            card.innerHTML = `
-              <div>${new Date(f.time).getHours()}:00</div>
-              <img class="weather-icon" src="${iconUrl}" alt="weather">
-              <div>Temp: ${f.Temperature ?? 'N/A'}°C</div>
-              <div>Rain: ${f.Rainfall ?? 0} mm</div>
-              <div><span class="wind-arrow" style="transform:rotate(${deg}deg)">🡡</span>${dir} ${Math.round(f.WindSpeed ?? 0)} km/h</div>
-            `;
-            cardsDiv.appendChild(card);
-          });
-
-          divGroup.appendChild(cardsDiv);
-          container.appendChild(divGroup);
+        // Determine day/night suffix if provided (otherwise use plain number)
+        let suffix = '';
+        if (symbol.length === 2 && ["d","n"].includes(symbol.slice(-1))) {
+          suffix = symbol.slice(-1);
+          symbol = symbol.slice(0,2);
         }
-      })
-      .catch(err => {
-        document.getElementById('forecast').textContent = 'Error loading forecast.';
-        console.error(err);
+
+        const iconUrl = `https://www.met.ie/cms/assets/uploads/2018/01/${symbol}${suffix}.png`;
+
+        // Card HTML
+        card.innerHTML = `
+          <div>${new Date(f.time).getHours()}:00</div>
+          <img class="weather-icon" src="${iconUrl}" alt="weather">
+          <div>Temp: ${f.Temperature ?? 'N/A'}°C</div>
+          <div>Rain: ${f.Rainfall ?? 0} mm</div>
+          <div><span class="wind-arrow" style="transform:rotate(${deg}deg)">🡡</span>${dir} ${Math.round(f.WindSpeed ?? 0)} km/h</div>
+        `;
+        cardsDiv.appendChild(card);
       });
-  </script>
+
+      divGroup.appendChild(cardsDiv);
+      container.appendChild(divGroup);
+    }
+  })
+  .catch(err => {
+    document.getElementById('forecast').textContent = 'Error loading forecast.';
+    console.error(err);
+  });
+</script>
 </body>
 </html>
