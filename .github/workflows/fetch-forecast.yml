@@ -2,7 +2,7 @@ name: Fetch Weather Forecast (Aug 28–31)
 
 on:
   schedule:
-    - cron: "0 * * * *"   # every hour on the hour
+    - cron: "0 * * * *"   # every hour
   workflow_dispatch:
 
 jobs:
@@ -18,6 +18,7 @@ jobs:
           import requests
           import json
           from datetime import datetime
+          import xml.etree.ElementTree as ET
           import os
 
           coords = {
@@ -38,39 +39,37 @@ jobs:
 
           for group, (lat, lon) in coords.items():
               date = start_dates[group]
-              url = (
-                  f"https://api.open-meteo.com/v1/forecast?"
-                  f"latitude={lat}&longitude={lon}"
-                  f"&hourly=temperature_2m,precipitation,weathercode,windspeed_10m,winddirection_10m"
-                  f"&timezone=auto&start_date={date}&end_date={date}"
-              )
+              url = f"http://openaccess.pf.api.met.ie/metno-wdb2ts/locationforecast?lat={lat}&lon={lon}&msl&format=xml"
               try:
                   r = requests.get(url, timeout=10)
                   r.raise_for_status()
-                  data = r.json()
+                  root = ET.fromstring(r.content)
               except Exception as e:
-                  print(f"Error fetching data for {group}: {e}")
+                  print(f"Error fetching {group}: {e}")
                   continue
 
-              for t, temp, ws, wd, rain, code in zip(
-                  data["hourly"]["time"],
-                  data["hourly"]["temperature_2m"],
-                  data["hourly"]["windspeed_10m"],
-                  data["hourly"]["winddirection_10m"],
-                  data["hourly"]["precipitation"],
-                  data["hourly"]["weathercode"]
-              ):
+              # Parse XML hourly data
+              for time_item in root.findall(".//forecast/time"):
+                  t = time_item.attrib.get("from")
                   hour = int(t[11:13])
-                  if 7 <= hour <= 19:
-                      forecasts.append({
-                          "group": group,
-                          "time": t,
-                          "Temperature": round(temp, 1),
-                          "WindDirection": round(wd, 0),
-                          "WindSpeed": round(ws, 1),
-                          "Rainfall": round(rain, 2),
-                          "WeatherSymbol3": str(code).zfill(2)
-                      })
+                  if not (7 <= hour <= 19):
+                      continue
+
+                  temp = time_item.find(".//temperature")
+                  rain = time_item.find(".//precipitation")
+                  wind_speed = time_item.find(".//windSpeed")
+                  wind_dir = time_item.find(".//windDirection")
+                  weather_symbol = time_item.find(".//symbol")
+
+                  forecasts.append({
+                      "group": group,
+                      "time": t,
+                      "Temperature": round(float(temp.attrib["value"]), 1) if temp is not None else None,
+                      "WindDirection": round(float(wind_dir.attrib["deg"]), 0) if wind_dir is not None else None,
+                      "WindSpeed": round(float(wind_speed.attrib["mps"])*3.6,1) if wind_speed is not None else None, # m/s -> km/h
+                      "Rainfall": round(float(rain.attrib.get("value",0)),2) if rain is not None else 0,
+                      "WeatherSymbol": weather_symbol.attrib.get("number") if weather_symbol is not None else "0"
+                  })
 
           output = {
               "timestamp": datetime.utcnow().isoformat() + "Z",
