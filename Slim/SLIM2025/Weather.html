@@ -1,154 +1,169 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Golf Forecast</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f0f4f8;
-      margin: 0;
-      padding: 20px;
-    }
-    h1 {
-      text-align: center;
-      margin-bottom: 20px;
-    }
-    .day {
-      margin-bottom: 40px;
-    }
-    .day h2 {
-      text-align: left;
-      margin-bottom: 10px;
-      border-bottom: 2px solid #ccc;
-      padding-bottom: 5px;
-    }
-    .cards {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 15px;
-    }
-    .card {
-      background: white;
-      border-radius: 10px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-      padding: 15px;
-      text-align: center;
-    }
-    .time {
-      font-size: 1.2em;
-      font-weight: bold;
-      margin-bottom: 10px;
-    }
-    .weather-icon {
-      width: 48px;
-      height: 48px;
-      margin: 0 auto 10px;
-    }
-    .detail {
-      font-size: 0.9em;
-      margin: 5px 0;
-    }
-  </style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>SLIM 2025 Forecast</title>
+<style>
+  :root{--bg:#0f1720;--card:#0b1220;--accent:#1a73e8}
+  body{font-family:system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;background:var(--bg);color:#f7fafc;margin:0;padding:22px}
+  h1{text-align:center;margin:0 0 18px 0}
+  .day {margin:22px 0}
+  .day-title{font-size:1.15rem;font-weight:700;color:var(--accent);margin-bottom:10px}
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+  .card{background:var(--card);padding:12px;border-radius:10px;box-shadow:0 6px 18px rgba(2,6,23,0.6);display:flex;gap:12px;align-items:center}
+  .icon{width:48px;height:48px;flex-shrink:0}
+  .info{flex:1}
+  .time{font-weight:700;margin-bottom:6px}
+  .detail{font-size:0.95rem;margin:3px 0;color:#dbeafe}
+  .wind-row{display:flex;align-items:center;gap:8px}
+  .arrow{display:inline-block;transform:rotate(0deg);transition:transform .15s linear}
+  .muted{opacity:.75;font-size:0.9rem}
+  .footer{margin-top:26px;text-align:center;color:#94a3b8;font-size:0.9rem}
+  @media (max-width:520px){body{padding:12px}}
+</style>
 </head>
 <body>
-  <h1>Golf Weather Forecast</h1>
-  <div id="forecast"></div>
+  <h1>SLIM 2025 — Donegal weather (Portsalon & Downings)</h1>
+  <div id="forecast-root">Loading...</div>
+  <div class="footer">Data: Met Éireann • Page auto-reads forecast_data/portsalon.json and .../downings.json</div>
 
-  <script>
-    async function loadForecast() {
-      try {
-        const response = await fetch('forecast_data/forecast.json');
-        if (!response.ok) throw new Error("Failed to load forecast.json");
+<script>
+(async function(){
+  const root = document.getElementById('forecast-root');
 
-        const data = await response.json();
+  // sessions: date strings in YYYY-MM-DD and local time windows (Ireland in late Aug = UTC+1)
+  const sessions = [
+    { date: "2025-08-28", location: "Portsalon", startHour:11, endHour:19 }, // Portsalon 28 Aug 11–19
+    { date: "2025-08-29", location: "Downings", startHour:11, endHour:19 },  // Downings 29 Aug 11–19
+    { date: "2025-08-30", location: "Downings", startHour:11, endHour:19 },  // Downings 30 Aug 11–19
+    { date: "2025-08-31", location: "Downings", startHour:7,  endHour:15 }   // Downings 31 Aug 7–15
+  ];
 
-        // Define sessions
-        const sessions = [
-          { location: "Portsalon", date: "2025-08-28", start: 11, end: 19 },
-          { location: "Downings", date: "2025-08-29", start: 11, end: 19 },
-          { location: "Downings", date: "2025-08-30", start: 11, end: 19 },
-          { location: "Downings", date: "2025-08-31", start: 7, end: 15 },
-        ];
+  try {
+    // Adjust these relative paths if your HTML lives elsewhere
+    const [portsalonRes, downingsRes] = await Promise.all([
+      fetch('../../forecast_data/portsalon.json'),
+      fetch('../../forecast_data/downings.json')
+    ]);
+    if (!portsalonRes.ok || !downingsRes.ok) throw new Error('Could not load JSON files');
 
-        const container = document.getElementById("forecast");
-        container.innerHTML = "";
+    const [portsalonData, downingsData] = await Promise.all([portsalonRes.json(), downingsRes.json()]);
 
-        for (const session of sessions) {
-          const dayDiv = document.createElement("div");
-          dayDiv.className = "day";
-
-          const dateObj = new Date(session.date);
-          const dayName = dateObj.toLocaleDateString("en-GB", { weekday: "long" });
-          const title = document.createElement("h2");
-          title.textContent = `${dayName} ${session.date} – ${session.location}`;
-          dayDiv.appendChild(title);
-
-          const cardsDiv = document.createElement("div");
-          cardsDiv.className = "cards";
-
-          const filtered = data.filter(entry => {
-            const dt = new Date(entry.time);
-            const hour = dt.getUTCHours();
-            const dateStr = dt.toISOString().slice(0,10);
-            return dateStr === session.date && hour >= session.start && hour < session.end;
-          });
-
-          filtered.forEach(entry => {
-            const card = document.createElement("div");
-            card.className = "card";
-
-            const timeDiv = document.createElement("div");
-            timeDiv.className = "time";
-            const dt = new Date(entry.time);
-            timeDiv.textContent = dt.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" });
-            card.appendChild(timeDiv);
-
-            // Weather symbol
-            if (entry.WeatherSymbol3) {
-              const img = document.createElement("img");
-              img.className = "weather-icon";
-              img.src = `https://api.met.no/weatherapi/weathericon/2.0/icon/${entry.WeatherSymbol3}.svg`;
-              img.alt = "Weather icon";
-              card.appendChild(img);
-            }
-
-            // Temperature
-            const tempDiv = document.createElement("div");
-            tempDiv.className = "detail";
-            tempDiv.textContent = `Temp: ${entry.Temperature}°C`;
-            card.appendChild(tempDiv);
-
-            // ✅ Rainfall (show range if available)
-            const rainDiv = document.createElement("div");
-            rainDiv.className = "detail";
-            if (typeof entry.Rainfall === "object" && entry.Rainfall.min && entry.Rainfall.max) {
-              rainDiv.textContent = `Rain: ${entry.Rainfall.min}–${entry.Rainfall.max} mm`;
-            } else {
-              rainDiv.textContent = `Rain: ${entry.Rainfall} mm`;
-            }
-            card.appendChild(rainDiv);
-
-            // Wind
-            const windDiv = document.createElement("div");
-            windDiv.className = "detail";
-            windDiv.textContent = `Wind: ${entry.WindSpeed} km/h (${entry.WindDirection}°)`;
-            card.appendChild(windDiv);
-
-            cardsDiv.appendChild(card);
-          });
-
-          dayDiv.appendChild(cardsDiv);
-          container.appendChild(dayDiv);
-        }
-      } catch (err) {
-        console.error(err);
-        document.getElementById("forecast").innerHTML = "<p style='color:red;'>Error loading forecast</p>";
+    // helper to pretty-print rain (object or number)
+    function formatRain(r) {
+      if (r == null) return 'N/A';
+      if (typeof r === 'object') {
+        if (r.min === r.max) return `${r.min} mm`;
+        return `${r.min}–${r.max} mm`;
       }
+      return `${r} mm`;
     }
 
-    loadForecast();
-  </script>
+    // helper to render a single card
+    function createCard(entry, localHour) {
+      const dt = new Date(entry.time);
+      // show local Irish time label: convert UTC hour to UTC+1
+      // Note: using getUTCHours()+1 achieves consistent Ireland local hour for August (BST)
+      const hourLabel = String(localHour).padStart(2,'0') + ':00';
+      const timeLabel = dt.toLocaleDateString('en-GB', { weekday:'short', day:'numeric', month:'short' }) + ' ' + hourLabel;
+
+      // icon URL fallback to met.ie icons (if unavailable will show broken image)
+      const iconUrl = `https://www.met.ie/Open_Data/images/icons/${entry.WeatherSymbol3}.png`;
+
+      // wind arrow rotation: use numeric degrees if available
+      const deg = (entry.WindDirection !== undefined && entry.WindDirection !== null) ? Number(entry.WindDirection) : NaN;
+      const windSpeed = (entry.WindSpeed === undefined || entry.WindSpeed === null) ? '0' : entry.WindSpeed;
+      const rainStr = formatRain(entry.Rainfall);
+
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.innerHTML = `
+        <img class="icon" src="${iconUrl}" alt="sym ${entry.WeatherSymbol3}" onerror="this.style.display='none'">
+        <div class="info">
+          <div class="time">${timeLabel} — <span class="muted">${entry.location}</span></div>
+          <div class="detail">🌡️ Temp: ${entry.Temperature === null ? 'N/A' : entry.Temperature + '°C'}</div>
+          <div class="detail">☔ ${rainStr}</div>
+          <div class="detail wind-row">💨 <span class="muted">${windSpeed} km/h</span> <span class="arrow" aria-hidden="true">▲</span> <span class="muted">${isNaN(deg) ? '?' : deg + '°'}</span></div>
+        </div>
+      `;
+      // rotate arrow if deg is a number
+      const arrow = card.querySelector('.arrow');
+      if (!isNaN(deg)) {
+        arrow.style.transform = `rotate(${deg}deg)`;
+      } else {
+        arrow.style.opacity = '0.25';
+      }
+      return card;
+    }
+
+    root.innerHTML = ''; // clear loading
+
+    // For each session, pick correct dataset and render cards
+    for (const sess of sessions) {
+      const dayDiv = document.createElement('div');
+      dayDiv.className = 'day';
+      const dateObj = new Date(sess.date);
+      const dayTitle = document.createElement('div');
+      dayTitle.className = 'day-title';
+      dayTitle.textContent = dateObj.toLocaleDateString('en-GB', { weekday:'long', day:'numeric', month:'short' }) + ' — ' + sess.location;
+      dayDiv.appendChild(dayTitle);
+      const cardsWrap = document.createElement('div');
+      cardsWrap.className = 'cards';
+
+      // select dataset
+      const dataset = (sess.location === 'Portsalon') ? portsalonData : downingsData;
+
+      // filter entries that match the date in UTC and then map to local hour and check window
+      const matching = dataset.filter(entry => {
+        if (!entry.time) return false;
+        const dt = new Date(entry.time);
+        const dateStr = dt.toISOString().slice(0,10); // UTC date part
+        return dateStr === sess.date;
+      }).map(entry => {
+        const dt = new Date(entry.time);
+        const utcHour = dt.getUTCHours();
+        const localHour = (utcHour + 1) % 24; // Ireland is UTC+1 in late Aug
+        return { entry, localHour, dt };
+      })
+      // sort by localHour
+      .sort((a,b) => a.localHour - b.localHour)
+      // filter by the requested window (inclusive)
+      .filter(item => item.localHour >= sess.startHour && item.localHour <= sess.endHour);
+
+      // de-duplicate by localHour (keep first)
+      const seen = new Set();
+      const unique = [];
+      for (const it of matching) {
+        if (!seen.has(it.localHour)) {
+          // annotate location field for display
+          it.entry.location = sess.location;
+          unique.push(it);
+          seen.add(it.localHour);
+        }
+      }
+
+      // render
+      if (unique.length === 0) {
+        const p = document.createElement('div');
+        p.className = 'muted';
+        p.textContent = 'No forecast entries available for this session.';
+        cardsWrap.appendChild(p);
+      } else {
+        for (const it of unique) {
+          cardsWrap.appendChild(createCard(it.entry, it.localHour));
+        }
+      }
+
+      dayDiv.appendChild(cardsWrap);
+      root.appendChild(dayDiv);
+    }
+
+  } catch (err) {
+    console.error(err);
+    root.innerHTML = '<div style="color:#ffb4b4">Error loading forecast — check that forecast_data/*.json exist and the Action ran successfully.</div>';
+  }
+})();
+</script>
 </body>
 </html>
