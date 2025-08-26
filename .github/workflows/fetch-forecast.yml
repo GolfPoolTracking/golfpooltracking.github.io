@@ -44,6 +44,10 @@ jobs:
               if not (start <= dt <= end):
                   continue
 
+              # Only keep hours 7am to 7pm
+              if not (7 <= dt.hour <= 19):
+                  continue
+
               loc = time_el.find('location')
               if loc is None:
                   continue
@@ -90,7 +94,7 @@ jobs:
               "forecasts": forecasts
           }
 
-          with open('forecast_data/forecast.json', 'w') as f:
+          with open('forecast_data/forecast.json','w') as f:
               json.dump(output, f, indent=2)
 
           print(f"Wrote {len(forecasts)} forecast entries to forecast_data/forecast.json")
