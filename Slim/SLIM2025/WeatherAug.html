@@ -35,24 +35,21 @@ function degToCompass(num){
   return dirs[val%16];
 }
 
-// Get local hour from ISO timestamp
 function getLocalHour(time){
   const dt = new Date(time);
   return dt.getHours();
 }
 
-// Get icon URL (day/night handling)
 function getIconUrl(symbol, hour){
   if(!symbol) return "forecast_icons/00.png";
-  let num = String(symbol).padStart(2,"0"); // 01 → 01
-  let suffix = (hour>=7 && hour<=19) ? "d" : "n"; // day/night
-  let url = `forecast_icons/${num}${suffix}.png`;
-  return url;
+  let num = String(symbol).padStart(2,"0");
+  let suffix = (hour>=7 && hour<=19) ? "d" : "n";
+  return `forecast_icons/${num}${suffix}.png`;
 }
 
 async function loadForecast(){
   try{
-    const res = await fetch("../../forecast_data/forecast.json");
+    const res = await fetch("forecast_data/forecast.json");
     if(!res.ok) throw new Error("Failed to load forecast");
     const data = await res.json();
 
@@ -69,6 +66,9 @@ async function loadForecast(){
     }
 
     for(const [group, forecasts] of Object.entries(grouped)){
+      // Sort forecasts by time
+      forecasts.sort((a,b) => new Date(a.time) - new Date(b.time));
+
       const dayDiv = document.createElement("div"); dayDiv.className="day-group";
       const title = document.createElement("div"); title.className="day-title"; title.textContent = group.replace("_"," "); 
       dayDiv.appendChild(title);
@@ -77,7 +77,6 @@ async function loadForecast(){
 
       forecasts.forEach(f=>{
         const card = document.createElement("div"); card.className="card";
-
         const hour = getLocalHour(f.time);
 
         const timeDiv = document.createElement("div"); timeDiv.className="time";
