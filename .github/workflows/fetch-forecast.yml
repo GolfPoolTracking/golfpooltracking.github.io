@@ -20,6 +20,7 @@ jobs:
           from datetime import datetime
           import xml.etree.ElementTree as ET
           import os
+          from collections import defaultdict
 
           coords = {
               "Portsalon_28Aug": (55.2056262, -7.6350788),
@@ -40,7 +41,9 @@ jobs:
                   print(f"Error fetching {group}: {e}")
                   continue
 
-              # Parse XML: <time><location>...</location></time>
+              # Merge all parameters per timestamp to avoid duplicates
+              forecasts_dict = defaultdict(dict)
+
               for time_item in root.findall(".//time"):
                   t = time_item.attrib.get("from")
                   if not t:
@@ -53,21 +56,32 @@ jobs:
                   if loc is None:
                       continue
 
-                  temp = loc.find("temperature")
-                  rain = loc.find("precipitation")
-                  wind_speed = loc.find("windSpeed")
-                  wind_dir = loc.find("windDirection")
-                  symbol = loc.find("symbol")
+                  entry = forecasts_dict[t]
+                  entry["group"] = group
+                  entry["time"] = t
 
-                  forecasts.append({
-                      "group": group,
-                      "time": t,
-                      "Temperature": round(float(temp.attrib["value"]), 1) if temp is not None else None,
-                      "WindDirection": round(float(wind_dir.attrib.get("deg",0)), 0) if wind_dir is not None else None,
-                      "WindSpeed": round(float(wind_speed.attrib.get("mps",0))*3.6,1) if wind_speed is not None else None,
-                      "Rainfall": round(float(rain.attrib.get("value",0)),2) if rain is not None else 0,
-                      "WeatherSymbol": symbol.attrib.get("number") if symbol is not None else "01"
-                  })
+                  temp = loc.find("temperature")
+                  if temp is not None:
+                      entry["Temperature"] = round(float(temp.attrib["value"]), 1)
+
+                  rain = loc.find("precipitation")
+                  if rain is not None:
+                      entry["Rainfall"] = round(float(rain.attrib.get("value", 0)), 2)
+
+                  wind_speed = loc.find("windSpeed")
+                  if wind_speed is not None:
+                      entry["WindSpeed"] = round(float(wind_speed.attrib.get("mps",0))*3.6,1)
+
+                  wind_dir = loc.find("windDirection")
+                  if wind_dir is not None:
+                      entry["WindDirection"] = round(float(wind_dir.attrib.get("deg",0)), 0)
+
+                  symbol = loc.find("symbol")
+                  if symbol is not None:
+                      entry["WeatherSymbol"] = symbol.attrib.get("number", "01")
+
+              # Append merged entries to forecasts list
+              forecasts.extend(list(forecasts_dict.values()))
 
           output = {
               "timestamp": datetime.utcnow().isoformat() + "Z",
