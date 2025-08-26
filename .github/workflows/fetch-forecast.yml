@@ -28,8 +28,8 @@ jobs:
           tree = ET.parse('forecast_data/raw_forecast.xml')
           root = tree.getroot()
 
-          start = datetime.datetime(2025,8,26)
-          end   = datetime.datetime(2025,8,27)
+          start = datetime.datetime(2025,8,28)
+          end   = datetime.datetime(2025,9,1)
 
           forecasts = []
 
@@ -37,6 +37,7 @@ jobs:
               time_str = time_el.attrib.get('from')
               if not time_str:
                   continue
+
               dt = datetime.datetime.fromisoformat(time_str.replace('Z','+00:00'))
               dt_naive = dt.replace(tzinfo=None)
               if not (start <= dt_naive < end):
@@ -48,47 +49,55 @@ jobs:
 
               entry = {'time': time_str}
 
+              # Temperature
               temp = loc.find('temperature')
               if temp is not None:
                   entry['Temperature'] = temp.attrib.get('value')
 
+              # Wind
               winddir = loc.find('windDirection')
               if winddir is not None:
                   entry['WindDirection'] = winddir.attrib.get('deg')
 
               windspeed = loc.find('windSpeed')
               if windspeed is not None:
-                  # convert m/s → km/h
                   try:
-                      mps = float(windspeed.attrib.get('mps'))
-                      entry['WindSpeed'] = round(mps * 3.6, 1)
+                      mps = float(windspeed.attrib.get('mps', 0))
+                      kmh = round(mps * 3.6, 1)
+                      entry['WindSpeed'] = kmh
                   except:
                       entry['WindSpeed'] = windspeed.attrib.get('mps')
 
-              # ✅ FIXED precipitation handling
+              # Rainfall (store min/max instead of single value)
               precip = loc.find('precipitation')
               if precip is not None:
-                  if 'value' in precip.attrib:
-                      entry['Rainfall'] = precip.attrib.get('value')
-                  elif 'minvalue' in precip.attrib and 'maxvalue' in precip.attrib:
-                      minv = float(precip.attrib.get('minvalue', 0))
-                      maxv = float(precip.attrib.get('maxvalue', 0))
-                      entry['Rainfall'] = round((minv + maxv) / 2, 2)
+                  minv = precip.attrib.get('minvalue')
+                  maxv = precip.attrib.get('maxvalue')
+                  val  = precip.attrib.get('value')
+
+                  if minv and maxv:
+                      entry['Rainfall'] = {
+                          "min": float(minv),
+                          "max": float(maxv)
+                      }
+                  elif val:
+                      entry['Rainfall'] = float(val)
                   else:
                       entry['Rainfall'] = "N/A"
 
+              # Weather symbol
               symbol = loc.find('symbol')
               if symbol is not None:
                   entry['WeatherSymbol3'] = symbol.attrib.get('number')
 
               forecasts.append(entry)
 
-          # fallback if empty
+          # Fallback if empty
           if not forecasts:
               forecasts = [{
-                  "time": "2025-08-26T12:00:00Z",
+                  "time": "2025-08-28T11:00:00Z",
                   "Temperature": "N/A",
-                  "Rainfall": "N/A",
+                  "Rainfall": { "min": 0.0, "max": 0.0 },
                   "WindSpeed": "0",
                   "WindDirection": "0",
                   "WeatherSymbol3": "1"
@@ -96,6 +105,7 @@ jobs:
 
           with open('forecast_data/forecast.json','w') as f:
               json.dump(forecasts, f, indent=2)
+
           print(f"Wrote {len(forecasts)} forecast entries to forecast_data/forecast.json")
           PY
 
