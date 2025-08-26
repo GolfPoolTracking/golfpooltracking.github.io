@@ -1,19 +1,26 @@
 {
-  "timestamp": "2025-08-26T21:01:28.174108+00:00",
+  "timestamp": "2025-08-26T22:01:03.016827+00:00",
   "forecasts": [
     {
       "group": "Portsalon_4Sep",
       "time": "2025-09-04T12:00:00+00:00",
-      "Temperature": 14.0,
-      "WindDirection": 266.9,
-      "WindSpeed": 30
+      "Temperature": 15.7,
+      "WindDirection": 279.8,
+      "WindSpeed": 36
     },
     {
       "group": "Portsalon_4Sep",
       "time": "2025-09-04T18:00:00+00:00",
-      "Temperature": 13.4,
-      "WindDirection": 265.3,
-      "WindSpeed": 27
+      "Temperature": 14.7,
+      "WindDirection": 271.2,
+      "WindSpeed": 28
+    },
+    {
+      "group": "OldTomMorris_5Sep",
+      "time": "2025-09-05T12:00:00+00:00",
+      "Temperature": 16.0,
+      "WindDirection": 245.3,
+      "WindSpeed": 32
     }
   ]
 }
