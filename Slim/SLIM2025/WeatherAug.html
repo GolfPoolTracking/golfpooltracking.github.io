@@ -11,7 +11,7 @@ header h1{margin:0;}
 .day-group{margin:1.5rem; padding:1rem; background:#fff; border-radius:12px; box-shadow:0 2px 5px rgba(0,0,0,0.1);}
 .day-title{font-size:1.3rem; margin-bottom:0.5rem; border-bottom:2px solid #eee; padding-bottom:0.5rem; font-weight:bold;}
 .forecast-cards{display:flex; flex-wrap:wrap; gap:0.5rem;}
-.card{flex:0 0 100px; background:#fdfdfd; border:1px solid #ddd; border-radius:10px; padding:0.5rem; text-align:center; box-shadow:0 1px 3px rgba(0,0,0,0.05);}
+.card{flex:0 0 90px; background:#fdfdfd; border:1px solid #ddd; border-radius:10px; padding:0.5rem; text-align:center; box-shadow:0 1px 3px rgba(0,0,0,0.05);}
 .time{font-weight:bold; margin-bottom:0.2rem;}
 .temp{font-size:1.1rem; margin:0.2rem 0;}
 .wind{font-size:0.8rem; margin:0.2rem 0; display:flex; align-items:center; justify-content:center; gap:0.2rem;}
@@ -35,10 +35,10 @@ function degToCompass(num){
 }
 function getLocalHour(time){ return new Date(time).getHours(); }
 function getIconUrl(symbol,hour){
-  if(!symbol) return "forecast_icons/00.png";
+  if(!symbol) return "../../forecast_icons/00.png";
   let num=String(symbol).padStart(2,"0");
   let suffix=(hour>=7 && hour<=19)?"d":"n";
-  return `forecast_icons/${num}${suffix}.png`;
+  return `../../forecast_icons/${num}${suffix}.png`;
 }
 
 async function loadForecast(){
