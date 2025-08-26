@@ -1,138 +1,127 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>SLIM 2025 - Weather Forecast</title>
-<style>
-  body { font-family: Arial, sans-serif; margin: 20px; background: #f4f4f4; }
-  h1 { text-align: center; }
-  .timestamp { text-align: center; font-size: 0.9em; color: #666; margin-bottom: 20px; }
-  .forecast-group { margin-bottom: 40px; }
-  h2 { margin-top: 30px; }
-  .cards { display: flex; flex-wrap: wrap; gap: 15px; }
-  .card { background: white; padding: 12px; border-radius: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); width: 140px; text-align: center; }
-  .card img { width: 50px; height: 50px; }
-  .wind { font-size: 14px; margin-top: 5px; }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SLIM 2025 - Weather Forecast</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #222;
+      color: #fff;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 5px;
+    }
+    #timestamp {
+      text-align: center;
+      font-size: 0.9rem;
+      margin-bottom: 20px;
+      color: #ccc;
+    }
+    .day-group {
+      margin-bottom: 30px;
+    }
+    .day-title {
+      font-size: 1.3rem;
+      color: #ffd700;
+      margin-bottom: 10px;
+      border-bottom: 2px solid rgba(255,215,0,0.6);
+      padding-bottom: 4px;
+    }
+    .forecast-cards {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .card {
+      background: rgba(0,0,0,0.7);
+      padding: 12px;
+      border-radius: 8px;
+      width: 120px;
+      text-align: center;
+      box-shadow: 1px 1px 6px #000;
+    }
+    .weather-icon {
+      width: 50px;
+      height: 50px;
+      margin-bottom: 6px;
+    }
+    .wind-arrow {
+      display: inline-block;
+      font-size: 1.6rem;   /* bigger arrow */
+      font-weight: bold;   /* bolder */
+      margin-right: 6px;
+      vertical-align: middle;
+    }
+  </style>
 </head>
 <body>
-<h1>SLIM 2025 - Weather Forecast</h1>
-<div id="timestamp" class="timestamp"></div>
-<div id="forecast"></div>
+  <h1>SLIM 2025 - Weather Forecast</h1>
+  <div id="timestamp"></div>
+  <div id="forecast"></div>
 
-<script>
-function degToCompass(num) {
-  if (num === undefined) return "";
-  const val = Math.floor((num / 22.5) + 0.5);
-  const arr = ["N","NNE","NE","ENE","E","ESE","SE","SSE","S","SSW","SW","WSW","W","WNW","NW","NNW"];
-  return arr[val % 16];
-}
+  <script>
+    fetch('../../forecast_data/forecast.json')
+      .then(res => res.json())
+      .then(data => {
+        const container = document.getElementById('forecast');
+        const ts = document.getElementById('timestamp');
+        ts.textContent = 'Forecast timestamp: ' + data.timestamp;
 
-function degToArrow(num) {
-  if (num === undefined) return "";
-  const arrows = ["↑","↗","→","↘","↓","↙","←","↖"];
-  const val = Math.floor((num / 45) + 0.5);
-  return arrows[val % 8];
-}
+        // Group forecasts by day/course
+        const groups = {};
+        data.forecasts.forEach(f => {
+          if (!groups[f.group]) groups[f.group] = [];
+          groups[f.group].push(f);
+        });
 
-function getIconUrl(symbolNumber, hour) {
-  if (!symbolNumber) return { url: "", fallback: "" };
-  const numStr = String(symbolNumber).padStart(2,'0');
-  let suffix = "";
-  if (hour !== undefined) suffix = (hour >= 6 && hour < 18) ? "d" : "n";
-  return {
-    url: `https://www.met.ie/cms/assets/uploads/2018/01/${numStr}${suffix}.png`,
-    fallback: `https://www.met.ie/cms/assets/uploads/2018/01/${numStr}.png`
-  };
-}
+        for (const group in groups) {
+          const divGroup = document.createElement('div');
+          divGroup.className = 'day-group';
 
-async function loadForecast() {
-  try {
-    const resp = await fetch("../../forecast_data/forecast.json");
-    if (!resp.ok) throw new Error("Fetch failed");
-    const data = await resp.json();
+          // Format group name nicely
+          let title = group.replace('_', ' ');
+          divGroup.innerHTML = `<div class="day-title">${title}</div>`;
 
-    document.getElementById("timestamp").textContent =
-      "Last updated: " + new Date(data.timestamp).toLocaleString();
+          const cardsDiv = document.createElement('div');
+          cardsDiv.className = 'forecast-cards';
 
-    // Merge forecasts by group + time
-    const merged = {};
-    data.forecasts.forEach(f => {
-      const key = f.group + "_" + f.time;
-      if (!merged[key]) merged[key] = {...f};
-      else merged[key] = {...merged[key], ...f};
-    });
-    const mergedForecasts = Object.values(merged);
+          groups[group].forEach(f => {
+            const card = document.createElement('div');
+            card.className = 'card';
 
-    // Group forecasts
-    const grouped = {};
-    mergedForecasts.forEach(f => {
-      if (!grouped[f.group]) grouped[f.group] = [];
-      grouped[f.group].push(f);
-    });
+            // Determine wind direction as compass
+            const deg = f.WindDirection || 0;
+            const compass = ["N","NE","E","SE","S","SW","W","NW"];
+            const index = Math.floor(((deg + 22.5) % 360)/45);
+            const dir = compass[index];
 
-    const forecastDiv = document.getElementById("forecast");
-    forecastDiv.innerHTML = "";
+            // Weather symbol
+            let symbol = f.WeatherSymbol3 || "01";
+            symbol = symbol.padStart(2,'0');
+            const iconUrl = `https://www.met.ie/cms/assets/uploads/2018/01/${symbol}.png`;
 
-    // Map group to friendly names
-    const groupNames = {
-      "Portsalon_28Aug": "Thursday 28 Aug - Portsalon (11am–7pm)",
-      "Downings_29Aug": "Friday 29 Aug - Old Tom Morris (11am–7pm)",
-      "Downings_30Aug": "Saturday 30 Aug - St Patrick's (11am–7pm)",
-      "Downings_31Aug": "Sunday 31 Aug - Sandy Hills (7am–3pm)"
-    };
+            card.innerHTML = `
+              <div>${new Date(f.time).getHours()}:00</div>
+              <img class="weather-icon" src="${iconUrl}" alt="weather">
+              <div>Temp: ${f.Temperature ?? 'N/A'}°C</div>
+              <div>Rain: ${f.Rainfall ?? 0} mm</div>
+              <div><span class="wind-arrow" style="transform:rotate(${deg}deg)">🡡</span>${dir} ${Math.round(f.WindSpeed ?? 0)} km/h</div>
+            `;
+            cardsDiv.appendChild(card);
+          });
 
-    for (const [label, entries] of Object.entries(grouped)) {
-      const gDiv = document.createElement("div");
-      gDiv.className = "forecast-group";
-
-      const title = document.createElement("h2");
-      title.textContent = groupNames[label] || label;
-      gDiv.appendChild(title);
-
-      const cardsDiv = document.createElement("div");
-      cardsDiv.className = "cards";
-
-      entries.forEach(e => {
-        const card = document.createElement("div");
-        card.className = "card";
-
-        const time = new Date(e.time);
-        const hour = time.getHours();
-        const timeStr = time.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
-
-        const icon = getIconUrl(e.WeatherSymbol3, hour);
-        const iconTag = icon.url 
-          ? `<img src="${icon.url}" alt="icon" onerror="this.onerror=null;this.src='${icon.fallback}';">` 
-          : '';
-
-        const windDir = degToCompass(e.WindDirection);
-        const windArrow = degToArrow(e.WindDirection);
-        const wind = (e.WindSpeed !== undefined) ? `${Math.round(e.WindSpeed)} km/h ${windDir} ${windArrow}` : "";
-
-        const rainText = e.Rainfall !== undefined ? `Rain: ${e.Rainfall} mm` : '';
-
-        card.innerHTML = `
-          <h3>${timeStr}</h3>
-          <div>${e.Temperature !== undefined ? e.Temperature + '°C' : ''}</div>
-          <div>${iconTag}</div>
-          <div>${rainText}</div>
-          <div class="wind">${wind}</div>
-        `;
-        cardsDiv.appendChild(card);
+          divGroup.appendChild(cardsDiv);
+          container.appendChild(divGroup);
+        }
+      })
+      .catch(err => {
+        document.getElementById('forecast').textContent = 'Error loading forecast.';
+        console.error(err);
       });
-
-      gDiv.appendChild(cardsDiv);
-      forecastDiv.appendChild(gDiv);
-    }
-
-  } catch(err) {
-    document.getElementById("forecast").innerHTML = "<p>Error loading forecast.</p>";
-    console.error(err);
-  }
-}
-
-loadForecast();
-</script>
+  </script>
 </body>
 </html>
