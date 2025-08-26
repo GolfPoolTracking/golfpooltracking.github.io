@@ -1,151 +1,244 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>SLIM 2025 - Weather Forecast</title>
 <style>
-  body {
-    font-family: Arial, sans-serif;
-    background: #222;
-    color: #fff;
-    padding: 15px;
-    margin: 0;
-  }
-  h1 {
-    text-align: center;
-    font-size: 1.8rem;
-    margin-bottom: 5px;
-  }
-  #timestamp {
-    text-align: center;
-    font-size: 0.85rem;
-    margin-bottom: 15px;
-    color: #ccc;
-  }
-  .day-group {
-    margin-bottom: 25px;
-  }
-  .day-title {
-    font-size: 1.2rem;
-    color: #ffd700;
-    margin-bottom: 8px;
-    border-bottom: 2px solid rgba(255,215,0,0.6);
-    padding-bottom: 3px;
-  }
-  .forecast-cards {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    justify-content: flex-start;
-  }
+  body { font-family: Arial, sans-serif; background:#111; color:#fff; margin:0; padding:16px; }
+  h1 { text-align:center; margin:4px 0 6px; font-size:1.6rem; }
+  #timestamp { text-align:center; color:#cfcfcf; font-size:0.9rem; margin-bottom:12px; }
+  .day-group { margin-bottom:20px; }
+  .day-title { color:#ffd700; font-weight:700; margin-bottom:8px; font-size:1.05rem; border-bottom:1px solid rgba(255,215,0,0.25); padding-bottom:6px; }
+  .forecast-cards { display:flex; flex-wrap:wrap; gap:10px; }
   .card {
-    background: rgba(0,0,0,0.7);
-    padding: 10px;
-    border-radius: 6px;
-    width: 100px;
-    text-align: center;
-    box-shadow: 1px 1px 4px #000;
-    font-size: 0.9rem;
+    background: rgba(255,255,255,0.03);
+    padding:10px;
+    border-radius:8px;
+    width:110px;
+    text-align:center;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.6);
+    font-size:0.9rem;
   }
-  .weather-icon {
-    width: 45px;
-    height: 45px;
-    margin-bottom: 5px;
-  }
-  .wind-arrow {
-    display: inline-block;
-    font-size: 1.4rem;
-    margin-right: 4px;
-    vertical-align: middle;
-    transform-origin: center;
-  }
-
-  /* Responsive adjustments */
-  @media (max-width: 600px) {
-    .forecast-cards {
-      justify-content: center;
-    }
-    .card {
-      width: 45%;
-      min-width: 90px;
-      font-size: 0.85rem;
-      padding: 8px;
-    }
-    .weather-icon { width: 40px; height: 40px; }
+  .weather-icon { width:46px; height:46px; display:block; margin:6px auto; }
+  .wind-arrow { display:inline-block; font-size:1.5rem; font-weight:700; vertical-align:middle; transform-origin:center; margin-right:6px; }
+  @media (max-width:600px){
+    .card { width:46%; }
   }
 </style>
 </head>
 <body>
-<h1>SLIM 2025 - Weather Forecast</h1>
-<div id="timestamp"></div>
-<div id="forecast"></div>
+  <h1>SLIM 2025 - Weather Forecast</h1>
+  <div id="timestamp">Loading…</div>
+  <div id="forecast"></div>
 
 <script>
-fetch('../../forecast_data/forecast.json')
-  .then(res => res.json())
-  .then(data => {
-    const container = document.getElementById('forecast');
-    const ts = document.getElementById('timestamp');
-    ts.textContent = 'Forecast timestamp: ' + data.timestamp;
+/* ---------- helpers ---------- */
 
-    const groups = {};
-    data.forecasts.forEach(f => {
-      if (!groups[f.group]) groups[f.group] = [];
-      groups[f.group].push(f);
-    });
+// 8-point compass (N, NE, E, SE, S, SW, W, NW)
+function degToCompass8(deg) {
+  if (deg === null || deg === undefined || isNaN(deg)) return '';
+  const sectors = ["N","NE","E","SE","S","SW","W","NW"];
+  const idx = Math.floor(((deg + 22.5) % 360) / 45);
+  return sectors[idx % 8];
+}
 
-    const compassPoints = ["N","NE","E","SE","S","SW","W","NW"];
+// Try candidate icon URLs sequentially, using Image() preloads to verify availability.
+// Calls callback(foundUrl) when found or callback(null) if none found.
+function findValidIcon(symbolNumber, hour, callback) {
+  if (!symbolNumber) { callback(null); return; }
+  const base = 'https://www.met.ie/cms/assets/uploads/2018/01/';
+  const num = String(symbolNumber).padStart(2, '0');
 
-    for (const group in groups) {
-      const divGroup = document.createElement('div');
-      divGroup.className = 'day-group';
-      divGroup.innerHTML = `<div class="day-title">${group.replace('_',' ')}</div>`;
+  // prefer day/night based on hour (6-17 day)
+  const isDay = (hour >= 6 && hour < 18);
+  const candidates = [];
+  if (hour !== undefined && hour !== null) {
+    candidates.push(num + (isDay ? 'd' : 'n') + '.png');
+    candidates.push(num + (isDay ? 'n' : 'd') + '.png');
+  }
+  candidates.push(num + '.png'); // fallback
 
-      const cardsDiv = document.createElement('div');
-      cardsDiv.className = 'forecast-cards';
+  let i = 0;
+  function tryNext() {
+    if (i >= candidates.length) { callback(null); return; }
+    const url = base + candidates[i];
+    const img = new Image();
+    img.onload = () => { callback(url); };
+    img.onerror = () => { i++; tryNext(); };
+    // start load
+    img.src = url + '?_=' + (new Date().getTime()); // cache-bust - helpful while testing
+  }
+  tryNext();
+}
 
-      groups[group].forEach(f => {
-        const dt = new Date(f.time);
-        const hour = dt.getHours();
-        if (hour < 7 || hour > 19) return;
+/* ---------- main ---------- */
 
-        const card = document.createElement('div');
-        card.className = 'card';
+(async function(){
+  const jsonPath = '../../forecast_data/forecast.json'; // <- adjust if needed
+  let resp;
+  try {
+    resp = await fetch(jsonPath);
+  } catch (err) {
+    document.getElementById('forecast').textContent = 'Error loading forecast JSON (fetch failed).';
+    console.error('Fetch error:', err);
+    return;
+  }
+  if (!resp.ok) {
+    document.getElementById('forecast').textContent = `Error loading forecast: ${resp.status} ${resp.statusText}`;
+    console.error('HTTP error:', resp.status, resp.statusText);
+    return;
+  }
 
-        const deg = f.WindDirection ?? 0;
-        const index = Math.floor(((deg + 22.5) % 360)/45);
-        const dir = compassPoints[index];
+  let data;
+  try {
+    data = await resp.json();
+  } catch (err) {
+    document.getElementById('forecast').textContent = 'Error parsing forecast JSON.';
+    console.error('JSON parse error:', err);
+    return;
+  }
 
-        let symbol = (f.WeatherSymbol3 ?? "01").padStart(2,'0');
-        let suffix = '';
-        if (symbol.length === 3 && ['d','n'].includes(symbol.slice(-1))) {
-          suffix = symbol.slice(-1);
-          symbol = symbol.slice(0,2);
-        }
-        const iconUrl = `https://www.met.ie/cms/assets/uploads/2018/01/${symbol}${suffix}.png`;
+  // simpler timestamp display
+  const tsEl = document.getElementById('timestamp');
+  try {
+    const t = new Date(data.timestamp);
+    tsEl.textContent = t.toLocaleString('en-IE', { day:'2-digit', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit' });
+  } catch(e) {
+    tsEl.textContent = data.timestamp || '';
+  }
 
-        card.innerHTML = `
-          <div><strong>${hour}:00</strong></div>
-          <img class="weather-icon" src="${iconUrl}" alt="weather">
-          <div>Temp: ${f.Temperature ?? 'N/A'}°C</div>
-          <div>Rain: ${f.Rainfall ?? 0} mm</div>
-          <div>
-            <span class="wind-arrow" style="transform:rotate(${deg}deg)">🡡</span>
-            ${dir} ${Math.round(f.WindSpeed ?? 0)} km/h
-          </div>
-        `;
-        cardsDiv.appendChild(card);
-      });
-
-      divGroup.appendChild(cardsDiv);
-      container.appendChild(divGroup);
+  // Merge entries by group + ISO hour (YYYY-MM-DDTHH) to remove duplicates
+  const merged = {};
+  (data.forecasts || []).forEach(f => {
+    if (!f.group || !f.time) return;
+    // Use the hour-of-ISO-time as grouping key. This groups entries that differ only by minute.
+    // (If you prefer grouping by local hour instead, replace toISOString() usage with local components.)
+    const dt = new Date(f.time);
+    const isoHour = dt.toISOString().slice(0,13); // "YYYY-MM-DDTHH"
+    const key = `${f.group}__${isoHour}`;
+    if (!merged[key]) {
+      merged[key] = {
+        group: f.group,
+        time: dt.toISOString(),
+        Temperature: (f.Temperature !== undefined) ? f.Temperature : null,
+        WindDirection: (f.WindDirection !== undefined) ? f.WindDirection : null,
+        WindSpeed: (f.WindSpeed !== undefined) ? f.WindSpeed : null,
+        Rainfall: (f.Rainfall !== undefined) ? f.Rainfall : null,
+        WeatherSymbol3: (f.WeatherSymbol3 !== undefined) ? f.WeatherSymbol3 : null
+      };
+    } else {
+      // merge non-null fields (prefer existing, otherwise take the new non-null)
+      const entry = merged[key];
+      if ((entry.Temperature === null || entry.Temperature === undefined) && f.Temperature !== undefined) entry.Temperature = f.Temperature;
+      if ((entry.WindDirection === null || entry.WindDirection === undefined) && f.WindDirection !== undefined) entry.WindDirection = f.WindDirection;
+      if ((entry.WindSpeed === null || entry.WindSpeed === undefined) && f.WindSpeed !== undefined) entry.WindSpeed = f.WindSpeed;
+      if ((entry.Rainfall === null || entry.Rainfall === undefined) && f.Rainfall !== undefined) entry.Rainfall = f.Rainfall;
+      if ((entry.WeatherSymbol3 === null || entry.WeatherSymbol3 === undefined) && f.WeatherSymbol3 !== undefined) entry.WeatherSymbol3 = f.WeatherSymbol3;
     }
-  })
-  .catch(err => {
-    document.getElementById('forecast').textContent = 'Error loading forecast.';
-    console.error(err);
   });
+
+  // Convert merged to array and sort by time
+  const mergedList = Object.values(merged).sort((a,b)=> new Date(a.time) - new Date(b.time));
+  console.log('Merged forecast count:', mergedList.length);
+
+  // Group by group label
+  const groups = {};
+  mergedList.forEach(item => {
+    if (!groups[item.group]) groups[item.group] = [];
+    groups[item.group].push(item);
+  });
+
+  // Friendly name map (adjust if your YAML uses different group keys)
+  const friendly = {
+    "Portsalon_28Aug": "Thursday 28 Aug - Portsalon (11am–7pm)",
+    "Downings_29Aug": "Friday 29 Aug - Old Tom Morris (11am–7pm)",
+    "Downings_30Aug": "Saturday 30 Aug - St Patrick's (11am–7pm)",
+    "Downings_31Aug": "Sunday 31 Aug - Sandy Hills (7am–3pm)",
+    // also accept the versions with course names if YAML used them
+    "Old Tom Morris_29Aug": "Friday 29 Aug - Old Tom Morris (11am–7pm)",
+    "St Patrick's_30Aug": "Saturday 30 Aug - St Patrick's (11am–7pm)",
+    "Sandy Hills_31Aug": "Sunday 31 Aug - Sandy Hills (7am–3pm)"
+  };
+
+  const out = document.getElementById('forecast');
+  out.innerHTML = '';
+
+  // iterate groups
+  for (const gkey of Object.keys(groups)) {
+    const items = groups[gkey];
+    if (!items.length) continue;
+
+    const groupDiv = document.createElement('div');
+    groupDiv.className = 'day-group';
+    const title = friendly[gkey] || gkey.replace(/_/g,' ');
+    const titleEl = document.createElement('div');
+    titleEl.className = 'day-title';
+    titleEl.textContent = title;
+    groupDiv.appendChild(titleEl);
+
+    const cards = document.createElement('div');
+    cards.className = 'forecast-cards';
+
+    // each merged item -> one card
+    for (const item of items) {
+      const dt = new Date(item.time);
+      const hourLocal = dt.getHours(); // show hour in browser local timezone (usually Europe/Dublin for you)
+      // if you want to force UTC hour use dt.getUTCHours()
+
+      // Only show the hours you asked for (7-19). If JSON already filtered that's fine,
+      // but we keep this extra guard in the UI too.
+      if (hourLocal < 7 || hourLocal > 19) continue;
+
+      const card = document.createElement('div');
+      card.className = 'card';
+
+      // Prepare placeholders
+      const tempText = (item.Temperature !== null && item.Temperature !== undefined) ? `${Number(item.Temperature).toFixed(1)}°C` : 'N/A';
+      const rainText = (item.Rainfall !== null && item.Rainfall !== undefined) ? `${item.Rainfall} mm` : 'N/A';
+      const windSpeed = (item.WindSpeed !== null && item.WindSpeed !== undefined) ? Math.round(item.WindSpeed) : 0;
+      const windDeg = (item.WindDirection !== null && item.WindDirection !== undefined) ? Number(item.WindDirection) : 0;
+      const windDir = degToCompass8(windDeg);
+
+      // icon element (we will populate src after verifying)
+      const img = document.createElement('img');
+      img.className = 'weather-icon';
+      img.alt = 'weather';
+
+      // Set up icon detection & assignment (asynchronous)
+      (function(sym, hour, imgEl){
+        findValidIcon(sym, hour, function(foundUrl){
+          if (foundUrl) {
+            imgEl.src = foundUrl;
+            imgEl.style.display = 'block';
+            console.debug('Icon chosen for', sym, '->', foundUrl);
+          } else {
+            imgEl.style.display = 'none'; // hide if none available
+            console.debug('No icon found for', sym);
+          }
+        });
+      })(item.WeatherSymbol3, hourLocal, img);
+
+      // Build card content
+      card.innerHTML = `<div><strong>${hourLocal}:00</strong></div>`;
+      card.appendChild(img);
+      const tempDiv = document.createElement('div'); tempDiv.textContent = 'Temp: ' + tempText;
+      const rainDiv = document.createElement('div'); rainDiv.textContent = 'Rain: ' + rainText;
+      const windDiv = document.createElement('div');
+      windDiv.innerHTML = `<span class="wind-arrow" style="transform:rotate(${windDeg}deg)">🡡</span>${windDir} ${windSpeed} km/h`;
+
+      card.appendChild(tempDiv);
+      card.appendChild(rainDiv);
+      card.appendChild(windDiv);
+
+      cards.appendChild(card);
+    }
+
+    groupDiv.appendChild(cards);
+    out.appendChild(groupDiv);
+  }
+
+})();
 </script>
 </body>
 </html>
