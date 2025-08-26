@@ -1,9 +1,9 @@
-name: Fetch Met Éireann Forecast 28-31 Aug
+name: Fetch Met Éireann Forecast
 
 on:
   schedule:
-    - cron: '0 * * * *'  # every hour on the hour UTC
-  workflow_dispatch:
+    - cron: '0 * * * *'  # Every hour on the hour UTC
+  workflow_dispatch:      # Allows manual trigger
 
 jobs:
   fetch_forecast:
@@ -13,11 +13,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Install dependencies
-        run: |
-          python3 -m pip install --upgrade pip
-          pip install requests xmltodict pytz
-
       - name: Fetch Met Éireann XML
         run: |
           mkdir -p forecast_data
@@ -25,83 +20,85 @@ jobs:
 
       - name: Convert XML to JSON
         run: |
-          python3 - <<'PYCODE'
+          python3 - <<'PY'
           import xml.etree.ElementTree as ET
           import json
           import datetime
           import pytz
 
+          # Load XML
           tree = ET.parse('forecast_data/raw_forecast.xml')
           root = tree.getroot()
 
-          tz = datetime.timezone.utc
-          groups = {
-              "Portsalon_28Aug": (datetime.datetime(2025,8,28,11,0, tzinfo=tz), datetime.datetime(2025,8,28,19,0, tzinfo=tz)),
-              "Downings_29Aug": (datetime.datetime(2025,8,29,11,0, tzinfo=tz), datetime.datetime(2025,8,29,19,0, tzinfo=tz)),
-              "Downings_30Aug": (datetime.datetime(2025,8,30,11,0, tzinfo=tz), datetime.datetime(2025,8,30,19,0, tzinfo=tz)),
-              "Downings_31Aug": (datetime.datetime(2025,8,31,7,0, tzinfo=tz),  datetime.datetime(2025,8,31,15,0, tzinfo=tz))
-          }
+          tz = pytz.UTC
+          # Adjust date range if needed
+          start = datetime.datetime(2025, 8, 28, tzinfo=tz)
+          end   = datetime.datetime(2025, 8, 31, 23, 59, tzinfo=tz)
 
           forecasts = []
-          seen = set()
 
           for time_el in root.findall('.//time'):
               time_str = time_el.attrib.get('from')
               if not time_str:
                   continue
+
+              # Parse time with timezone
               dt = datetime.datetime.fromisoformat(time_str.replace('Z', '+00:00'))
+              if not (start <= dt <= end):
+                  continue
 
               loc = time_el.find('location')
               if loc is None:
                   continue
 
-              group_name = None
-              for gname, (start_dt, end_dt) in groups.items():
-                  if start_dt <= dt <= end_dt:
-                      group_name = gname
-                      break
-              if not group_name:
-                  continue
+              # Determine group based on date
+              day = dt.day
+              group = None
+              if day == 28: group = "Portsalon_28Aug"
+              elif day == 29: group = "Downings_29Aug"
+              elif day == 30: group = "Downings_30Aug"
+              elif day == 31: group = "Downings_31Aug"
 
-              key = (group_name, dt)
-              if key in seen:
-                  continue
-              seen.add(key)
+              entry = {'group': group, 'time': dt.isoformat()}
 
-              entry = {"group": group_name, "time": dt.isoformat()}
-
+              # Temperature
               temp = loc.find('temperature')
-              if temp is not None:
-                  entry['Temperature'] = round(float(temp.attrib.get('value',0)),1)
+              entry['Temperature'] = float(temp.attrib.get('value')) if temp is not None else None
 
+              # Wind
               winddir = loc.find('windDirection')
-              if winddir is not None:
-                  entry['WindDirection'] = float(winddir.attrib.get('deg',0))
-
+              entry['WindDirection'] = float(winddir.attrib.get('deg')) if winddir is not None else None
               windspeed = loc.find('windSpeed')
-              if windspeed is not None:
-                  entry['WindSpeed'] = round(float(windspeed.attrib.get('mps',0))*3.6)
+              entry['WindSpeed'] = float(windspeed.attrib.get('mps',0)) * 3.6 if windspeed is not None else None  # convert m/s to km/h
 
+              # Precipitation
               precip = loc.find('precipitation')
-              if precip is not None:
-                  entry['Rainfall'] = round(float(precip.attrib.get('value',0)),1)
+              entry['Rainfall'] = float(precip.attrib.get('value', 0)) if precip is not None else 0.0
 
+              # Weather symbol
               symbol = loc.find('symbol')
-              if symbol is not None:
-                  entry['WeatherSymbol3'] = symbol.attrib.get('number')
+              entry['WeatherSymbol3'] = symbol.attrib.get('number') if symbol is not None else None
 
               forecasts.append(entry)
 
-          if not forecasts:
-              forecasts = [{"group":"Portsalon_28Aug","time":datetime.datetime.now(tz).isoformat(),
-                            "Temperature":"N/A","Rainfall":0,"WindSpeed":0,"WindDirection":0,"WeatherSymbol3":"1"}]
+          # Remove duplicates by group + time
+          merged = {}
+          for f in forecasts:
+              key = f['group'] + "_" + f['time']
+              merged[key] = f
+          forecasts = list(merged.values())
 
-          out = {"timestamp": datetime.datetime.now(tz).isoformat(), "forecasts": forecasts}
+          # Build final JSON
+          output = {
+              "timestamp": datetime.datetime.now(tz).isoformat(),
+              "forecasts": forecasts
+          }
 
           with open('forecast_data/forecast.json','w') as f:
-              json.dump(out, f, indent=2)
+              json.dump(output, f, indent=2)
+
           print(f"Wrote {len(forecasts)} forecast entries to forecast_data/forecast.json")
-          PYCODE
+          PY
 
       - name: Commit and push forecast.json
         run: |
