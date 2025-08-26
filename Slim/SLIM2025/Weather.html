@@ -66,11 +66,12 @@ async function loadForecast() {
     forecastDiv.innerHTML = "";
 
     const groupNames = {
-      "Portsalon_28Aug": "Thursday 28 Aug - Portsalon (11am–7pm)",
-      "Downings_29Aug": "Friday 29 Aug - Downings (11am–7pm)",
-      "Downings_30Aug": "Saturday 30 Aug - Downings (11am–7pm)",
-      "Downings_31Aug": "Sunday 31 Aug - Downings (7am–3pm)"
-    };
+        "Portsalon_4Sep": "Thursday 4 Sep - Portsalon (11am–7pm)",
+        "OldTomMorris_5Sep": "Friday 5 Sep - Old Tom Morris (11am–7pm)",
+        "StPatricks_6Sep": "Saturday 6 Sep - St Patrick's (11am–7pm)",
+        "SandyHills_7Sep": "Sunday 7 Sep - Sandy Hills (7am–3pm)"
+      };
+
 
     for (const [label, entries] of Object.entries(grouped)) {
       const gDiv = document.createElement("div");
