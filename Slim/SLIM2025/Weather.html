@@ -30,7 +30,7 @@
   <script>
     async function loadForecast() {
       try {
-        const resp = await fetch("forecast_data/forecast.json");
+        const resp = await fetch("./forecast_data/forecast.json");  // ✅ safer relative path
         if (!resp.ok) throw new Error("Fetch failed");
         const data = await resp.json();
 
@@ -73,17 +73,16 @@
             const time = new Date(e.time);
             const timeStr = time.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});
 
-            const img = document.createElement("img");
-            img.src = `https://www.met.ie/Open_Data/Weather_Forecast_Symbols/${e.WeatherSymbol3}.png`;
-            img.alt = "weather";
+            const iconUrl = `https://www.met.ie/Open_Data/Weather_Forecast_Symbols/${e.WeatherSymbol3}.png`;
 
             const windDir = degToCompass(e.WindDirection);
-            const wind = `${e.WindSpeed} km/h ${windDir}`;
+            const windArrow = degToArrow(e.WindDirection);
+            const wind = `${e.WindSpeed} km/h ${windDir} ${windArrow}`;
 
             card.innerHTML = `
               <h3>${timeStr}</h3>
               <div>${e.Temperature}°C</div>
-              <div><img src="${img.src}" alt="icon"></div>
+              <div><img src="${iconUrl}" alt="icon"></div>
               <div>Rain: ${e.Rainfall} mm</div>
               <div class="wind">Wind: ${wind}</div>
             `;
@@ -106,6 +105,13 @@
       const arr = ["N","NNE","NE","ENE","E","ESE","SE","SSE",
                    "S","SSW","SW","WSW","W","WNW","NW","NNW"];
       return arr[val % 16];
+    }
+
+    function degToArrow(num) {
+      if (num === undefined) return "";
+      const arrows = ["↑","↗","→","↘","↓","↙","←","↖"];
+      const val = Math.floor((num / 45) + 0.5);
+      return arrows[val % 8];
     }
 
     loadForecast();
