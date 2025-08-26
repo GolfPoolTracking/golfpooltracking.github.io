@@ -30,15 +30,15 @@
   <script>
     async function loadForecast() {
       try {
-        const resp = await fetch("./forecast_data/forecast.json");  // ✅ safer relative path
+        const resp = await fetch("./forecast_data/forecast.json");
         if (!resp.ok) throw new Error("Fetch failed");
         const data = await resp.json();
 
-        // timestamp
+        // Display timestamp
         document.getElementById("timestamp").textContent =
           "Last updated: " + new Date(data.timestamp).toLocaleString();
 
-        // group by label
+        // Group forecasts by label
         const grouped = {};
         data.forecasts.forEach(f => {
           if (!grouped[f.group]) grouped[f.group] = [];
@@ -49,10 +49,10 @@
         forecastDiv.innerHTML = "";
 
         const groupNames = {
-          "Portsalon_4Sep": "Thursday 4 Sep - Portsalon (11am–7pm)",
-          "Downings_5Sep": "Friday 5 Sep - Downings (11am–7pm)",
-          "Downings_6Sep": "Saturday 6 Sep - Downings (11am–7pm)",
-          "Downings_7Sep": "Sunday 7 Sep - Downings (7am–3pm)"
+          "Portsalon_28Aug": "Thursday 28 Aug - Portsalon (11am–7pm)",
+          "Downings_29Aug": "Friday 29 Aug - Downings (11am–7pm)",
+          "Downings_30Aug": "Saturday 30 Aug - Downings (11am–7pm)",
+          "Downings_31Aug": "Sunday 31 Aug - Downings (7am–3pm)"
         };
 
         for (const [label, entries] of Object.entries(grouped)) {
@@ -73,18 +73,20 @@
             const time = new Date(e.time);
             const timeStr = time.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});
 
-            const iconUrl = `https://www.met.ie/Open_Data/Weather_Forecast_Symbols/${e.WeatherSymbol3}.png`;
+            const iconUrl = e.WeatherSymbol3
+              ? `https://www.met.ie/Open_Data/Weather_Forecast_Symbols/${e.WeatherSymbol3}.png`
+              : "";
 
             const windDir = degToCompass(e.WindDirection);
             const windArrow = degToArrow(e.WindDirection);
-            const wind = `${e.WindSpeed} km/h ${windDir} ${windArrow}`;
+            const wind = e.WindSpeed ? `${e.WindSpeed} km/h ${windDir} ${windArrow}` : "";
 
             card.innerHTML = `
               <h3>${timeStr}</h3>
-              <div>${e.Temperature}°C</div>
-              <div><img src="${iconUrl}" alt="icon"></div>
-              <div>Rain: ${e.Rainfall} mm</div>
-              <div class="wind">Wind: ${wind}</div>
+              <div>${e.Temperature !== undefined ? e.Temperature + '°C' : ''}</div>
+              <div>${iconUrl ? `<img src="${iconUrl}" alt="icon">` : ''}</div>
+              <div>${e.Rainfall !== undefined ? 'Rain: ' + e.Rainfall + ' mm' : ''}</div>
+              <div class="wind">${wind}</div>
             `;
 
             cardsDiv.appendChild(card);
