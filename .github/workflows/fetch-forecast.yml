@@ -71,9 +71,9 @@ jobs:
         run: |
           mkdir -p forecast_icons
           for i in $(seq -w 1 2); do
-            curl -s -o forecast_icons/${i}.png https://www.met.ie/cms/assets/uploads/2018/01/${i}d.png
+            curl -s -o forecast_icons/${i}d.png https://www.met.ie/cms/assets/uploads/2018/01/${i}d.png
           done
-          curl -s -o forecast_icons/00.png https://www.met.ie/cms/assets/uploads/2018/01/01.png
+          curl -s -o forecast_icons/00.png https://www.met.ie/cms/assets/uploads/2018/01/01d.png
 
       - name: Commit changes
         run: |
