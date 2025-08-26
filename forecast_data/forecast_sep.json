@@ -1,0 +1,19 @@
+{
+  "timestamp": "2025-08-26T17:06:08.205974+00:00",
+  "forecasts": [
+    {
+      "group": "Portsalon_4Sep",
+      "time": "2025-09-04T12:00:00+00:00",
+      "Temperature": 14.0,
+      "WindDirection": 266.9,
+      "WindSpeed": 30
+    },
+    {
+      "group": "Portsalon_4Sep",
+      "time": "2025-09-04T18:00:00+00:00",
+      "Temperature": 13.4,
+      "WindDirection": 265.3,
+      "WindSpeed": 27
+    }
+  ]
+}
