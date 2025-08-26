@@ -49,7 +49,7 @@ function getIconUrl(symbol, hour){
 
 async function loadForecast(){
   try{
-    const res = await fetch("forecast_data/forecast.json");
+    const res = await fetch("../../forecast_data/forecast.json");
     if(!res.ok) throw new Error("Failed to load forecast");
     const data = await res.json();
 
