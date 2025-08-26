@@ -2,8 +2,8 @@ name: Fetch Met Éireann Forecast
 
 on:
   schedule:
-    - cron: '10 0 * * *'  # daily at 00:10 UTC
-  workflow_dispatch:      # allows manual trigger
+    - cron: '0 * * * *' # every hour on the hour
+  workflow_dispatch:    # manual trigger
 
 jobs:
   fetch_forecast:
@@ -16,82 +16,102 @@ jobs:
       - name: Install Python dependencies
         run: |
           python3 -m pip install --upgrade pip
-          pip install requests
+          pip install requests xmltodict
 
-      - name: Fetch & Convert Forecasts
+      - name: Fetch Met Éireann XML and generate JSON
         run: |
-          mkdir -p forecast_data
-          python3 - <<'PY'
-          import requests, xml.etree.ElementTree as ET, json, datetime
+          python3 - <<'PYCODE'
+          import requests
+          import xmltodict
+          import json
+          import datetime
 
-          # Locations and date ranges
-          locations = {
-              "Portsalon_28Aug": (55.192, -7.633, datetime.datetime(2025,8,28,11), datetime.datetime(2025,8,28,19)),
-              "Downings_29Aug": (55.267, -7.633, datetime.datetime(2025,8,29,11), datetime.datetime(2025,8,29,19)),
-              "Downings_30Aug": (55.267, -7.633, datetime.datetime(2025,8,30,11), datetime.datetime(2025,8,30,19)),
-              "Downings_31Aug": (55.267, -7.633, datetime.datetime(2025,8,31,7), datetime.datetime(2025,8,31,15))
-          }
+          # Configuration for locations and dates
+          LOCATIONS = [
+              {"name": "Portsalon_28Aug", "lat": 55.266, "lon": -7.633, "date": "2025-08-28"},
+              {"name": "Downings_29Aug", "lat": 55.167, "lon": -7.966, "date": "2025-08-29"},
+              {"name": "Downings_30Aug", "lat": 55.167, "lon": -7.966, "date": "2025-08-30"},
+              {"name": "Downings_31Aug", "lat": 55.167, "lon": -7.966, "date": "2025-08-31"}
+          ]
 
-          all_forecasts = []
+          forecasts_all = []
 
-          for label, (lat, lon, start, end) in locations.items():
-              url = f"http://openaccess.pf.api.met.ie/metno-wdb2ts/locationforecast?lat={lat};long={lon}"
+          for loc in LOCATIONS:
+              url = f"http://openaccess.pf.api.met.ie/metno-wdb2ts/locationforecast?lat={loc['lat']};long={loc['lon']}"
               resp = requests.get(url)
               resp.raise_for_status()
-              root = ET.fromstring(resp.content)
+              data_xml = resp.text
 
-              time_dict = {}
+              data_dict = xmltodict.parse(data_xml)
 
-              for time_el in root.findall(".//time"):
-                  time_str = time_el.attrib.get("from")
-                  if not time_str:
+              product = data_dict.get("weatherdata", {}).get("product", {})
+              if not product:
+                  continue
+
+              times = product.get("time", [])
+              if not isinstance(times, list):
+                  times = [times]
+
+              start_dt = datetime.datetime.fromisoformat(loc["date"])
+              end_dt   = start_dt + datetime.timedelta(days=1)
+
+              # keep only relevant hours
+              for t in times:
+                  time_from = t.get("@from")
+                  if not time_from:
                       continue
-                  dt = datetime.datetime.fromisoformat(time_str.replace("Z","+00:00")).replace(tzinfo=None)
-                  if not (start <= dt <= end):
+                  dt = datetime.datetime.fromisoformat(time_from)
+                  if not (start_dt <= dt < end_dt):
+                      continue
+                  hour = dt.hour
+                  # Only show forecast hours for each day (Portsalon 11-19, Downings 11-19 or 7-15)
+                  if loc['name'] == "Portsalon_28Aug" and not (11 <= hour <= 19):
+                      continue
+                  if loc['name'] in ["Downings_29Aug","Downings_30Aug"] and not (11 <= hour <= 19):
+                      continue
+                  if loc['name'] == "Downings_31Aug" and not (7 <= hour <= 15):
                       continue
 
-                  loc_el = time_el.find("location")
-                  if loc_el is None:
+                  loc_data = t.get("location", {})
+                  if loc_data is None:
                       continue
 
-                  key = dt.isoformat()
-                  if key not in time_dict:
-                      time_dict[key] = {"group": label, "time": key}
+                  # Temperature
+                  temp = loc_data.get("temperature", {}).get("@value")
+                  # Wind
+                  wind_dir = loc_data.get("windDirection", {}).get("@deg")
+                  wind_speed = loc_data.get("windSpeed", {}).get("@mps")
+                  if wind_speed is not None:
+                      wind_speed = round(float(wind_speed) * 3.6) # m/s to km/h
 
-                  entry = time_dict[key]
+                  # Precipitation
+                  precip = loc_data.get("precipitation", {}).get("@value")
+                  # Symbol
+                  symbol = loc_data.get("symbol", {}).get("@number")
 
-                  temp = loc_el.find("temperature")
-                  if temp is not None:
-                      entry["Temperature"] = float(temp.attrib.get("value", entry.get("Temperature", 0)))
+                  entry = {
+                      "group": loc["name"],
+                      "time": time_from,
+                      "Temperature": float(temp) if temp else None,
+                      "WindDirection": float(wind_dir) if wind_dir else None,
+                      "WindSpeed": wind_speed,
+                      "Rainfall": float(precip) if precip else None,
+                      "WeatherSymbol3": int(symbol) if symbol else None
+                  }
 
-                  winddir = loc_el.find("windDirection")
-                  if winddir is not None:
-                      entry["WindDirection"] = float(winddir.attrib.get("deg", entry.get("WindDirection", 0)))
+                  forecasts_all.append(entry)
 
-                  windspeed = loc_el.find("windSpeed")
-                  if windspeed is not None:
-                      mps = float(windspeed.attrib.get("mps", 0))
-                      entry["WindSpeed"] = round(mps * 3.6)
-
-                  precip = loc_el.find("precipitation")
-                  if precip is not None:
-                      entry["Rainfall"] = float(precip.attrib.get("value", entry.get("Rainfall", 0)))
-
-                  symbol = loc_el.find("symbol")
-                  if symbol is not None:
-                      entry["WeatherSymbol3"] = symbol.attrib.get("number", entry.get("WeatherSymbol3", "1"))
-
-              all_forecasts.extend(time_dict.values())
-
-          result = {
+          # Output JSON with timestamp
+          output = {
               "timestamp": datetime.datetime.utcnow().isoformat() + "Z",
-              "forecasts": all_forecasts
+              "forecasts": forecasts_all
           }
 
-          with open("forecast_data/forecast.json","w") as f:
-              json.dump(result, f, indent=2)
-          print(f"Wrote {len(all_forecasts)} forecast entries to forecast.json")
-          PY
+          with open("forecast_data/forecast.json", "w") as f:
+              json.dump(output, f, indent=2)
+
+          print(f"Wrote {len(forecasts_all)} forecast entries to forecast_data/forecast.json")
+          PYCODE
 
       - name: Commit and push forecast.json
         run: |
