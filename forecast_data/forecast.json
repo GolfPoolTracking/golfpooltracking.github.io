@@ -1,0 +1,106 @@
+[
+  {
+    "time": "2025-08-26T15:00:00Z",
+    "Temperature": "15.1",
+    "WindDirection": "204.0",
+    "WindSpeed": 18.0
+  },
+  {
+    "time": "2025-08-26T14:00:00Z",
+    "Rainfall": "0.4",
+    "WeatherSymbol3": "5"
+  },
+  {
+    "time": "2025-08-26T16:00:00Z",
+    "Temperature": "16.3",
+    "WindDirection": "205.2",
+    "WindSpeed": 20.5
+  },
+  {
+    "time": "2025-08-26T15:00:00Z",
+    "Rainfall": "0.4",
+    "WeatherSymbol3": "9"
+  },
+  {
+    "time": "2025-08-26T17:00:00Z",
+    "Temperature": "15.5",
+    "WindDirection": "196.7",
+    "WindSpeed": 17.3
+  },
+  {
+    "time": "2025-08-26T16:00:00Z",
+    "Rainfall": "0.3",
+    "WeatherSymbol3": "9"
+  },
+  {
+    "time": "2025-08-26T18:00:00Z",
+    "Temperature": "16.0",
+    "WindDirection": "193.5",
+    "WindSpeed": 13.7
+  },
+  {
+    "time": "2025-08-26T17:00:00Z",
+    "Rainfall": "0.1",
+    "WeatherSymbol3": "46"
+  },
+  {
+    "time": "2025-08-26T19:00:00Z",
+    "Temperature": "15.5",
+    "WindDirection": "204.0",
+    "WindSpeed": 11.2
+  },
+  {
+    "time": "2025-08-26T18:00:00Z",
+    "Rainfall": "0.0",
+    "WeatherSymbol3": "3"
+  },
+  {
+    "time": "2025-08-26T20:00:00Z",
+    "Temperature": "14.2",
+    "WindDirection": "162.3",
+    "WindSpeed": 13.3
+  },
+  {
+    "time": "2025-08-26T19:00:00Z",
+    "Rainfall": "0.0",
+    "WeatherSymbol3": "3"
+  },
+  {
+    "time": "2025-08-26T21:00:00Z",
+    "Temperature": "13.8",
+    "WindDirection": "154.3",
+    "WindSpeed": 16.9
+  },
+  {
+    "time": "2025-08-26T20:00:00Z",
+    "Rainfall": "0.0",
+    "WeatherSymbol3": "3"
+  },
+  {
+    "time": "2025-08-26T22:00:00Z",
+    "Temperature": "13.7",
+    "WindDirection": "154.0",
+    "WindSpeed": 18.4
+  },
+  {
+    "time": "2025-08-26T21:00:00Z",
+    "Rainfall": "0.0",
+    "WeatherSymbol3": "1"
+  },
+  {
+    "time": "2025-08-26T23:00:00Z",
+    "Temperature": "13.6",
+    "WindDirection": "154.4",
+    "WindSpeed": 19.8
+  },
+  {
+    "time": "2025-08-26T22:00:00Z",
+    "Rainfall": "0.0",
+    "WeatherSymbol3": "2"
+  },
+  {
+    "time": "2025-08-26T23:00:00Z",
+    "Rainfall": "0.0",
+    "WeatherSymbol3": "1"
+  }
+]
