@@ -1,4 +1,4 @@
-name: Fetch Weather Forecast (Aug 28–31)
+name: Fetch Weather Forecast & Met Éireann Icons
 
 on:
   schedule:
@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  fetch-forecast:
+  fetch-forecast-and-icons:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
@@ -38,7 +38,6 @@ jobs:
           forecasts = []
 
           for group, (lat, lon) in coords.items():
-              date = start_dates[group]
               url = f"http://openaccess.pf.api.met.ie/metno-wdb2ts/locationforecast?lat={lat}&lon={lon}&msl&format=xml"
               try:
                   r = requests.get(url, timeout=10)
@@ -48,7 +47,6 @@ jobs:
                   print(f"Error fetching {group}: {e}")
                   continue
 
-              # Parse XML hourly data
               for time_item in root.findall(".//forecast/time"):
                   t = time_item.attrib.get("from")
                   hour = int(t[11:13])
@@ -66,9 +64,9 @@ jobs:
                       "time": t,
                       "Temperature": round(float(temp.attrib["value"]), 1) if temp is not None else None,
                       "WindDirection": round(float(wind_dir.attrib["deg"]), 0) if wind_dir is not None else None,
-                      "WindSpeed": round(float(wind_speed.attrib["mps"])*3.6,1) if wind_speed is not None else None, # m/s -> km/h
+                      "WindSpeed": round(float(wind_speed.attrib.get("mps",0))*3.6,1) if wind_speed is not None else None,
                       "Rainfall": round(float(rain.attrib.get("value",0)),2) if rain is not None else 0,
-                      "WeatherSymbol": weather_symbol.attrib.get("number") if weather_symbol is not None else "0"
+                      "WeatherSymbol": weather_symbol.attrib.get("number") if weather_symbol is not None else "01"
                   })
 
           output = {
@@ -81,10 +79,19 @@ jobs:
               json.dump(output, f, indent=2)
           PYCODE
 
-      - name: Commit forecast.json
+      - name: Download Met Éireann icons (01.png → 52.png)
+        run: |
+          mkdir -p forecast_icons
+          for i in $(seq -w 1 52); do
+            curl -s -o forecast_icons/${i}.png https://www.met.ie/cms/assets/uploads/2018/01/${i}.png
+          done
+          # fallback icon
+          curl -s -o forecast_icons/00.png https://www.met.ie/cms/assets/uploads/2018/01/01.png
+
+      - name: Commit changes
         run: |
           git config --global user.name "github-actions"
           git config --global user.email "github-actions@github.com"
-          git add forecast_data/forecast.json
-          git diff --cached --quiet || git commit -m "Update forecast data"
+          git add forecast_data/forecast.json forecast_icons/
+          git diff --cached --quiet || git commit -m "Update forecast data and icons"
           git push
