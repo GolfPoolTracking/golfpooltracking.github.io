@@ -3,7 +3,7 @@ name: Fetch Met Éireann Forecast
 on:
   schedule:
     - cron: '10 0 * * *'  # daily at 00:10 UTC
-  workflow_dispatch:
+  workflow_dispatch:      # allows manual trigger
 
 jobs:
   fetch_forecast:
@@ -24,20 +24,14 @@ jobs:
           import xml.etree.ElementTree as ET
           import json
           import datetime
-          import hashlib
-          import sys
 
-          try:
-              tree = ET.parse('forecast_data/raw_forecast.xml')
-              root = tree.getroot()
-          except Exception as e:
-              print("Failed to parse XML:", e)
-              sys.exit(1)
+          tree = ET.parse('forecast_data/raw_forecast.xml')
+          root = tree.getroot()
 
-          start = datetime.datetime(2025,8,28)
-          end   = datetime.datetime(2025,9,1)
+          start = datetime.datetime(2025,8,26)
+          end   = datetime.datetime(2025,8,27)
 
-          forecasts = {}
+          forecasts = []
 
           for time_el in root.findall('.//time'):
               time_str = time_el.attrib.get('from')
@@ -48,67 +42,67 @@ jobs:
               if not (start <= dt_naive < end):
                   continue
 
-              hour_key = dt.strftime('%Y-%m-%dT%H:00:00Z')
-              entry = forecasts.get(hour_key, {'time': hour_key})
-
               loc = time_el.find('location')
-              if loc is not None:
-                  temp = loc.find('temperature')
-                  if temp is not None:
-                      entry['Temperature'] = temp.attrib.get('value')
+              if loc is None:
+                  continue
 
-                  winddir = loc.find('windDirection')
-                  if winddir is not None:
-                      entry['WindDirection'] = winddir.attrib.get('deg')
+              entry = {'time': time_str}
 
-                  windspeed = loc.find('windSpeed')
-                  if windspeed is not None:
-                      entry['WindSpeed'] = str(round(float(windspeed.attrib.get('mps')) * 3.6, 1))
+              temp = loc.find('temperature')
+              if temp is not None:
+                  entry['Temperature'] = temp.attrib.get('value')
 
-                  symbol = loc.find('symbol')
-                  entry['WeatherSymbol3'] = symbol.attrib.get('number') if symbol is not None else "1"
+              winddir = loc.find('windDirection')
+              if winddir is not None:
+                  entry['WindDirection'] = winddir.attrib.get('deg')
 
-              # Merge precipitation even if separate
-              precip = time_el.find('precipitation')
+              windspeed = loc.find('windSpeed')
+              if windspeed is not None:
+                  # convert m/s → km/h
+                  try:
+                      mps = float(windspeed.attrib.get('mps'))
+                      entry['WindSpeed'] = round(mps * 3.6, 1)
+                  except:
+                      entry['WindSpeed'] = windspeed.attrib.get('mps')
+
+              # ✅ FIXED precipitation handling
+              precip = loc.find('precipitation')
               if precip is not None:
-                  entry['Rainfall'] = precip.attrib.get('value')
+                  if 'value' in precip.attrib:
+                      entry['Rainfall'] = precip.attrib.get('value')
+                  elif 'minvalue' in precip.attrib and 'maxvalue' in precip.attrib:
+                      minv = float(precip.attrib.get('minvalue', 0))
+                      maxv = float(precip.attrib.get('maxvalue', 0))
+                      entry['Rainfall'] = round((minv + maxv) / 2, 2)
+                  else:
+                      entry['Rainfall'] = "N/A"
 
-              # Defaults
-              entry.setdefault('Temperature', 'N/A')
-              entry.setdefault('WindSpeed', '0')
-              entry.setdefault('WindDirection', '0')
-              entry.setdefault('Rainfall', '0.0')
-              entry.setdefault('WeatherSymbol3', '1')
+              symbol = loc.find('symbol')
+              if symbol is not None:
+                  entry['WeatherSymbol3'] = symbol.attrib.get('number')
 
-              forecasts[hour_key] = entry
+              forecasts.append(entry)
 
-          # Split JSON
-          portsalon = [v for k,v in sorted(forecasts.items()) if k.startswith('2025-08-28')]
-          downings  = [v for k,v in sorted(forecasts.items()) if k > '2025-08-28']
+          # fallback if empty
+          if not forecasts:
+              forecasts = [{
+                  "time": "2025-08-26T12:00:00Z",
+                  "Temperature": "N/A",
+                  "Rainfall": "N/A",
+                  "WindSpeed": "0",
+                  "WindDirection": "0",
+                  "WeatherSymbol3": "1"
+              }]
 
-          def write_if_changed(path, data):
-              import os
-              try:
-                  with open(path,'r') as f:
-                      old_hash = hashlib.md5(f.read().encode()).hexdigest()
-              except FileNotFoundError:
-                  old_hash = None
-              new_hash = hashlib.md5(json.dumps(data,sort_keys=True).encode()).hexdigest()
-              if old_hash != new_hash:
-                  with open(path,'w') as f:
-                      json.dump(data,f,indent=2)
-                  print(f"Wrote updated {path}")
-              else:
-                  print(f"No changes for {path}")
-
-          write_if_changed('forecast_data/portsalon.json', portsalon)
-          write_if_changed('forecast_data/downings.json', downings)
+          with open('forecast_data/forecast.json','w') as f:
+              json.dump(forecasts, f, indent=2)
+          print(f"Wrote {len(forecasts)} forecast entries to forecast_data/forecast.json")
           PY
 
       - name: Commit and push forecast.json
         run: |
           git config --local user.name "github-actions[bot]"
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
-          git add forecast_data/portsalon.json forecast_data/downings.json
+          git add forecast_data/forecast.json
           git commit -m "Update forecast.json [skip ci]" || echo "No changes"
           git push
