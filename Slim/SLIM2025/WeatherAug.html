@@ -10,14 +10,14 @@ header h1{margin:0;}
 .timestamp{font-size:0.9rem;color:#ddd;}
 .day-group{margin:1.5rem; padding:1rem; background:#fff; border-radius:12px; box-shadow:0 2px 5px rgba(0,0,0,0.1);}
 .day-title{font-size:1.3rem; margin-bottom:0.5rem; border-bottom:2px solid #eee; padding-bottom:0.5rem; font-weight:bold;}
-.forecast-cards{display:flex; flex-wrap:wrap; gap:1rem;}
-.card{flex:1 1 140px; background:#fdfdfd; border:1px solid #ddd; border-radius:10px; padding:0.8rem; text-align:center; box-shadow:0 1px 3px rgba(0,0,0,0.05);}
-.time{font-weight:bold; margin-bottom:0.3rem;}
-.temp{font-size:1.2rem; margin:0.3rem 0;}
-.wind{font-size:0.9rem; margin:0.2rem 0; display:flex; align-items:center; justify-content:center; gap:0.2rem;}
-.wind-arrow{display:inline-block; width:16px; height:16px; border:solid #333; border-width:0 2px 2px 0; padding:2px;}
-.rain{font-size:0.9rem; margin:0.2rem 0;}
-img.weather-icon{width:60px; height:60px;}
+.forecast-cards{display:flex; flex-wrap:wrap; gap:0.5rem;}
+.card{flex:0 0 100px; background:#fdfdfd; border:1px solid #ddd; border-radius:10px; padding:0.5rem; text-align:center; box-shadow:0 1px 3px rgba(0,0,0,0.05);}
+.time{font-weight:bold; margin-bottom:0.2rem;}
+.temp{font-size:1.1rem; margin:0.2rem 0;}
+.wind{font-size:0.8rem; margin:0.2rem 0; display:flex; align-items:center; justify-content:center; gap:0.2rem;}
+.wind-arrow{display:inline-block; width:12px; height:12px; border:solid #333; border-width:0 2px 2px 0; padding:1px;}
+.rain{font-size:0.8rem; margin:0.2rem 0;}
+img.weather-icon{width:50px; height:50px;}
 </style>
 </head>
 <body>
@@ -28,77 +28,67 @@ img.weather-icon{width:60px; height:60px;}
 <div id="forecast"></div>
 
 <script>
-// Compass conversion
 function degToCompass(num){
   const val=Math.floor((num/22.5)+0.5);
   const dirs=["N","NNE","NE","ENE","E","ESE","SE","SSE","S","SSW","SW","WSW","W","WNW","NW","NNW"];
   return dirs[val%16];
 }
-
-function getLocalHour(time){
-  const dt = new Date(time);
-  return dt.getHours();
-}
-
-function getIconUrl(symbol, hour){
+function getLocalHour(time){ return new Date(time).getHours(); }
+function getIconUrl(symbol,hour){
   if(!symbol) return "forecast_icons/00.png";
-  let num = String(symbol).padStart(2,"0");
-  let suffix = (hour>=7 && hour<=19) ? "d" : "n";
+  let num=String(symbol).padStart(2,"0");
+  let suffix=(hour>=7 && hour<=19)?"d":"n";
   return `forecast_icons/${num}${suffix}.png`;
 }
 
 async function loadForecast(){
   try{
-    const res = await fetch("../../forecast_data/forecast.json");
+    const res=await fetch("../../forecast_data/forecast.json");
     if(!res.ok) throw new Error("Failed to load forecast");
-    const data = await res.json();
+    const data=await res.json();
 
-    document.getElementById("timestamp").textContent = "Updated: " + new Date(data.timestamp).toLocaleString();
+    document.getElementById("timestamp").textContent="Updated: "+new Date(data.timestamp).toLocaleString();
 
-    const container = document.getElementById("forecast");
-    container.innerHTML = "";
+    const container=document.getElementById("forecast");
+    container.innerHTML="";
 
-    // Group by location/day
-    const grouped = {};
+    const grouped={};
     for(const f of data.forecasts){
       if(!grouped[f.group]) grouped[f.group]=[];
       grouped[f.group].push(f);
     }
 
     for(const [group, forecasts] of Object.entries(grouped)){
-      // Sort forecasts by time
-      forecasts.sort((a,b) => new Date(a.time) - new Date(b.time));
+      forecasts.sort((a,b)=>new Date(a.time)-new Date(b.time));
 
-      const dayDiv = document.createElement("div"); dayDiv.className="day-group";
-      const title = document.createElement("div"); title.className="day-title"; title.textContent = group.replace("_"," "); 
+      const dayDiv=document.createElement("div"); dayDiv.className="day-group";
+      const title=document.createElement("div"); title.className="day-title"; title.textContent=group.replace("_"," "); 
       dayDiv.appendChild(title);
 
-      const cards = document.createElement("div"); cards.className="forecast-cards";
+      const cards=document.createElement("div"); cards.className="forecast-cards";
 
       forecasts.forEach(f=>{
-        const card = document.createElement("div"); card.className="card";
-        const hour = getLocalHour(f.time);
+        const card=document.createElement("div"); card.className="card";
+        const hour=getLocalHour(f.time);
 
-        const timeDiv = document.createElement("div"); timeDiv.className="time";
-        timeDiv.textContent = new Date(f.time).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+        const timeDiv=document.createElement("div"); timeDiv.className="time";
+        timeDiv.textContent=new Date(f.time).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
 
-        const iconImg = document.createElement("img");
-        iconImg.className = "weather-icon";
-        iconImg.src = getIconUrl(f.WeatherSymbol, hour);
-        iconImg.alt = "Weather";
+        const iconImg=document.createElement("img"); iconImg.className="weather-icon";
+        iconImg.src=getIconUrl(f.WeatherSymbol,hour); iconImg.alt="Weather";
 
-        const tempDiv = document.createElement("div"); tempDiv.className="temp";
-        tempDiv.textContent = (f.Temperature ?? "-") + "°C";
+        const tempDiv=document.createElement("div"); tempDiv.className="temp";
+        tempDiv.textContent=(f.Temperature ?? "-")+"°C";
 
-        const windDiv = document.createElement("div"); windDiv.className="wind";
-        if(f.WindDirection != null && f.WindSpeed != null){
-          const dir = degToCompass(f.WindDirection);
-          const arrow = document.createElement("span"); arrow.className="wind-arrow"; arrow.style.transform = `rotate(${f.WindDirection}deg)`;
-          windDiv.textContent = `${Math.round(f.WindSpeed)} km/h ${dir} `; windDiv.appendChild(arrow);
-        } else { windDiv.textContent = "Wind: -"; }
+        const windDiv=document.createElement("div"); windDiv.className="wind";
+        if(f.WindDirection!=null && f.WindSpeed!=null){
+          const dir=degToCompass(f.WindDirection);
+          const arrow=document.createElement("span"); arrow.className="wind-arrow"; arrow.style.transform=`rotate(${f.WindDirection}deg)`;
+          windDiv.textContent=`${Math.round(f.WindSpeed)} km/h ${dir} `; windDiv.appendChild(arrow);
+        } else { windDiv.textContent="Wind: -"; }
 
-        const rainDiv = document.createElement("div"); rainDiv.className="rain";
-        rainDiv.textContent = `Rain: ${f.Rainfall ?? 0} mm`;
+        const rainDiv=document.createElement("div"); rainDiv.className="rain";
+        rainDiv.textContent=`Rain: ${f.Rainfall ?? 0} mm`;
 
         card.appendChild(timeDiv);
         card.appendChild(iconImg);
