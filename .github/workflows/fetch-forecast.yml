@@ -1,4 +1,4 @@
-name: Fetch Met Éireann Forecast
+name: Fetch Met Éireann Forecast 28-31 Aug
 
 on:
   schedule:
@@ -34,7 +34,6 @@ jobs:
           tree = ET.parse('forecast_data/raw_forecast.xml')
           root = tree.getroot()
 
-          # Define groups with start/end datetimes (aware, UTC)
           tz = datetime.timezone.utc
           groups = {
               "Portsalon_28Aug": (datetime.datetime(2025,8,28,11,0, tzinfo=tz), datetime.datetime(2025,8,28,19,0, tzinfo=tz)),
@@ -44,8 +43,6 @@ jobs:
           }
 
           forecasts = []
-
-          # helper to track added times and avoid duplicates
           seen = set()
 
           for time_el in root.findall('.//time'):
@@ -53,13 +50,11 @@ jobs:
               if not time_str:
                   continue
               dt = datetime.datetime.fromisoformat(time_str.replace('Z', '+00:00'))
-              dt_rounded = dt.replace(minute=0, second=0, microsecond=0)
 
               loc = time_el.find('location')
               if loc is None:
                   continue
 
-              # Determine which group it belongs to
               group_name = None
               for gname, (start_dt, end_dt) in groups.items():
                   if start_dt <= dt <= end_dt:
@@ -68,16 +63,12 @@ jobs:
               if not group_name:
                   continue
 
-              # Avoid duplicated datetime
-              key = (group_name, dt_rounded)
+              key = (group_name, dt)
               if key in seen:
                   continue
               seen.add(key)
 
-              entry = {
-                  "group": group_name,
-                  "time": dt.isoformat()
-              }
+              entry = {"group": group_name, "time": dt.isoformat()}
 
               temp = loc.find('temperature')
               if temp is not None:
@@ -89,12 +80,10 @@ jobs:
 
               windspeed = loc.find('windSpeed')
               if windspeed is not None:
-                  # Convert m/s to km/h
                   entry['WindSpeed'] = round(float(windspeed.attrib.get('mps',0))*3.6)
 
               precip = loc.find('precipitation')
               if precip is not None:
-                  # Use single value
                   entry['Rainfall'] = round(float(precip.attrib.get('value',0)),1)
 
               symbol = loc.find('symbol')
@@ -103,20 +92,12 @@ jobs:
 
               forecasts.append(entry)
 
-          # fallback if empty
           if not forecasts:
-              forecasts = [{
-                  "group": "Portsalon_28Aug",
-                  "time": datetime.datetime.now(tz).isoformat(),
-                  "Temperature": "N/A",
-                  "Rainfall": "0",
-                  "WindSpeed": 0,
-                  "WindDirection": 0,
-                  "WeatherSymbol3": "1"
-              }]
+              forecasts = [{"group":"Portsalon_28Aug","time":datetime.datetime.now(tz).isoformat(),
+                            "Temperature":"N/A","Rainfall":0,"WindSpeed":0,"WindDirection":0,"WeatherSymbol3":"1"}]
 
-          # Write JSON
           out = {"timestamp": datetime.datetime.now(tz).isoformat(), "forecasts": forecasts}
+
           with open('forecast_data/forecast.json','w') as f:
               json.dump(out, f, indent=2)
           print(f"Wrote {len(forecasts)} forecast entries to forecast_data/forecast.json")
