@@ -1,104 +1,98 @@
-name: Fetch Met Éireann Forecast
+name: Fetch Met Éireann Forecast - Aug
 
 on:
   schedule:
-    - cron: '0 * * * *'  # Every hour on the hour UTC
+    - cron: '0 * * * *'  # every hour on the hour
   workflow_dispatch:
 
 jobs:
   fetch_forecast:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Fetch Met Éireann XML
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests xmltodict
+
+      - name: Fetch Met Éireann XML for Portsalon
         run: |
           mkdir -p forecast_data
-          curl -s "http://openaccess.pf.api.met.ie/metno-wdb2ts/locationforecast?lat=55.267;long=-7.633" -o forecast_data/raw_forecast.xml
+          curl -s "http://openaccess.pf.api.met.ie/metno-wdb2ts/locationforecast?lat=55.2056262;long=-7.6350788" -o forecast_data/raw_portsalon.xml
+
+      - name: Fetch Met Éireann XML for Downings
+        run: |
+          curl -s "http://openaccess.pf.api.met.ie/metno-wdb2ts/locationforecast?lat=55.1948628;long=-7.8369654" -o forecast_data/raw_downings.xml
 
       - name: Convert XML to JSON
         run: |
-          python3 - <<'PY'
-          import xml.etree.ElementTree as ET
-          import json
-          import datetime
-          import pytz
+          python3 - <<'PYCODE'
+          import xmltodict, json, datetime
 
-          tree = ET.parse('forecast_data/raw_forecast.xml')
-          root = tree.getroot()
+          # Configuration for each day/course
+          locations = [
+            {"file": "forecast_data/raw_portsalon.xml", "group": "Portsalon_28Aug", "date": datetime.date(2025,8,28), "hours": range(7,20)},
+            {"file": "forecast_data/raw_downings.xml", "group": "Old Tom Morris_29Aug", "date": datetime.date(2025,8,29), "hours": range(7,20)},
+            {"file": "forecast_data/raw_downings.xml", "group": "St Patrick's_30Aug", "date": datetime.date(2025,8,30), "hours": range(7,20)},
+            {"file": "forecast_data/raw_downings.xml", "group": "Sandy Hills_31Aug", "date": datetime.date(2025,8,31), "hours": range(7,16)},
+          ]
 
-          tz = pytz.UTC
-          start = datetime.datetime(2025, 8, 28, tzinfo=tz)
-          end   = datetime.datetime(2025, 8, 31, 23, 59, tzinfo=tz)
+          forecasts = []
 
-          forecasts_dict = {}
+          for loc in locations:
+              with open(loc["file"]) as f:
+                  data = xmltodict.parse(f.read())
+                  times = data.get("weatherdata", {}).get("product", {}).get("time", [])
+                  if not isinstance(times, list):
+                      times = [times]
 
-          for time_el in root.findall('.//time'):
-              time_str = time_el.attrib.get('from')
-              if not time_str:
-                  continue
+                  for t in times:
+                      time_from = t.get("@from")
+                      if not time_from:
+                          continue
+                      dt = datetime.datetime.fromisoformat(time_from.replace('Z','+00:00'))
+                      if dt.date() != loc["date"] or dt.hour not in loc["hours"]:
+                          continue
 
-              dt = datetime.datetime.fromisoformat(time_str.replace('Z', '+00:00'))
-              if not (start <= dt <= end):
-                  continue
+                      loc_data = t.get("location", {})
+                      # Build forecast entry
+                      entry = {"group": loc["group"], "time": dt.isoformat()}
 
-              # Only keep hours 7am to 7pm
-              if not (7 <= dt.hour <= 19):
-                  continue
+                      # Temperature
+                      temp = loc_data.get("temperature", {})
+                      if isinstance(temp, dict):
+                          entry["Temperature"] = float(temp.get("@value", "N/A"))
 
-              loc = time_el.find('location')
-              if loc is None:
-                  continue
+                      # Wind
+                      winddir = loc_data.get("windDirection", {})
+                      entry["WindDirection"] = float(winddir.get("@deg", "0"))
+                      windspd = loc_data.get("windSpeed", {})
+                      entry["WindSpeed"] = float(windspd.get("@mps", "0")) * 3.6  # m/s -> km/h
 
-              # Determine group
-              day = dt.day
-              group = None
-              if day == 28: group = "Portsalon_28Aug"
-              elif day == 29: group = "Downings_29Aug"
-              elif day == 30: group = "Downings_30Aug"
-              elif day == 31: group = "Downings_31Aug"
+                      # Rain (precipitation)
+                      precip = loc_data.get("precipitation", {})
+                      if isinstance(precip, dict):
+                          entry["Rainfall"] = float(precip.get("@value", "0"))
 
-              key = group + "_" + dt.isoformat()
-              if key not in forecasts_dict:
-                  forecasts_dict[key] = {'group': group, 'time': dt.isoformat()}
+                      # Weather symbol
+                      symbol = loc_data.get("symbol", {})
+                      if isinstance(symbol, dict):
+                          entry["WeatherSymbol3"] = str(symbol.get("@number", "01"))
 
-              entry = forecasts_dict[key]
+                      forecasts.append(entry)
 
-              # Merge values
-              temp = loc.find('temperature')
-              if temp is not None:
-                  entry['Temperature'] = float(temp.attrib.get('value', entry.get('Temperature', 0)))
-
-              winddir = loc.find('windDirection')
-              if winddir is not None:
-                  entry['WindDirection'] = float(winddir.attrib.get('deg', entry.get('WindDirection', 0)))
-
-              windspeed = loc.find('windSpeed')
-              if windspeed is not None:
-                  entry['WindSpeed'] = float(windspeed.attrib.get('mps', 0)) * 3.6  # m/s -> km/h
-
-              precip = loc.find('precipitation')
-              if precip is not None:
-                  entry['Rainfall'] = float(precip.attrib.get('value', entry.get('Rainfall', 0)))
-
-              symbol = loc.find('symbol')
-              if symbol is not None:
-                  entry['WeatherSymbol3'] = symbol.attrib.get('number', entry.get('WeatherSymbol3'))
-
-          forecasts = list(forecasts_dict.values())
-
-          output = {
-              "timestamp": datetime.datetime.now(tz).isoformat(),
-              "forecasts": forecasts
-          }
-
-          with open('forecast_data/forecast.json','w') as f:
-              json.dump(output, f, indent=2)
-
+          final = {"timestamp": datetime.datetime.utcnow().isoformat(), "forecasts": forecasts}
+          with open("forecast_data/forecast.json","w") as f:
+              json.dump(final, f, indent=2)
           print(f"Wrote {len(forecasts)} forecast entries to forecast_data/forecast.json")
-          PY
+          PYCODE
 
       - name: Commit and push forecast.json
         run: |
