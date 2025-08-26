@@ -1,5 +1,5 @@
 {
-  "timestamp": "2025-08-26T22:09:50.833827Z",
+  "timestamp": "2025-08-26T22:16:44.431486Z",
   "forecasts": [
     {
       "group": "Portsalon_28Aug",
@@ -11,6 +11,33 @@
       "WeatherSymbol": "10"
     },
     {
+      "group": "Downings_29Aug",
+      "time": "2025-08-27T07:00:00Z",
+      "Temperature": 13.0,
+      "WindSpeed": 22.7,
+      "WindDirection": 148.0,
+      "Rainfall": 0.8,
+      "WeatherSymbol": "9"
+    },
+    {
+      "group": "Downings_30Aug",
+      "time": "2025-08-27T07:00:00Z",
+      "Temperature": 13.0,
+      "WindSpeed": 22.7,
+      "WindDirection": 148.0,
+      "Rainfall": 0.8,
+      "WeatherSymbol": "9"
+    },
+    {
+      "group": "Downings_31Aug",
+      "time": "2025-08-27T07:00:00Z",
+      "Temperature": 13.0,
+      "WindSpeed": 22.7,
+      "WindDirection": 148.0,
+      "Rainfall": 0.8,
+      "WeatherSymbol": "9"
+    },
+    {
       "group": "Portsalon_28Aug",
       "time": "2025-08-27T08:00:00Z",
       "Temperature": 13.5,
@@ -20,11 +47,65 @@
       "WeatherSymbol": "9"
     },
     {
+      "group": "Downings_29Aug",
+      "time": "2025-08-27T08:00:00Z",
+      "Temperature": 13.1,
+      "WindSpeed": 16.2,
+      "WindDirection": 168.0,
+      "Rainfall": 0.3,
+      "WeatherSymbol": "9"
+    },
+    {
+      "group": "Downings_30Aug",
+      "time": "2025-08-27T08:00:00Z",
+      "Temperature": 13.1,
+      "WindSpeed": 16.2,
+      "WindDirection": 168.0,
+      "Rainfall": 0.3,
+      "WeatherSymbol": "9"
+    },
+    {
+      "group": "Downings_31Aug",
+      "time": "2025-08-27T08:00:00Z",
+      "Temperature": 13.1,
+      "WindSpeed": 16.2,
+      "WindDirection": 168.0,
+      "Rainfall": 0.3,
+      "WeatherSymbol": "9"
+    },
+    {
       "group": "Portsalon_28Aug",
       "time": "2025-08-27T09:00:00Z",
       "Temperature": 13.5,
       "WindSpeed": 11.9,
       "WindDirection": 183.0,
+      "Rainfall": 0.0,
+      "WeatherSymbol": "3"
+    },
+    {
+      "group": "Downings_29Aug",
+      "time": "2025-08-27T09:00:00Z",
+      "Temperature": 13.5,
+      "WindSpeed": 12.2,
+      "WindDirection": 168.0,
+      "Rainfall": 0.0,
+      "WeatherSymbol": "3"
+    },
+    {
+      "group": "Downings_30Aug",
+      "time": "2025-08-27T09:00:00Z",
+      "Temperature": 13.5,
+      "WindSpeed": 12.2,
+      "WindDirection": 168.0,
+      "Rainfall": 0.0,
+      "WeatherSymbol": "3"
+    },
+    {
+      "group": "Downings_31Aug",
+      "time": "2025-08-27T09:00:00Z",
+      "Temperature": 13.5,
+      "WindSpeed": 12.2,
+      "WindDirection": 168.0,
       "Rainfall": 0.0,
       "WeatherSymbol": "3"
     },
@@ -38,6 +119,33 @@
       "WeatherSymbol": "3"
     },
     {
+      "group": "Downings_29Aug",
+      "time": "2025-08-27T10:00:00Z",
+      "Temperature": 14.2,
+      "WindSpeed": 13.3,
+      "WindDirection": 174.0,
+      "Rainfall": 0.0,
+      "WeatherSymbol": "1"
+    },
+    {
+      "group": "Downings_30Aug",
+      "time": "2025-08-27T10:00:00Z",
+      "Temperature": 14.2,
+      "WindSpeed": 13.3,
+      "WindDirection": 174.0,
+      "Rainfall": 0.0,
+      "WeatherSymbol": "1"
+    },
+    {
+      "group": "Downings_31Aug",
+      "time": "2025-08-27T10:00:00Z",
+      "Temperature": 14.2,
+      "WindSpeed": 13.3,
+      "WindDirection": 174.0,
+      "Rainfall": 0.0,
+      "WeatherSymbol": "1"
+    },
+    {
       "group": "Portsalon_28Aug",
       "time": "2025-08-27T11:00:00Z",
       "Temperature": 16.0,
@@ -47,11 +155,65 @@
       "WeatherSymbol": "3"
     },
     {
+      "group": "Downings_29Aug",
+      "time": "2025-08-27T11:00:00Z",
+      "Temperature": 16.0,
+      "WindSpeed": 16.6,
+      "WindDirection": 179.0,
+      "Rainfall": 0.0,
+      "WeatherSymbol": "4"
+    },
+    {
+      "group": "Downings_30Aug",
+      "time": "2025-08-27T11:00:00Z",
+      "Temperature": 16.0,
+      "WindSpeed": 16.6,
+      "WindDirection": 179.0,
+      "Rainfall": 0.0,
+      "WeatherSymbol": "4"
+    },
+    {
+      "group": "Downings_31Aug",
+      "time": "2025-08-27T11:00:00Z",
+      "Temperature": 16.0,
+      "WindSpeed": 16.6,
+      "WindDirection": 179.0,
+      "Rainfall": 0.0,
+      "WeatherSymbol": "4"
+    },
+    {
       "group": "Portsalon_28Aug",
       "time": "2025-08-27T12:00:00Z",
       "Temperature": 17.5,
       "WindSpeed": 19.8,
       "WindDirection": 189.0,
+      "Rainfall": 0.0,
+      "WeatherSymbol": "4"
+    },
+    {
+      "group": "Downings_29Aug",
+      "time": "2025-08-27T12:00:00Z",
+      "Temperature": 16.8,
+      "WindSpeed": 21.2,
+      "WindDirection": 182.0,
+      "Rainfall": 0.0,
+      "WeatherSymbol": "4"
+    },
+    {
+      "group": "Downings_30Aug",
+      "time": "2025-08-27T12:00:00Z",
+      "Temperature": 16.8,
+      "WindSpeed": 21.2,
+      "WindDirection": 182.0,
+      "Rainfall": 0.0,
+      "WeatherSymbol": "4"
+    },
+    {
+      "group": "Downings_31Aug",
+      "time": "2025-08-27T12:00:00Z",
+      "Temperature": 16.8,
+      "WindSpeed": 21.2,
+      "WindDirection": 182.0,
       "Rainfall": 0.0,
       "WeatherSymbol": "4"
     },
@@ -65,6 +227,33 @@
       "WeatherSymbol": "46"
     },
     {
+      "group": "Downings_29Aug",
+      "time": "2025-08-27T13:00:00Z",
+      "Temperature": 16.5,
+      "WindSpeed": 25.2,
+      "WindDirection": 176.0,
+      "Rainfall": 0.2,
+      "WeatherSymbol": "46"
+    },
+    {
+      "group": "Downings_30Aug",
+      "time": "2025-08-27T13:00:00Z",
+      "Temperature": 16.5,
+      "WindSpeed": 25.2,
+      "WindDirection": 176.0,
+      "Rainfall": 0.2,
+      "WeatherSymbol": "46"
+    },
+    {
+      "group": "Downings_31Aug",
+      "time": "2025-08-27T13:00:00Z",
+      "Temperature": 16.5,
+      "WindSpeed": 25.2,
+      "WindDirection": 176.0,
+      "Rainfall": 0.2,
+      "WeatherSymbol": "46"
+    },
+    {
       "group": "Portsalon_28Aug",
       "time": "2025-08-27T14:00:00Z",
       "Temperature": 16.7,
@@ -74,11 +263,65 @@
       "WeatherSymbol": "46"
     },
     {
+      "group": "Downings_29Aug",
+      "time": "2025-08-27T14:00:00Z",
+      "Temperature": 15.1,
+      "WindSpeed": 25.9,
+      "WindDirection": 166.0,
+      "Rainfall": 0.2,
+      "WeatherSymbol": "46"
+    },
+    {
+      "group": "Downings_30Aug",
+      "time": "2025-08-27T14:00:00Z",
+      "Temperature": 15.1,
+      "WindSpeed": 25.9,
+      "WindDirection": 166.0,
+      "Rainfall": 0.2,
+      "WeatherSymbol": "46"
+    },
+    {
+      "group": "Downings_31Aug",
+      "time": "2025-08-27T14:00:00Z",
+      "Temperature": 15.1,
+      "WindSpeed": 25.9,
+      "WindDirection": 166.0,
+      "Rainfall": 0.2,
+      "WeatherSymbol": "46"
+    },
+    {
       "group": "Portsalon_28Aug",
       "time": "2025-08-27T15:00:00Z",
       "Temperature": 16.5,
       "WindSpeed": 21.2,
       "WindDirection": 177.0,
+      "Rainfall": 0.2,
+      "WeatherSymbol": "46"
+    },
+    {
+      "group": "Downings_29Aug",
+      "time": "2025-08-27T15:00:00Z",
+      "Temperature": 15.7,
+      "WindSpeed": 24.1,
+      "WindDirection": 162.0,
+      "Rainfall": 0.2,
+      "WeatherSymbol": "46"
+    },
+    {
+      "group": "Downings_30Aug",
+      "time": "2025-08-27T15:00:00Z",
+      "Temperature": 15.7,
+      "WindSpeed": 24.1,
+      "WindDirection": 162.0,
+      "Rainfall": 0.2,
+      "WeatherSymbol": "46"
+    },
+    {
+      "group": "Downings_31Aug",
+      "time": "2025-08-27T15:00:00Z",
+      "Temperature": 15.7,
+      "WindSpeed": 24.1,
+      "WindDirection": 162.0,
       "Rainfall": 0.2,
       "WeatherSymbol": "46"
     },
@@ -92,10 +335,64 @@
       "WeatherSymbol": "9"
     },
     {
+      "group": "Downings_29Aug",
+      "time": "2025-08-27T16:00:00Z",
+      "Temperature": 14.8,
+      "WindSpeed": 22.0,
+      "WindDirection": 160.0,
+      "Rainfall": 0.3,
+      "WeatherSymbol": "9"
+    },
+    {
+      "group": "Downings_30Aug",
+      "time": "2025-08-27T16:00:00Z",
+      "Temperature": 14.8,
+      "WindSpeed": 22.0,
+      "WindDirection": 160.0,
+      "Rainfall": 0.3,
+      "WeatherSymbol": "9"
+    },
+    {
+      "group": "Downings_31Aug",
+      "time": "2025-08-27T16:00:00Z",
+      "Temperature": 14.8,
+      "WindSpeed": 22.0,
+      "WindDirection": 160.0,
+      "Rainfall": 0.3,
+      "WeatherSymbol": "9"
+    },
+    {
       "group": "Portsalon_28Aug",
       "time": "2025-08-27T17:00:00Z",
       "Temperature": 14.8,
       "WindSpeed": 17.6,
+      "WindDirection": 154.0,
+      "Rainfall": 0.2,
+      "WeatherSymbol": "46"
+    },
+    {
+      "group": "Downings_29Aug",
+      "time": "2025-08-27T17:00:00Z",
+      "Temperature": 14.3,
+      "WindSpeed": 19.8,
+      "WindDirection": 154.0,
+      "Rainfall": 0.2,
+      "WeatherSymbol": "46"
+    },
+    {
+      "group": "Downings_30Aug",
+      "time": "2025-08-27T17:00:00Z",
+      "Temperature": 14.3,
+      "WindSpeed": 19.8,
+      "WindDirection": 154.0,
+      "Rainfall": 0.2,
+      "WeatherSymbol": "46"
+    },
+    {
+      "group": "Downings_31Aug",
+      "time": "2025-08-27T17:00:00Z",
+      "Temperature": 14.3,
+      "WindSpeed": 19.8,
       "WindDirection": 154.0,
       "Rainfall": 0.2,
       "WeatherSymbol": "46"
@@ -106,6 +403,33 @@
       "Temperature": 14.5,
       "WindSpeed": 20.2,
       "WindDirection": 162.0,
+      "Rainfall": 0.2,
+      "WeatherSymbol": "46"
+    },
+    {
+      "group": "Downings_29Aug",
+      "time": "2025-08-27T18:00:00Z",
+      "Temperature": 14.1,
+      "WindSpeed": 22.0,
+      "WindDirection": 164.0,
+      "Rainfall": 0.2,
+      "WeatherSymbol": "46"
+    },
+    {
+      "group": "Downings_30Aug",
+      "time": "2025-08-27T18:00:00Z",
+      "Temperature": 14.1,
+      "WindSpeed": 22.0,
+      "WindDirection": 164.0,
+      "Rainfall": 0.2,
+      "WeatherSymbol": "46"
+    },
+    {
+      "group": "Downings_31Aug",
+      "time": "2025-08-27T18:00:00Z",
+      "Temperature": 14.1,
+      "WindSpeed": 22.0,
+      "WindDirection": 164.0,
       "Rainfall": 0.2,
       "WeatherSymbol": "46"
     },
@@ -119,11 +443,65 @@
       "WeatherSymbol": "46"
     },
     {
+      "group": "Downings_29Aug",
+      "time": "2025-08-27T19:00:00Z",
+      "Temperature": 14.0,
+      "WindSpeed": 21.2,
+      "WindDirection": 149.0,
+      "Rainfall": 0.3,
+      "WeatherSymbol": "9"
+    },
+    {
+      "group": "Downings_30Aug",
+      "time": "2025-08-27T19:00:00Z",
+      "Temperature": 14.0,
+      "WindSpeed": 21.2,
+      "WindDirection": 149.0,
+      "Rainfall": 0.3,
+      "WeatherSymbol": "9"
+    },
+    {
+      "group": "Downings_31Aug",
+      "time": "2025-08-27T19:00:00Z",
+      "Temperature": 14.0,
+      "WindSpeed": 21.2,
+      "WindDirection": 149.0,
+      "Rainfall": 0.3,
+      "WeatherSymbol": "9"
+    },
+    {
       "group": "Portsalon_28Aug",
       "time": "2025-08-28T07:00:00Z",
       "Temperature": 13.8,
       "WindSpeed": 19.1,
       "WindDirection": 167.0,
+      "Rainfall": 0.2,
+      "WeatherSymbol": "46"
+    },
+    {
+      "group": "Downings_29Aug",
+      "time": "2025-08-28T07:00:00Z",
+      "Temperature": 13.3,
+      "WindSpeed": 18.0,
+      "WindDirection": 166.0,
+      "Rainfall": 0.2,
+      "WeatherSymbol": "46"
+    },
+    {
+      "group": "Downings_30Aug",
+      "time": "2025-08-28T07:00:00Z",
+      "Temperature": 13.3,
+      "WindSpeed": 18.0,
+      "WindDirection": 166.0,
+      "Rainfall": 0.2,
+      "WeatherSymbol": "46"
+    },
+    {
+      "group": "Downings_31Aug",
+      "time": "2025-08-28T07:00:00Z",
+      "Temperature": 13.3,
+      "WindSpeed": 18.0,
+      "WindDirection": 166.0,
       "Rainfall": 0.2,
       "WeatherSymbol": "46"
     },
@@ -137,12 +515,66 @@
       "WeatherSymbol": "4"
     },
     {
+      "group": "Downings_29Aug",
+      "time": "2025-08-28T08:00:00Z",
+      "Temperature": 13.6,
+      "WindSpeed": 21.2,
+      "WindDirection": 158.0,
+      "Rainfall": 0.3,
+      "WeatherSymbol": "9"
+    },
+    {
+      "group": "Downings_30Aug",
+      "time": "2025-08-28T08:00:00Z",
+      "Temperature": 13.6,
+      "WindSpeed": 21.2,
+      "WindDirection": 158.0,
+      "Rainfall": 0.3,
+      "WeatherSymbol": "9"
+    },
+    {
+      "group": "Downings_31Aug",
+      "time": "2025-08-28T08:00:00Z",
+      "Temperature": 13.6,
+      "WindSpeed": 21.2,
+      "WindDirection": 158.0,
+      "Rainfall": 0.3,
+      "WeatherSymbol": "9"
+    },
+    {
       "group": "Portsalon_28Aug",
       "time": "2025-08-28T09:00:00Z",
       "Temperature": 14.6,
       "WindSpeed": 20.5,
       "WindDirection": 166.0,
       "Rainfall": 0.4,
+      "WeatherSymbol": "9"
+    },
+    {
+      "group": "Downings_29Aug",
+      "time": "2025-08-28T09:00:00Z",
+      "Temperature": 14.1,
+      "WindSpeed": 22.7,
+      "WindDirection": 162.0,
+      "Rainfall": 0.5,
+      "WeatherSymbol": "9"
+    },
+    {
+      "group": "Downings_30Aug",
+      "time": "2025-08-28T09:00:00Z",
+      "Temperature": 14.1,
+      "WindSpeed": 22.7,
+      "WindDirection": 162.0,
+      "Rainfall": 0.5,
+      "WeatherSymbol": "9"
+    },
+    {
+      "group": "Downings_31Aug",
+      "time": "2025-08-28T09:00:00Z",
+      "Temperature": 14.1,
+      "WindSpeed": 22.7,
+      "WindDirection": 162.0,
+      "Rainfall": 0.5,
       "WeatherSymbol": "9"
     },
     {
@@ -155,11 +587,65 @@
       "WeatherSymbol": "9"
     },
     {
+      "group": "Downings_29Aug",
+      "time": "2025-08-28T10:00:00Z",
+      "Temperature": 14.4,
+      "WindSpeed": 22.7,
+      "WindDirection": 155.0,
+      "Rainfall": 0.4,
+      "WeatherSymbol": "9"
+    },
+    {
+      "group": "Downings_30Aug",
+      "time": "2025-08-28T10:00:00Z",
+      "Temperature": 14.4,
+      "WindSpeed": 22.7,
+      "WindDirection": 155.0,
+      "Rainfall": 0.4,
+      "WeatherSymbol": "9"
+    },
+    {
+      "group": "Downings_31Aug",
+      "time": "2025-08-28T10:00:00Z",
+      "Temperature": 14.4,
+      "WindSpeed": 22.7,
+      "WindDirection": 155.0,
+      "Rainfall": 0.4,
+      "WeatherSymbol": "9"
+    },
+    {
       "group": "Portsalon_28Aug",
       "time": "2025-08-28T11:00:00Z",
       "Temperature": 15.4,
       "WindSpeed": 22.0,
       "WindDirection": 154.0,
+      "Rainfall": 0.3,
+      "WeatherSymbol": "9"
+    },
+    {
+      "group": "Downings_29Aug",
+      "time": "2025-08-28T11:00:00Z",
+      "Temperature": 14.8,
+      "WindSpeed": 24.8,
+      "WindDirection": 152.0,
+      "Rainfall": 0.3,
+      "WeatherSymbol": "9"
+    },
+    {
+      "group": "Downings_30Aug",
+      "time": "2025-08-28T11:00:00Z",
+      "Temperature": 14.8,
+      "WindSpeed": 24.8,
+      "WindDirection": 152.0,
+      "Rainfall": 0.3,
+      "WeatherSymbol": "9"
+    },
+    {
+      "group": "Downings_31Aug",
+      "time": "2025-08-28T11:00:00Z",
+      "Temperature": 14.8,
+      "WindSpeed": 24.8,
+      "WindDirection": 152.0,
       "Rainfall": 0.3,
       "WeatherSymbol": "9"
     },
@@ -173,6 +659,33 @@
       "WeatherSymbol": "9"
     },
     {
+      "group": "Downings_29Aug",
+      "time": "2025-08-28T12:00:00Z",
+      "Temperature": 14.1,
+      "WindSpeed": 25.6,
+      "WindDirection": 151.0,
+      "Rainfall": 0.5,
+      "WeatherSymbol": "9"
+    },
+    {
+      "group": "Downings_30Aug",
+      "time": "2025-08-28T12:00:00Z",
+      "Temperature": 14.1,
+      "WindSpeed": 25.6,
+      "WindDirection": 151.0,
+      "Rainfall": 0.5,
+      "WeatherSymbol": "9"
+    },
+    {
+      "group": "Downings_31Aug",
+      "time": "2025-08-28T12:00:00Z",
+      "Temperature": 14.1,
+      "WindSpeed": 25.6,
+      "WindDirection": 151.0,
+      "Rainfall": 0.5,
+      "WeatherSymbol": "9"
+    },
+    {
       "group": "Portsalon_28Aug",
       "time": "2025-08-28T13:00:00Z",
       "Temperature": 14.2,
@@ -180,6 +693,33 @@
       "WindDirection": 147.0,
       "Rainfall": 0.9,
       "WeatherSymbol": "9"
+    },
+    {
+      "group": "Downings_29Aug",
+      "time": "2025-08-28T13:00:00Z",
+      "Temperature": 13.7,
+      "WindSpeed": 24.5,
+      "WindDirection": 152.0,
+      "Rainfall": 0.7,
+      "WeatherSymbol": "5"
+    },
+    {
+      "group": "Downings_30Aug",
+      "time": "2025-08-28T13:00:00Z",
+      "Temperature": 13.7,
+      "WindSpeed": 24.5,
+      "WindDirection": 152.0,
+      "Rainfall": 0.7,
+      "WeatherSymbol": "5"
+    },
+    {
+      "group": "Downings_31Aug",
+      "time": "2025-08-28T13:00:00Z",
+      "Temperature": 13.7,
+      "WindSpeed": 24.5,
+      "WindDirection": 152.0,
+      "Rainfall": 0.7,
+      "WeatherSymbol": "5"
     },
     {
       "group": "Portsalon_28Aug",
@@ -191,12 +731,66 @@
       "WeatherSymbol": "5"
     },
     {
+      "group": "Downings_29Aug",
+      "time": "2025-08-28T14:00:00Z",
+      "Temperature": 14.5,
+      "WindSpeed": 16.6,
+      "WindDirection": 156.0,
+      "Rainfall": 0.7,
+      "WeatherSymbol": "9"
+    },
+    {
+      "group": "Downings_30Aug",
+      "time": "2025-08-28T14:00:00Z",
+      "Temperature": 14.5,
+      "WindSpeed": 16.6,
+      "WindDirection": 156.0,
+      "Rainfall": 0.7,
+      "WeatherSymbol": "9"
+    },
+    {
+      "group": "Downings_31Aug",
+      "time": "2025-08-28T14:00:00Z",
+      "Temperature": 14.5,
+      "WindSpeed": 16.6,
+      "WindDirection": 156.0,
+      "Rainfall": 0.7,
+      "WeatherSymbol": "9"
+    },
+    {
       "group": "Portsalon_28Aug",
       "time": "2025-08-28T15:00:00Z",
       "Temperature": 15.9,
       "WindSpeed": 14.4,
       "WindDirection": 182.0,
       "Rainfall": 0.5,
+      "WeatherSymbol": "9"
+    },
+    {
+      "group": "Downings_29Aug",
+      "time": "2025-08-28T15:00:00Z",
+      "Temperature": 15.3,
+      "WindSpeed": 16.9,
+      "WindDirection": 218.0,
+      "Rainfall": 0.3,
+      "WeatherSymbol": "9"
+    },
+    {
+      "group": "Downings_30Aug",
+      "time": "2025-08-28T15:00:00Z",
+      "Temperature": 15.3,
+      "WindSpeed": 16.9,
+      "WindDirection": 218.0,
+      "Rainfall": 0.3,
+      "WeatherSymbol": "9"
+    },
+    {
+      "group": "Downings_31Aug",
+      "time": "2025-08-28T15:00:00Z",
+      "Temperature": 15.3,
+      "WindSpeed": 16.9,
+      "WindDirection": 218.0,
+      "Rainfall": 0.3,
       "WeatherSymbol": "9"
     },
     {
@@ -209,6 +803,33 @@
       "WeatherSymbol": "46"
     },
     {
+      "group": "Downings_29Aug",
+      "time": "2025-08-28T16:00:00Z",
+      "Temperature": 14.5,
+      "WindSpeed": 28.1,
+      "WindDirection": 249.0,
+      "Rainfall": 0.3,
+      "WeatherSymbol": "9"
+    },
+    {
+      "group": "Downings_30Aug",
+      "time": "2025-08-28T16:00:00Z",
+      "Temperature": 14.5,
+      "WindSpeed": 28.1,
+      "WindDirection": 249.0,
+      "Rainfall": 0.3,
+      "WeatherSymbol": "9"
+    },
+    {
+      "group": "Downings_31Aug",
+      "time": "2025-08-28T16:00:00Z",
+      "Temperature": 14.5,
+      "WindSpeed": 28.1,
+      "WindDirection": 249.0,
+      "Rainfall": 0.3,
+      "WeatherSymbol": "9"
+    },
+    {
       "group": "Portsalon_28Aug",
       "time": "2025-08-28T17:00:00Z",
       "Temperature": 14.7,
@@ -218,11 +839,65 @@
       "WeatherSymbol": "5"
     },
     {
+      "group": "Downings_29Aug",
+      "time": "2025-08-28T17:00:00Z",
+      "Temperature": 14.4,
+      "WindSpeed": 27.0,
+      "WindDirection": 243.0,
+      "Rainfall": 0.4,
+      "WeatherSymbol": "9"
+    },
+    {
+      "group": "Downings_30Aug",
+      "time": "2025-08-28T17:00:00Z",
+      "Temperature": 14.4,
+      "WindSpeed": 27.0,
+      "WindDirection": 243.0,
+      "Rainfall": 0.4,
+      "WeatherSymbol": "9"
+    },
+    {
+      "group": "Downings_31Aug",
+      "time": "2025-08-28T17:00:00Z",
+      "Temperature": 14.4,
+      "WindSpeed": 27.0,
+      "WindDirection": 243.0,
+      "Rainfall": 0.4,
+      "WeatherSymbol": "9"
+    },
+    {
       "group": "Portsalon_28Aug",
       "time": "2025-08-28T18:00:00Z",
       "Temperature": 14.6,
       "WindSpeed": 19.1,
       "WindDirection": 240.0,
+      "Rainfall": 0.2,
+      "WeatherSymbol": "40"
+    },
+    {
+      "group": "Downings_29Aug",
+      "time": "2025-08-28T18:00:00Z",
+      "Temperature": 14.6,
+      "WindSpeed": 22.3,
+      "WindDirection": 247.0,
+      "Rainfall": 0.2,
+      "WeatherSymbol": "40"
+    },
+    {
+      "group": "Downings_30Aug",
+      "time": "2025-08-28T18:00:00Z",
+      "Temperature": 14.6,
+      "WindSpeed": 22.3,
+      "WindDirection": 247.0,
+      "Rainfall": 0.2,
+      "WeatherSymbol": "40"
+    },
+    {
+      "group": "Downings_31Aug",
+      "time": "2025-08-28T18:00:00Z",
+      "Temperature": 14.6,
+      "WindSpeed": 22.3,
+      "WindDirection": 247.0,
       "Rainfall": 0.2,
       "WeatherSymbol": "40"
     },
@@ -236,11 +911,65 @@
       "WeatherSymbol": "5"
     },
     {
+      "group": "Downings_29Aug",
+      "time": "2025-08-28T19:00:00Z",
+      "Temperature": 14.3,
+      "WindSpeed": 14.8,
+      "WindDirection": 240.0,
+      "Rainfall": 0.3,
+      "WeatherSymbol": "5"
+    },
+    {
+      "group": "Downings_30Aug",
+      "time": "2025-08-28T19:00:00Z",
+      "Temperature": 14.3,
+      "WindSpeed": 14.8,
+      "WindDirection": 240.0,
+      "Rainfall": 0.3,
+      "WeatherSymbol": "5"
+    },
+    {
+      "group": "Downings_31Aug",
+      "time": "2025-08-28T19:00:00Z",
+      "Temperature": 14.3,
+      "WindSpeed": 14.8,
+      "WindDirection": 240.0,
+      "Rainfall": 0.3,
+      "WeatherSymbol": "5"
+    },
+    {
       "group": "Portsalon_28Aug",
       "time": "2025-08-29T07:00:00Z",
       "Temperature": 13.2,
       "WindSpeed": 20.9,
       "WindDirection": 259.0,
+      "Rainfall": 0.2,
+      "WeatherSymbol": "46"
+    },
+    {
+      "group": "Downings_29Aug",
+      "time": "2025-08-29T07:00:00Z",
+      "Temperature": 13.4,
+      "WindSpeed": 22.3,
+      "WindDirection": 265.0,
+      "Rainfall": 0.2,
+      "WeatherSymbol": "46"
+    },
+    {
+      "group": "Downings_30Aug",
+      "time": "2025-08-29T07:00:00Z",
+      "Temperature": 13.4,
+      "WindSpeed": 22.3,
+      "WindDirection": 265.0,
+      "Rainfall": 0.2,
+      "WeatherSymbol": "46"
+    },
+    {
+      "group": "Downings_31Aug",
+      "time": "2025-08-29T07:00:00Z",
+      "Temperature": 13.4,
+      "WindSpeed": 22.3,
+      "WindDirection": 265.0,
       "Rainfall": 0.2,
       "WeatherSymbol": "46"
     },
@@ -254,6 +983,33 @@
       "WeatherSymbol": "46"
     },
     {
+      "group": "Downings_29Aug",
+      "time": "2025-08-29T08:00:00Z",
+      "Temperature": 13.6,
+      "WindSpeed": 21.2,
+      "WindDirection": 264.0,
+      "Rainfall": 0.2,
+      "WeatherSymbol": "40"
+    },
+    {
+      "group": "Downings_30Aug",
+      "time": "2025-08-29T08:00:00Z",
+      "Temperature": 13.6,
+      "WindSpeed": 21.2,
+      "WindDirection": 264.0,
+      "Rainfall": 0.2,
+      "WeatherSymbol": "40"
+    },
+    {
+      "group": "Downings_31Aug",
+      "time": "2025-08-29T08:00:00Z",
+      "Temperature": 13.6,
+      "WindSpeed": 21.2,
+      "WindDirection": 264.0,
+      "Rainfall": 0.2,
+      "WeatherSymbol": "40"
+    },
+    {
       "group": "Portsalon_28Aug",
       "time": "2025-08-29T09:00:00Z",
       "Temperature": 14.0,
@@ -263,11 +1019,65 @@
       "WeatherSymbol": "40"
     },
     {
+      "group": "Downings_29Aug",
+      "time": "2025-08-29T09:00:00Z",
+      "Temperature": 14.0,
+      "WindSpeed": 18.4,
+      "WindDirection": 261.0,
+      "Rainfall": 0.1,
+      "WeatherSymbol": "40"
+    },
+    {
+      "group": "Downings_30Aug",
+      "time": "2025-08-29T09:00:00Z",
+      "Temperature": 14.0,
+      "WindSpeed": 18.4,
+      "WindDirection": 261.0,
+      "Rainfall": 0.1,
+      "WeatherSymbol": "40"
+    },
+    {
+      "group": "Downings_31Aug",
+      "time": "2025-08-29T09:00:00Z",
+      "Temperature": 14.0,
+      "WindSpeed": 18.4,
+      "WindDirection": 261.0,
+      "Rainfall": 0.1,
+      "WeatherSymbol": "40"
+    },
+    {
       "group": "Portsalon_28Aug",
       "time": "2025-08-29T10:00:00Z",
       "Temperature": 14.6,
       "WindSpeed": 19.8,
       "WindDirection": 271.0,
+      "Rainfall": 0.2,
+      "WeatherSymbol": "40"
+    },
+    {
+      "group": "Downings_29Aug",
+      "time": "2025-08-29T10:00:00Z",
+      "Temperature": 14.5,
+      "WindSpeed": 19.4,
+      "WindDirection": 269.0,
+      "Rainfall": 0.2,
+      "WeatherSymbol": "40"
+    },
+    {
+      "group": "Downings_30Aug",
+      "time": "2025-08-29T10:00:00Z",
+      "Temperature": 14.5,
+      "WindSpeed": 19.4,
+      "WindDirection": 269.0,
+      "Rainfall": 0.2,
+      "WeatherSymbol": "40"
+    },
+    {
+      "group": "Downings_31Aug",
+      "time": "2025-08-29T10:00:00Z",
+      "Temperature": 14.5,
+      "WindSpeed": 19.4,
+      "WindDirection": 269.0,
       "Rainfall": 0.2,
       "WeatherSymbol": "40"
     },
@@ -281,11 +1091,65 @@
       "WeatherSymbol": "5"
     },
     {
+      "group": "Downings_29Aug",
+      "time": "2025-08-29T11:00:00Z",
+      "Temperature": 14.4,
+      "WindSpeed": 22.0,
+      "WindDirection": 272.0,
+      "Rainfall": 0.2,
+      "WeatherSymbol": "40"
+    },
+    {
+      "group": "Downings_30Aug",
+      "time": "2025-08-29T11:00:00Z",
+      "Temperature": 14.4,
+      "WindSpeed": 22.0,
+      "WindDirection": 272.0,
+      "Rainfall": 0.2,
+      "WeatherSymbol": "40"
+    },
+    {
+      "group": "Downings_31Aug",
+      "time": "2025-08-29T11:00:00Z",
+      "Temperature": 14.4,
+      "WindSpeed": 22.0,
+      "WindDirection": 272.0,
+      "Rainfall": 0.2,
+      "WeatherSymbol": "40"
+    },
+    {
       "group": "Portsalon_28Aug",
       "time": "2025-08-29T12:00:00Z",
       "Temperature": 14.9,
       "WindSpeed": 20.2,
       "WindDirection": 270.0,
+      "Rainfall": 0.2,
+      "WeatherSymbol": "40"
+    },
+    {
+      "group": "Downings_29Aug",
+      "time": "2025-08-29T12:00:00Z",
+      "Temperature": 15.1,
+      "WindSpeed": 22.0,
+      "WindDirection": 272.0,
+      "Rainfall": 0.2,
+      "WeatherSymbol": "40"
+    },
+    {
+      "group": "Downings_30Aug",
+      "time": "2025-08-29T12:00:00Z",
+      "Temperature": 15.1,
+      "WindSpeed": 22.0,
+      "WindDirection": 272.0,
+      "Rainfall": 0.2,
+      "WeatherSymbol": "40"
+    },
+    {
+      "group": "Downings_31Aug",
+      "time": "2025-08-29T12:00:00Z",
+      "Temperature": 15.1,
+      "WindSpeed": 22.0,
+      "WindDirection": 272.0,
       "Rainfall": 0.2,
       "WeatherSymbol": "40"
     },
@@ -299,12 +1163,66 @@
       "WeatherSymbol": "40"
     },
     {
+      "group": "Downings_29Aug",
+      "time": "2025-08-29T13:00:00Z",
+      "Temperature": 16.0,
+      "WindSpeed": 24.5,
+      "WindDirection": 280.0,
+      "Rainfall": 0.2,
+      "WeatherSymbol": "40"
+    },
+    {
+      "group": "Downings_30Aug",
+      "time": "2025-08-29T13:00:00Z",
+      "Temperature": 16.0,
+      "WindSpeed": 24.5,
+      "WindDirection": 280.0,
+      "Rainfall": 0.2,
+      "WeatherSymbol": "40"
+    },
+    {
+      "group": "Downings_31Aug",
+      "time": "2025-08-29T13:00:00Z",
+      "Temperature": 16.0,
+      "WindSpeed": 24.5,
+      "WindDirection": 280.0,
+      "Rainfall": 0.2,
+      "WeatherSymbol": "40"
+    },
+    {
       "group": "Portsalon_28Aug",
       "time": "2025-08-29T14:00:00Z",
       "Temperature": 16.2,
       "WindSpeed": 23.4,
       "WindDirection": 279.0,
       "Rainfall": 0.2,
+      "WeatherSymbol": "40"
+    },
+    {
+      "group": "Downings_29Aug",
+      "time": "2025-08-29T14:00:00Z",
+      "Temperature": 15.8,
+      "WindSpeed": 25.6,
+      "WindDirection": 279.0,
+      "Rainfall": 0.1,
+      "WeatherSymbol": "40"
+    },
+    {
+      "group": "Downings_30Aug",
+      "time": "2025-08-29T14:00:00Z",
+      "Temperature": 15.8,
+      "WindSpeed": 25.6,
+      "WindDirection": 279.0,
+      "Rainfall": 0.1,
+      "WeatherSymbol": "40"
+    },
+    {
+      "group": "Downings_31Aug",
+      "time": "2025-08-29T14:00:00Z",
+      "Temperature": 15.8,
+      "WindSpeed": 25.6,
+      "WindDirection": 279.0,
+      "Rainfall": 0.1,
       "WeatherSymbol": "40"
     },
     {
@@ -317,11 +1235,65 @@
       "WeatherSymbol": "40"
     },
     {
+      "group": "Downings_29Aug",
+      "time": "2025-08-29T15:00:00Z",
+      "Temperature": 15.9,
+      "WindSpeed": 24.1,
+      "WindDirection": 274.0,
+      "Rainfall": 0.1,
+      "WeatherSymbol": "40"
+    },
+    {
+      "group": "Downings_30Aug",
+      "time": "2025-08-29T15:00:00Z",
+      "Temperature": 15.9,
+      "WindSpeed": 24.1,
+      "WindDirection": 274.0,
+      "Rainfall": 0.1,
+      "WeatherSymbol": "40"
+    },
+    {
+      "group": "Downings_31Aug",
+      "time": "2025-08-29T15:00:00Z",
+      "Temperature": 15.9,
+      "WindSpeed": 24.1,
+      "WindDirection": 274.0,
+      "Rainfall": 0.1,
+      "WeatherSymbol": "40"
+    },
+    {
       "group": "Portsalon_28Aug",
       "time": "2025-08-29T16:00:00Z",
       "Temperature": 15.8,
       "WindSpeed": 22.7,
       "WindDirection": 278.0,
+      "Rainfall": 0.1,
+      "WeatherSymbol": "40"
+    },
+    {
+      "group": "Downings_29Aug",
+      "time": "2025-08-29T16:00:00Z",
+      "Temperature": 15.6,
+      "WindSpeed": 24.8,
+      "WindDirection": 276.0,
+      "Rainfall": 0.1,
+      "WeatherSymbol": "40"
+    },
+    {
+      "group": "Downings_30Aug",
+      "time": "2025-08-29T16:00:00Z",
+      "Temperature": 15.6,
+      "WindSpeed": 24.8,
+      "WindDirection": 276.0,
+      "Rainfall": 0.1,
+      "WeatherSymbol": "40"
+    },
+    {
+      "group": "Downings_31Aug",
+      "time": "2025-08-29T16:00:00Z",
+      "Temperature": 15.6,
+      "WindSpeed": 24.8,
+      "WindDirection": 276.0,
       "Rainfall": 0.1,
       "WeatherSymbol": "40"
     },
@@ -335,6 +1307,33 @@
       "WeatherSymbol": "40"
     },
     {
+      "group": "Downings_29Aug",
+      "time": "2025-08-29T17:00:00Z",
+      "Temperature": 15.3,
+      "WindSpeed": 23.0,
+      "WindDirection": 277.0,
+      "Rainfall": 0.0,
+      "WeatherSymbol": "3"
+    },
+    {
+      "group": "Downings_30Aug",
+      "time": "2025-08-29T17:00:00Z",
+      "Temperature": 15.3,
+      "WindSpeed": 23.0,
+      "WindDirection": 277.0,
+      "Rainfall": 0.0,
+      "WeatherSymbol": "3"
+    },
+    {
+      "group": "Downings_31Aug",
+      "time": "2025-08-29T17:00:00Z",
+      "Temperature": 15.3,
+      "WindSpeed": 23.0,
+      "WindDirection": 277.0,
+      "Rainfall": 0.0,
+      "WeatherSymbol": "3"
+    },
+    {
       "group": "Portsalon_28Aug",
       "time": "2025-08-29T18:00:00Z",
       "Temperature": 14.8,
@@ -344,11 +1343,65 @@
       "WeatherSymbol": "3"
     },
     {
+      "group": "Downings_29Aug",
+      "time": "2025-08-29T18:00:00Z",
+      "Temperature": 14.8,
+      "WindSpeed": 21.2,
+      "WindDirection": 272.0,
+      "Rainfall": 0.0,
+      "WeatherSymbol": "3"
+    },
+    {
+      "group": "Downings_30Aug",
+      "time": "2025-08-29T18:00:00Z",
+      "Temperature": 14.8,
+      "WindSpeed": 21.2,
+      "WindDirection": 272.0,
+      "Rainfall": 0.0,
+      "WeatherSymbol": "3"
+    },
+    {
+      "group": "Downings_31Aug",
+      "time": "2025-08-29T18:00:00Z",
+      "Temperature": 14.8,
+      "WindSpeed": 21.2,
+      "WindDirection": 272.0,
+      "Rainfall": 0.0,
+      "WeatherSymbol": "3"
+    },
+    {
       "group": "Portsalon_28Aug",
       "time": "2025-08-29T19:00:00Z",
       "Temperature": 14.1,
       "WindSpeed": 15.8,
       "WindDirection": 266.0,
+      "Rainfall": 0.0,
+      "WeatherSymbol": "3"
+    },
+    {
+      "group": "Downings_29Aug",
+      "time": "2025-08-29T19:00:00Z",
+      "Temperature": 14.1,
+      "WindSpeed": 18.4,
+      "WindDirection": 267.0,
+      "Rainfall": 0.0,
+      "WeatherSymbol": "3"
+    },
+    {
+      "group": "Downings_30Aug",
+      "time": "2025-08-29T19:00:00Z",
+      "Temperature": 14.1,
+      "WindSpeed": 18.4,
+      "WindDirection": 267.0,
+      "Rainfall": 0.0,
+      "WeatherSymbol": "3"
+    },
+    {
+      "group": "Downings_31Aug",
+      "time": "2025-08-29T19:00:00Z",
+      "Temperature": 14.1,
+      "WindSpeed": 18.4,
+      "WindDirection": 267.0,
       "Rainfall": 0.0,
       "WeatherSymbol": "3"
     },
@@ -362,12 +1415,66 @@
       "WeatherSymbol": "9"
     },
     {
+      "group": "Downings_29Aug",
+      "time": "2025-08-30T09:00:00Z",
+      "Temperature": 14.4,
+      "WindSpeed": 16.2,
+      "WindDirection": 174.0,
+      "Rainfall": 1.8,
+      "WeatherSymbol": "9"
+    },
+    {
+      "group": "Downings_30Aug",
+      "time": "2025-08-30T09:00:00Z",
+      "Temperature": 14.4,
+      "WindSpeed": 16.2,
+      "WindDirection": 174.0,
+      "Rainfall": 1.8,
+      "WeatherSymbol": "9"
+    },
+    {
+      "group": "Downings_31Aug",
+      "time": "2025-08-30T09:00:00Z",
+      "Temperature": 14.4,
+      "WindSpeed": 16.2,
+      "WindDirection": 174.0,
+      "Rainfall": 1.8,
+      "WeatherSymbol": "9"
+    },
+    {
       "group": "Portsalon_28Aug",
       "time": "2025-08-30T12:00:00Z",
       "Temperature": 13.9,
       "WindSpeed": 15.8,
       "WindDirection": 145.0,
       "Rainfall": 7.4,
+      "WeatherSymbol": "10"
+    },
+    {
+      "group": "Downings_29Aug",
+      "time": "2025-08-30T12:00:00Z",
+      "Temperature": 13.5,
+      "WindSpeed": 16.2,
+      "WindDirection": 142.0,
+      "Rainfall": 6.5,
+      "WeatherSymbol": "10"
+    },
+    {
+      "group": "Downings_30Aug",
+      "time": "2025-08-30T12:00:00Z",
+      "Temperature": 13.5,
+      "WindSpeed": 16.2,
+      "WindDirection": 142.0,
+      "Rainfall": 6.5,
+      "WeatherSymbol": "10"
+    },
+    {
+      "group": "Downings_31Aug",
+      "time": "2025-08-30T12:00:00Z",
+      "Temperature": 13.5,
+      "WindSpeed": 16.2,
+      "WindDirection": 142.0,
+      "Rainfall": 6.5,
       "WeatherSymbol": "10"
     },
     {
@@ -380,12 +1487,66 @@
       "WeatherSymbol": "10"
     },
     {
+      "group": "Downings_29Aug",
+      "time": "2025-08-30T15:00:00Z",
+      "Temperature": 13.5,
+      "WindSpeed": 15.1,
+      "WindDirection": 88.0,
+      "Rainfall": 8.7,
+      "WeatherSymbol": "10"
+    },
+    {
+      "group": "Downings_30Aug",
+      "time": "2025-08-30T15:00:00Z",
+      "Temperature": 13.5,
+      "WindSpeed": 15.1,
+      "WindDirection": 88.0,
+      "Rainfall": 8.7,
+      "WeatherSymbol": "10"
+    },
+    {
+      "group": "Downings_31Aug",
+      "time": "2025-08-30T15:00:00Z",
+      "Temperature": 13.5,
+      "WindSpeed": 15.1,
+      "WindDirection": 88.0,
+      "Rainfall": 8.7,
+      "WeatherSymbol": "10"
+    },
+    {
       "group": "Portsalon_28Aug",
       "time": "2025-08-30T18:00:00Z",
       "Temperature": 13.5,
       "WindSpeed": 23.0,
       "WindDirection": 26.0,
       "Rainfall": 11.8,
+      "WeatherSymbol": "10"
+    },
+    {
+      "group": "Downings_29Aug",
+      "time": "2025-08-30T18:00:00Z",
+      "Temperature": 13.5,
+      "WindSpeed": 23.8,
+      "WindDirection": 27.0,
+      "Rainfall": 11.6,
+      "WeatherSymbol": "10"
+    },
+    {
+      "group": "Downings_30Aug",
+      "time": "2025-08-30T18:00:00Z",
+      "Temperature": 13.5,
+      "WindSpeed": 23.8,
+      "WindDirection": 27.0,
+      "Rainfall": 11.6,
+      "WeatherSymbol": "10"
+    },
+    {
+      "group": "Downings_31Aug",
+      "time": "2025-08-30T18:00:00Z",
+      "Temperature": 13.5,
+      "WindSpeed": 23.8,
+      "WindDirection": 27.0,
+      "Rainfall": 11.6,
       "WeatherSymbol": "10"
     },
     {
@@ -398,6 +1559,33 @@
       "WeatherSymbol": "41"
     },
     {
+      "group": "Downings_29Aug",
+      "time": "2025-08-31T09:00:00Z",
+      "Temperature": 13.4,
+      "WindSpeed": 26.3,
+      "WindDirection": 250.0,
+      "Rainfall": 0.8,
+      "WeatherSymbol": "5"
+    },
+    {
+      "group": "Downings_30Aug",
+      "time": "2025-08-31T09:00:00Z",
+      "Temperature": 13.4,
+      "WindSpeed": 26.3,
+      "WindDirection": 250.0,
+      "Rainfall": 0.8,
+      "WeatherSymbol": "5"
+    },
+    {
+      "group": "Downings_31Aug",
+      "time": "2025-08-31T09:00:00Z",
+      "Temperature": 13.4,
+      "WindSpeed": 26.3,
+      "WindDirection": 250.0,
+      "Rainfall": 0.8,
+      "WeatherSymbol": "5"
+    },
+    {
       "group": "Portsalon_28Aug",
       "time": "2025-08-31T12:00:00Z",
       "Temperature": 13.8,
@@ -407,11 +1595,65 @@
       "WeatherSymbol": "5"
     },
     {
+      "group": "Downings_29Aug",
+      "time": "2025-08-31T12:00:00Z",
+      "Temperature": 13.6,
+      "WindSpeed": 31.7,
+      "WindDirection": 244.0,
+      "Rainfall": 0.4,
+      "WeatherSymbol": "40"
+    },
+    {
+      "group": "Downings_30Aug",
+      "time": "2025-08-31T12:00:00Z",
+      "Temperature": 13.6,
+      "WindSpeed": 31.7,
+      "WindDirection": 244.0,
+      "Rainfall": 0.4,
+      "WeatherSymbol": "40"
+    },
+    {
+      "group": "Downings_31Aug",
+      "time": "2025-08-31T12:00:00Z",
+      "Temperature": 13.6,
+      "WindSpeed": 31.7,
+      "WindDirection": 244.0,
+      "Rainfall": 0.4,
+      "WeatherSymbol": "40"
+    },
+    {
       "group": "Portsalon_28Aug",
       "time": "2025-08-31T15:00:00Z",
       "Temperature": 14.8,
       "WindSpeed": 24.1,
       "WindDirection": 237.0,
+      "Rainfall": 0.0,
+      "WeatherSymbol": "2"
+    },
+    {
+      "group": "Downings_29Aug",
+      "time": "2025-08-31T15:00:00Z",
+      "Temperature": 14.6,
+      "WindSpeed": 28.1,
+      "WindDirection": 241.0,
+      "Rainfall": 0.0,
+      "WeatherSymbol": "2"
+    },
+    {
+      "group": "Downings_30Aug",
+      "time": "2025-08-31T15:00:00Z",
+      "Temperature": 14.6,
+      "WindSpeed": 28.1,
+      "WindDirection": 241.0,
+      "Rainfall": 0.0,
+      "WeatherSymbol": "2"
+    },
+    {
+      "group": "Downings_31Aug",
+      "time": "2025-08-31T15:00:00Z",
+      "Temperature": 14.6,
+      "WindSpeed": 28.1,
+      "WindDirection": 241.0,
       "Rainfall": 0.0,
       "WeatherSymbol": "2"
     },
@@ -425,6 +1667,33 @@
       "WeatherSymbol": "2"
     },
     {
+      "group": "Downings_29Aug",
+      "time": "2025-08-31T18:00:00Z",
+      "Temperature": 13.8,
+      "WindSpeed": 19.4,
+      "WindDirection": 228.0,
+      "Rainfall": 0.0,
+      "WeatherSymbol": "3"
+    },
+    {
+      "group": "Downings_30Aug",
+      "time": "2025-08-31T18:00:00Z",
+      "Temperature": 13.8,
+      "WindSpeed": 19.4,
+      "WindDirection": 228.0,
+      "Rainfall": 0.0,
+      "WeatherSymbol": "3"
+    },
+    {
+      "group": "Downings_31Aug",
+      "time": "2025-08-31T18:00:00Z",
+      "Temperature": 13.8,
+      "WindSpeed": 19.4,
+      "WindDirection": 228.0,
+      "Rainfall": 0.0,
+      "WeatherSymbol": "3"
+    },
+    {
       "group": "Portsalon_28Aug",
       "time": "2025-09-01T09:00:00Z",
       "Temperature": 12.8,
@@ -432,6 +1701,33 @@
       "WindDirection": 277.0,
       "Rainfall": 0.7,
       "WeatherSymbol": "9"
+    },
+    {
+      "group": "Downings_29Aug",
+      "time": "2025-09-01T09:00:00Z",
+      "Temperature": 13.2,
+      "WindSpeed": 22.7,
+      "WindDirection": 282.0,
+      "Rainfall": 0.4,
+      "WeatherSymbol": "46"
+    },
+    {
+      "group": "Downings_30Aug",
+      "time": "2025-09-01T09:00:00Z",
+      "Temperature": 13.2,
+      "WindSpeed": 22.7,
+      "WindDirection": 282.0,
+      "Rainfall": 0.4,
+      "WeatherSymbol": "46"
+    },
+    {
+      "group": "Downings_31Aug",
+      "time": "2025-09-01T09:00:00Z",
+      "Temperature": 13.2,
+      "WindSpeed": 22.7,
+      "WindDirection": 282.0,
+      "Rainfall": 0.4,
+      "WeatherSymbol": "46"
     },
     {
       "group": "Portsalon_28Aug",
@@ -443,12 +1739,66 @@
       "WeatherSymbol": "41"
     },
     {
+      "group": "Downings_29Aug",
+      "time": "2025-09-01T12:00:00Z",
+      "Temperature": 14.2,
+      "WindSpeed": 25.6,
+      "WindDirection": 275.0,
+      "Rainfall": 2.6,
+      "WeatherSymbol": "5"
+    },
+    {
+      "group": "Downings_30Aug",
+      "time": "2025-09-01T12:00:00Z",
+      "Temperature": 14.2,
+      "WindSpeed": 25.6,
+      "WindDirection": 275.0,
+      "Rainfall": 2.6,
+      "WeatherSymbol": "5"
+    },
+    {
+      "group": "Downings_31Aug",
+      "time": "2025-09-01T12:00:00Z",
+      "Temperature": 14.2,
+      "WindSpeed": 25.6,
+      "WindDirection": 275.0,
+      "Rainfall": 2.6,
+      "WeatherSymbol": "5"
+    },
+    {
       "group": "Portsalon_28Aug",
       "time": "2025-09-01T18:00:00Z",
       "Temperature": 13.7,
       "WindSpeed": 23.0,
       "WindDirection": 266.0,
       "Rainfall": 1.0,
+      "WeatherSymbol": "5"
+    },
+    {
+      "group": "Downings_29Aug",
+      "time": "2025-09-01T18:00:00Z",
+      "Temperature": 13.7,
+      "WindSpeed": 25.2,
+      "WindDirection": 266.0,
+      "Rainfall": 1.3,
+      "WeatherSymbol": "5"
+    },
+    {
+      "group": "Downings_30Aug",
+      "time": "2025-09-01T18:00:00Z",
+      "Temperature": 13.7,
+      "WindSpeed": 25.2,
+      "WindDirection": 266.0,
+      "Rainfall": 1.3,
+      "WeatherSymbol": "5"
+    },
+    {
+      "group": "Downings_31Aug",
+      "time": "2025-09-01T18:00:00Z",
+      "Temperature": 13.7,
+      "WindSpeed": 25.2,
+      "WindDirection": 266.0,
+      "Rainfall": 1.3,
       "WeatherSymbol": "5"
     },
     {
@@ -461,11 +1811,65 @@
       "WeatherSymbol": "46"
     },
     {
+      "group": "Downings_29Aug",
+      "time": "2025-09-02T12:00:00Z",
+      "Temperature": 15.6,
+      "WindSpeed": 14.0,
+      "WindDirection": 214.0,
+      "Rainfall": 0.0,
+      "WeatherSymbol": "4"
+    },
+    {
+      "group": "Downings_30Aug",
+      "time": "2025-09-02T12:00:00Z",
+      "Temperature": 15.6,
+      "WindSpeed": 14.0,
+      "WindDirection": 214.0,
+      "Rainfall": 0.0,
+      "WeatherSymbol": "4"
+    },
+    {
+      "group": "Downings_31Aug",
+      "time": "2025-09-02T12:00:00Z",
+      "Temperature": 15.6,
+      "WindSpeed": 14.0,
+      "WindDirection": 214.0,
+      "Rainfall": 0.0,
+      "WeatherSymbol": "4"
+    },
+    {
       "group": "Portsalon_28Aug",
       "time": "2025-09-02T18:00:00Z",
       "Temperature": 15.4,
       "WindSpeed": 6.5,
       "WindDirection": 168.0,
+      "Rainfall": 0.0,
+      "WeatherSymbol": "4"
+    },
+    {
+      "group": "Downings_29Aug",
+      "time": "2025-09-02T18:00:00Z",
+      "Temperature": 15.5,
+      "WindSpeed": 5.0,
+      "WindDirection": 153.0,
+      "Rainfall": 0.0,
+      "WeatherSymbol": "4"
+    },
+    {
+      "group": "Downings_30Aug",
+      "time": "2025-09-02T18:00:00Z",
+      "Temperature": 15.5,
+      "WindSpeed": 5.0,
+      "WindDirection": 153.0,
+      "Rainfall": 0.0,
+      "WeatherSymbol": "4"
+    },
+    {
+      "group": "Downings_31Aug",
+      "time": "2025-09-02T18:00:00Z",
+      "Temperature": 15.5,
+      "WindSpeed": 5.0,
+      "WindDirection": 153.0,
       "Rainfall": 0.0,
       "WeatherSymbol": "4"
     },
@@ -479,6 +1883,33 @@
       "WeatherSymbol": "9"
     },
     {
+      "group": "Downings_29Aug",
+      "time": "2025-09-03T12:00:00Z",
+      "Temperature": 16.8,
+      "WindSpeed": 3.6,
+      "WindDirection": 284.0,
+      "Rainfall": 3.0,
+      "WeatherSymbol": "9"
+    },
+    {
+      "group": "Downings_30Aug",
+      "time": "2025-09-03T12:00:00Z",
+      "Temperature": 16.8,
+      "WindSpeed": 3.6,
+      "WindDirection": 284.0,
+      "Rainfall": 3.0,
+      "WeatherSymbol": "9"
+    },
+    {
+      "group": "Downings_31Aug",
+      "time": "2025-09-03T12:00:00Z",
+      "Temperature": 16.8,
+      "WindSpeed": 3.6,
+      "WindDirection": 284.0,
+      "Rainfall": 3.0,
+      "WeatherSymbol": "9"
+    },
+    {
       "group": "Portsalon_28Aug",
       "time": "2025-09-03T18:00:00Z",
       "Temperature": 15.9,
@@ -486,6 +1917,33 @@
       "WindDirection": 163.0,
       "Rainfall": 0.0,
       "WeatherSymbol": "3"
+    },
+    {
+      "group": "Downings_29Aug",
+      "time": "2025-09-03T18:00:00Z",
+      "Temperature": 15.3,
+      "WindSpeed": 13.7,
+      "WindDirection": 168.0,
+      "Rainfall": 0.9,
+      "WeatherSymbol": "40"
+    },
+    {
+      "group": "Downings_30Aug",
+      "time": "2025-09-03T18:00:00Z",
+      "Temperature": 15.3,
+      "WindSpeed": 13.7,
+      "WindDirection": 168.0,
+      "Rainfall": 0.9,
+      "WeatherSymbol": "40"
+    },
+    {
+      "group": "Downings_31Aug",
+      "time": "2025-09-03T18:00:00Z",
+      "Temperature": 15.3,
+      "WindSpeed": 13.7,
+      "WindDirection": 168.0,
+      "Rainfall": 0.9,
+      "WeatherSymbol": "40"
     },
     {
       "group": "Portsalon_28Aug",
@@ -497,6 +1955,33 @@
       "WeatherSymbol": "5"
     },
     {
+      "group": "Downings_29Aug",
+      "time": "2025-09-04T12:00:00Z",
+      "Temperature": 15.0,
+      "WindSpeed": 34.6,
+      "WindDirection": 284.0,
+      "Rainfall": 0.7,
+      "WeatherSymbol": "46"
+    },
+    {
+      "group": "Downings_30Aug",
+      "time": "2025-09-04T12:00:00Z",
+      "Temperature": 15.0,
+      "WindSpeed": 34.6,
+      "WindDirection": 284.0,
+      "Rainfall": 0.7,
+      "WeatherSymbol": "46"
+    },
+    {
+      "group": "Downings_31Aug",
+      "time": "2025-09-04T12:00:00Z",
+      "Temperature": 15.0,
+      "WindSpeed": 34.6,
+      "WindDirection": 284.0,
+      "Rainfall": 0.7,
+      "WeatherSymbol": "46"
+    },
+    {
       "group": "Portsalon_28Aug",
       "time": "2025-09-04T18:00:00Z",
       "Temperature": 13.9,
@@ -504,6 +1989,33 @@
       "WindDirection": 271.0,
       "Rainfall": 0.0,
       "WeatherSymbol": "3"
+    },
+    {
+      "group": "Downings_29Aug",
+      "time": "2025-09-04T18:00:00Z",
+      "Temperature": 13.7,
+      "WindSpeed": 25.2,
+      "WindDirection": 270.0,
+      "Rainfall": 0.6,
+      "WeatherSymbol": "40"
+    },
+    {
+      "group": "Downings_30Aug",
+      "time": "2025-09-04T18:00:00Z",
+      "Temperature": 13.7,
+      "WindSpeed": 25.2,
+      "WindDirection": 270.0,
+      "Rainfall": 0.6,
+      "WeatherSymbol": "40"
+    },
+    {
+      "group": "Downings_31Aug",
+      "time": "2025-09-04T18:00:00Z",
+      "Temperature": 13.7,
+      "WindSpeed": 25.2,
+      "WindDirection": 270.0,
+      "Rainfall": 0.6,
+      "WeatherSymbol": "40"
     },
     {
       "group": "Portsalon_28Aug",
@@ -514,510 +2026,6 @@
     },
     {
       "group": "Downings_29Aug",
-      "time": "2025-08-27T07:00:00Z",
-      "Temperature": 13.0,
-      "WindSpeed": 22.7,
-      "WindDirection": 148.0,
-      "Rainfall": 0.8,
-      "WeatherSymbol": "9"
-    },
-    {
-      "group": "Downings_29Aug",
-      "time": "2025-08-27T08:00:00Z",
-      "Temperature": 13.1,
-      "WindSpeed": 16.2,
-      "WindDirection": 168.0,
-      "Rainfall": 0.3,
-      "WeatherSymbol": "9"
-    },
-    {
-      "group": "Downings_29Aug",
-      "time": "2025-08-27T09:00:00Z",
-      "Temperature": 13.5,
-      "WindSpeed": 12.2,
-      "WindDirection": 168.0,
-      "Rainfall": 0.0,
-      "WeatherSymbol": "3"
-    },
-    {
-      "group": "Downings_29Aug",
-      "time": "2025-08-27T10:00:00Z",
-      "Temperature": 14.2,
-      "WindSpeed": 13.3,
-      "WindDirection": 174.0,
-      "Rainfall": 0.0,
-      "WeatherSymbol": "1"
-    },
-    {
-      "group": "Downings_29Aug",
-      "time": "2025-08-27T11:00:00Z",
-      "Temperature": 16.0,
-      "WindSpeed": 16.6,
-      "WindDirection": 179.0,
-      "Rainfall": 0.0,
-      "WeatherSymbol": "4"
-    },
-    {
-      "group": "Downings_29Aug",
-      "time": "2025-08-27T12:00:00Z",
-      "Temperature": 16.8,
-      "WindSpeed": 21.2,
-      "WindDirection": 182.0,
-      "Rainfall": 0.0,
-      "WeatherSymbol": "4"
-    },
-    {
-      "group": "Downings_29Aug",
-      "time": "2025-08-27T13:00:00Z",
-      "Temperature": 16.5,
-      "WindSpeed": 25.2,
-      "WindDirection": 176.0,
-      "Rainfall": 0.2,
-      "WeatherSymbol": "46"
-    },
-    {
-      "group": "Downings_29Aug",
-      "time": "2025-08-27T14:00:00Z",
-      "Temperature": 15.1,
-      "WindSpeed": 25.9,
-      "WindDirection": 166.0,
-      "Rainfall": 0.2,
-      "WeatherSymbol": "46"
-    },
-    {
-      "group": "Downings_29Aug",
-      "time": "2025-08-27T15:00:00Z",
-      "Temperature": 15.7,
-      "WindSpeed": 24.1,
-      "WindDirection": 162.0,
-      "Rainfall": 0.2,
-      "WeatherSymbol": "46"
-    },
-    {
-      "group": "Downings_29Aug",
-      "time": "2025-08-27T16:00:00Z",
-      "Temperature": 14.8,
-      "WindSpeed": 22.0,
-      "WindDirection": 160.0,
-      "Rainfall": 0.3,
-      "WeatherSymbol": "9"
-    },
-    {
-      "group": "Downings_29Aug",
-      "time": "2025-08-27T17:00:00Z",
-      "Temperature": 14.3,
-      "WindSpeed": 19.8,
-      "WindDirection": 154.0,
-      "Rainfall": 0.2,
-      "WeatherSymbol": "46"
-    },
-    {
-      "group": "Downings_29Aug",
-      "time": "2025-08-27T18:00:00Z",
-      "Temperature": 14.1,
-      "WindSpeed": 22.0,
-      "WindDirection": 164.0,
-      "Rainfall": 0.2,
-      "WeatherSymbol": "46"
-    },
-    {
-      "group": "Downings_29Aug",
-      "time": "2025-08-27T19:00:00Z",
-      "Temperature": 14.0,
-      "WindSpeed": 21.2,
-      "WindDirection": 149.0,
-      "Rainfall": 0.3,
-      "WeatherSymbol": "9"
-    },
-    {
-      "group": "Downings_29Aug",
-      "time": "2025-08-28T07:00:00Z",
-      "Temperature": 13.3,
-      "WindSpeed": 18.0,
-      "WindDirection": 166.0,
-      "Rainfall": 0.2,
-      "WeatherSymbol": "46"
-    },
-    {
-      "group": "Downings_29Aug",
-      "time": "2025-08-28T08:00:00Z",
-      "Temperature": 13.6,
-      "WindSpeed": 21.2,
-      "WindDirection": 158.0,
-      "Rainfall": 0.3,
-      "WeatherSymbol": "9"
-    },
-    {
-      "group": "Downings_29Aug",
-      "time": "2025-08-28T09:00:00Z",
-      "Temperature": 14.1,
-      "WindSpeed": 22.7,
-      "WindDirection": 162.0,
-      "Rainfall": 0.5,
-      "WeatherSymbol": "9"
-    },
-    {
-      "group": "Downings_29Aug",
-      "time": "2025-08-28T10:00:00Z",
-      "Temperature": 14.4,
-      "WindSpeed": 22.7,
-      "WindDirection": 155.0,
-      "Rainfall": 0.4,
-      "WeatherSymbol": "9"
-    },
-    {
-      "group": "Downings_29Aug",
-      "time": "2025-08-28T11:00:00Z",
-      "Temperature": 14.8,
-      "WindSpeed": 24.8,
-      "WindDirection": 152.0,
-      "Rainfall": 0.3,
-      "WeatherSymbol": "9"
-    },
-    {
-      "group": "Downings_29Aug",
-      "time": "2025-08-28T12:00:00Z",
-      "Temperature": 14.1,
-      "WindSpeed": 25.6,
-      "WindDirection": 151.0,
-      "Rainfall": 0.5,
-      "WeatherSymbol": "9"
-    },
-    {
-      "group": "Downings_29Aug",
-      "time": "2025-08-28T13:00:00Z",
-      "Temperature": 13.7,
-      "WindSpeed": 24.5,
-      "WindDirection": 152.0,
-      "Rainfall": 0.7,
-      "WeatherSymbol": "5"
-    },
-    {
-      "group": "Downings_29Aug",
-      "time": "2025-08-28T14:00:00Z",
-      "Temperature": 14.5,
-      "WindSpeed": 16.6,
-      "WindDirection": 156.0,
-      "Rainfall": 0.7,
-      "WeatherSymbol": "9"
-    },
-    {
-      "group": "Downings_29Aug",
-      "time": "2025-08-28T15:00:00Z",
-      "Temperature": 15.3,
-      "WindSpeed": 16.9,
-      "WindDirection": 218.0,
-      "Rainfall": 0.3,
-      "WeatherSymbol": "9"
-    },
-    {
-      "group": "Downings_29Aug",
-      "time": "2025-08-28T16:00:00Z",
-      "Temperature": 14.5,
-      "WindSpeed": 28.1,
-      "WindDirection": 249.0,
-      "Rainfall": 0.3,
-      "WeatherSymbol": "9"
-    },
-    {
-      "group": "Downings_29Aug",
-      "time": "2025-08-28T17:00:00Z",
-      "Temperature": 14.4,
-      "WindSpeed": 27.0,
-      "WindDirection": 243.0,
-      "Rainfall": 0.4,
-      "WeatherSymbol": "9"
-    },
-    {
-      "group": "Downings_29Aug",
-      "time": "2025-08-28T18:00:00Z",
-      "Temperature": 14.6,
-      "WindSpeed": 22.3,
-      "WindDirection": 247.0,
-      "Rainfall": 0.2,
-      "WeatherSymbol": "40"
-    },
-    {
-      "group": "Downings_29Aug",
-      "time": "2025-08-28T19:00:00Z",
-      "Temperature": 14.3,
-      "WindSpeed": 14.8,
-      "WindDirection": 240.0,
-      "Rainfall": 0.3,
-      "WeatherSymbol": "5"
-    },
-    {
-      "group": "Downings_29Aug",
-      "time": "2025-08-29T07:00:00Z",
-      "Temperature": 13.4,
-      "WindSpeed": 22.3,
-      "WindDirection": 265.0,
-      "Rainfall": 0.2,
-      "WeatherSymbol": "46"
-    },
-    {
-      "group": "Downings_29Aug",
-      "time": "2025-08-29T08:00:00Z",
-      "Temperature": 13.6,
-      "WindSpeed": 21.2,
-      "WindDirection": 264.0,
-      "Rainfall": 0.2,
-      "WeatherSymbol": "40"
-    },
-    {
-      "group": "Downings_29Aug",
-      "time": "2025-08-29T09:00:00Z",
-      "Temperature": 14.0,
-      "WindSpeed": 18.4,
-      "WindDirection": 261.0,
-      "Rainfall": 0.1,
-      "WeatherSymbol": "40"
-    },
-    {
-      "group": "Downings_29Aug",
-      "time": "2025-08-29T10:00:00Z",
-      "Temperature": 14.5,
-      "WindSpeed": 19.4,
-      "WindDirection": 269.0,
-      "Rainfall": 0.2,
-      "WeatherSymbol": "40"
-    },
-    {
-      "group": "Downings_29Aug",
-      "time": "2025-08-29T11:00:00Z",
-      "Temperature": 14.4,
-      "WindSpeed": 22.0,
-      "WindDirection": 272.0,
-      "Rainfall": 0.2,
-      "WeatherSymbol": "40"
-    },
-    {
-      "group": "Downings_29Aug",
-      "time": "2025-08-29T12:00:00Z",
-      "Temperature": 15.1,
-      "WindSpeed": 22.0,
-      "WindDirection": 272.0,
-      "Rainfall": 0.2,
-      "WeatherSymbol": "40"
-    },
-    {
-      "group": "Downings_29Aug",
-      "time": "2025-08-29T13:00:00Z",
-      "Temperature": 16.0,
-      "WindSpeed": 24.5,
-      "WindDirection": 280.0,
-      "Rainfall": 0.2,
-      "WeatherSymbol": "40"
-    },
-    {
-      "group": "Downings_29Aug",
-      "time": "2025-08-29T14:00:00Z",
-      "Temperature": 15.8,
-      "WindSpeed": 25.6,
-      "WindDirection": 279.0,
-      "Rainfall": 0.1,
-      "WeatherSymbol": "40"
-    },
-    {
-      "group": "Downings_29Aug",
-      "time": "2025-08-29T15:00:00Z",
-      "Temperature": 15.9,
-      "WindSpeed": 24.1,
-      "WindDirection": 274.0,
-      "Rainfall": 0.1,
-      "WeatherSymbol": "40"
-    },
-    {
-      "group": "Downings_29Aug",
-      "time": "2025-08-29T16:00:00Z",
-      "Temperature": 15.6,
-      "WindSpeed": 24.8,
-      "WindDirection": 276.0,
-      "Rainfall": 0.1,
-      "WeatherSymbol": "40"
-    },
-    {
-      "group": "Downings_29Aug",
-      "time": "2025-08-29T17:00:00Z",
-      "Temperature": 15.3,
-      "WindSpeed": 23.0,
-      "WindDirection": 277.0,
-      "Rainfall": 0.0,
-      "WeatherSymbol": "3"
-    },
-    {
-      "group": "Downings_29Aug",
-      "time": "2025-08-29T18:00:00Z",
-      "Temperature": 14.8,
-      "WindSpeed": 21.2,
-      "WindDirection": 272.0,
-      "Rainfall": 0.0,
-      "WeatherSymbol": "3"
-    },
-    {
-      "group": "Downings_29Aug",
-      "time": "2025-08-29T19:00:00Z",
-      "Temperature": 14.1,
-      "WindSpeed": 18.4,
-      "WindDirection": 267.0,
-      "Rainfall": 0.0,
-      "WeatherSymbol": "3"
-    },
-    {
-      "group": "Downings_29Aug",
-      "time": "2025-08-30T09:00:00Z",
-      "Temperature": 14.4,
-      "WindSpeed": 16.2,
-      "WindDirection": 174.0,
-      "Rainfall": 1.8,
-      "WeatherSymbol": "9"
-    },
-    {
-      "group": "Downings_29Aug",
-      "time": "2025-08-30T12:00:00Z",
-      "Temperature": 13.5,
-      "WindSpeed": 16.2,
-      "WindDirection": 142.0,
-      "Rainfall": 6.5,
-      "WeatherSymbol": "10"
-    },
-    {
-      "group": "Downings_29Aug",
-      "time": "2025-08-30T15:00:00Z",
-      "Temperature": 13.5,
-      "WindSpeed": 15.1,
-      "WindDirection": 88.0,
-      "Rainfall": 8.7,
-      "WeatherSymbol": "10"
-    },
-    {
-      "group": "Downings_29Aug",
-      "time": "2025-08-30T18:00:00Z",
-      "Temperature": 13.5,
-      "WindSpeed": 23.8,
-      "WindDirection": 27.0,
-      "Rainfall": 11.6,
-      "WeatherSymbol": "10"
-    },
-    {
-      "group": "Downings_29Aug",
-      "time": "2025-08-31T09:00:00Z",
-      "Temperature": 13.4,
-      "WindSpeed": 26.3,
-      "WindDirection": 250.0,
-      "Rainfall": 0.8,
-      "WeatherSymbol": "5"
-    },
-    {
-      "group": "Downings_29Aug",
-      "time": "2025-08-31T12:00:00Z",
-      "Temperature": 13.6,
-      "WindSpeed": 31.7,
-      "WindDirection": 244.0,
-      "Rainfall": 0.4,
-      "WeatherSymbol": "40"
-    },
-    {
-      "group": "Downings_29Aug",
-      "time": "2025-08-31T15:00:00Z",
-      "Temperature": 14.6,
-      "WindSpeed": 28.1,
-      "WindDirection": 241.0,
-      "Rainfall": 0.0,
-      "WeatherSymbol": "2"
-    },
-    {
-      "group": "Downings_29Aug",
-      "time": "2025-08-31T18:00:00Z",
-      "Temperature": 13.8,
-      "WindSpeed": 19.4,
-      "WindDirection": 228.0,
-      "Rainfall": 0.0,
-      "WeatherSymbol": "3"
-    },
-    {
-      "group": "Downings_29Aug",
-      "time": "2025-09-01T09:00:00Z",
-      "Temperature": 13.2,
-      "WindSpeed": 22.7,
-      "WindDirection": 282.0,
-      "Rainfall": 0.4,
-      "WeatherSymbol": "46"
-    },
-    {
-      "group": "Downings_29Aug",
-      "time": "2025-09-01T12:00:00Z",
-      "Temperature": 14.2,
-      "WindSpeed": 25.6,
-      "WindDirection": 275.0,
-      "Rainfall": 2.6,
-      "WeatherSymbol": "5"
-    },
-    {
-      "group": "Downings_29Aug",
-      "time": "2025-09-01T18:00:00Z",
-      "Temperature": 13.7,
-      "WindSpeed": 25.2,
-      "WindDirection": 266.0,
-      "Rainfall": 1.3,
-      "WeatherSymbol": "5"
-    },
-    {
-      "group": "Downings_29Aug",
-      "time": "2025-09-02T12:00:00Z",
-      "Temperature": 15.6,
-      "WindSpeed": 14.0,
-      "WindDirection": 214.0,
-      "Rainfall": 0.0,
-      "WeatherSymbol": "4"
-    },
-    {
-      "group": "Downings_29Aug",
-      "time": "2025-09-02T18:00:00Z",
-      "Temperature": 15.5,
-      "WindSpeed": 5.0,
-      "WindDirection": 153.0,
-      "Rainfall": 0.0,
-      "WeatherSymbol": "4"
-    },
-    {
-      "group": "Downings_29Aug",
-      "time": "2025-09-03T12:00:00Z",
-      "Temperature": 16.8,
-      "WindSpeed": 3.6,
-      "WindDirection": 284.0,
-      "Rainfall": 3.0,
-      "WeatherSymbol": "9"
-    },
-    {
-      "group": "Downings_29Aug",
-      "time": "2025-09-03T18:00:00Z",
-      "Temperature": 15.3,
-      "WindSpeed": 13.7,
-      "WindDirection": 168.0,
-      "Rainfall": 0.9,
-      "WeatherSymbol": "40"
-    },
-    {
-      "group": "Downings_29Aug",
-      "time": "2025-09-04T12:00:00Z",
-      "Temperature": 15.0,
-      "WindSpeed": 34.6,
-      "WindDirection": 284.0,
-      "Rainfall": 0.7,
-      "WeatherSymbol": "46"
-    },
-    {
-      "group": "Downings_29Aug",
-      "time": "2025-09-04T18:00:00Z",
-      "Temperature": 13.7,
-      "WindSpeed": 25.2,
-      "WindDirection": 270.0,
-      "Rainfall": 0.6,
-      "WeatherSymbol": "40"
-    },
-    {
-      "group": "Downings_29Aug",
       "time": "2025-09-05T12:00:00Z",
       "Temperature": 15.7,
       "WindSpeed": 28.8,
@@ -1025,1018 +2033,10 @@
     },
     {
       "group": "Downings_30Aug",
-      "time": "2025-08-27T07:00:00Z",
-      "Temperature": 13.0,
-      "WindSpeed": 22.7,
-      "WindDirection": 148.0,
-      "Rainfall": 0.8,
-      "WeatherSymbol": "9"
-    },
-    {
-      "group": "Downings_30Aug",
-      "time": "2025-08-27T08:00:00Z",
-      "Temperature": 13.1,
-      "WindSpeed": 16.2,
-      "WindDirection": 168.0,
-      "Rainfall": 0.3,
-      "WeatherSymbol": "9"
-    },
-    {
-      "group": "Downings_30Aug",
-      "time": "2025-08-27T09:00:00Z",
-      "Temperature": 13.5,
-      "WindSpeed": 12.2,
-      "WindDirection": 168.0,
-      "Rainfall": 0.0,
-      "WeatherSymbol": "3"
-    },
-    {
-      "group": "Downings_30Aug",
-      "time": "2025-08-27T10:00:00Z",
-      "Temperature": 14.2,
-      "WindSpeed": 13.3,
-      "WindDirection": 174.0,
-      "Rainfall": 0.0,
-      "WeatherSymbol": "1"
-    },
-    {
-      "group": "Downings_30Aug",
-      "time": "2025-08-27T11:00:00Z",
-      "Temperature": 16.0,
-      "WindSpeed": 16.6,
-      "WindDirection": 179.0,
-      "Rainfall": 0.0,
-      "WeatherSymbol": "4"
-    },
-    {
-      "group": "Downings_30Aug",
-      "time": "2025-08-27T12:00:00Z",
-      "Temperature": 16.8,
-      "WindSpeed": 21.2,
-      "WindDirection": 182.0,
-      "Rainfall": 0.0,
-      "WeatherSymbol": "4"
-    },
-    {
-      "group": "Downings_30Aug",
-      "time": "2025-08-27T13:00:00Z",
-      "Temperature": 16.5,
-      "WindSpeed": 25.2,
-      "WindDirection": 176.0,
-      "Rainfall": 0.2,
-      "WeatherSymbol": "46"
-    },
-    {
-      "group": "Downings_30Aug",
-      "time": "2025-08-27T14:00:00Z",
-      "Temperature": 15.1,
-      "WindSpeed": 25.9,
-      "WindDirection": 166.0,
-      "Rainfall": 0.2,
-      "WeatherSymbol": "46"
-    },
-    {
-      "group": "Downings_30Aug",
-      "time": "2025-08-27T15:00:00Z",
-      "Temperature": 15.7,
-      "WindSpeed": 24.1,
-      "WindDirection": 162.0,
-      "Rainfall": 0.2,
-      "WeatherSymbol": "46"
-    },
-    {
-      "group": "Downings_30Aug",
-      "time": "2025-08-27T16:00:00Z",
-      "Temperature": 14.8,
-      "WindSpeed": 22.0,
-      "WindDirection": 160.0,
-      "Rainfall": 0.3,
-      "WeatherSymbol": "9"
-    },
-    {
-      "group": "Downings_30Aug",
-      "time": "2025-08-27T17:00:00Z",
-      "Temperature": 14.3,
-      "WindSpeed": 19.8,
-      "WindDirection": 154.0,
-      "Rainfall": 0.2,
-      "WeatherSymbol": "46"
-    },
-    {
-      "group": "Downings_30Aug",
-      "time": "2025-08-27T18:00:00Z",
-      "Temperature": 14.1,
-      "WindSpeed": 22.0,
-      "WindDirection": 164.0,
-      "Rainfall": 0.2,
-      "WeatherSymbol": "46"
-    },
-    {
-      "group": "Downings_30Aug",
-      "time": "2025-08-27T19:00:00Z",
-      "Temperature": 14.0,
-      "WindSpeed": 21.2,
-      "WindDirection": 149.0,
-      "Rainfall": 0.3,
-      "WeatherSymbol": "9"
-    },
-    {
-      "group": "Downings_30Aug",
-      "time": "2025-08-28T07:00:00Z",
-      "Temperature": 13.3,
-      "WindSpeed": 18.0,
-      "WindDirection": 166.0,
-      "Rainfall": 0.2,
-      "WeatherSymbol": "46"
-    },
-    {
-      "group": "Downings_30Aug",
-      "time": "2025-08-28T08:00:00Z",
-      "Temperature": 13.6,
-      "WindSpeed": 21.2,
-      "WindDirection": 158.0,
-      "Rainfall": 0.3,
-      "WeatherSymbol": "9"
-    },
-    {
-      "group": "Downings_30Aug",
-      "time": "2025-08-28T09:00:00Z",
-      "Temperature": 14.1,
-      "WindSpeed": 22.7,
-      "WindDirection": 162.0,
-      "Rainfall": 0.5,
-      "WeatherSymbol": "9"
-    },
-    {
-      "group": "Downings_30Aug",
-      "time": "2025-08-28T10:00:00Z",
-      "Temperature": 14.4,
-      "WindSpeed": 22.7,
-      "WindDirection": 155.0,
-      "Rainfall": 0.4,
-      "WeatherSymbol": "9"
-    },
-    {
-      "group": "Downings_30Aug",
-      "time": "2025-08-28T11:00:00Z",
-      "Temperature": 14.8,
-      "WindSpeed": 24.8,
-      "WindDirection": 152.0,
-      "Rainfall": 0.3,
-      "WeatherSymbol": "9"
-    },
-    {
-      "group": "Downings_30Aug",
-      "time": "2025-08-28T12:00:00Z",
-      "Temperature": 14.1,
-      "WindSpeed": 25.6,
-      "WindDirection": 151.0,
-      "Rainfall": 0.5,
-      "WeatherSymbol": "9"
-    },
-    {
-      "group": "Downings_30Aug",
-      "time": "2025-08-28T13:00:00Z",
-      "Temperature": 13.7,
-      "WindSpeed": 24.5,
-      "WindDirection": 152.0,
-      "Rainfall": 0.7,
-      "WeatherSymbol": "5"
-    },
-    {
-      "group": "Downings_30Aug",
-      "time": "2025-08-28T14:00:00Z",
-      "Temperature": 14.5,
-      "WindSpeed": 16.6,
-      "WindDirection": 156.0,
-      "Rainfall": 0.7,
-      "WeatherSymbol": "9"
-    },
-    {
-      "group": "Downings_30Aug",
-      "time": "2025-08-28T15:00:00Z",
-      "Temperature": 15.3,
-      "WindSpeed": 16.9,
-      "WindDirection": 218.0,
-      "Rainfall": 0.3,
-      "WeatherSymbol": "9"
-    },
-    {
-      "group": "Downings_30Aug",
-      "time": "2025-08-28T16:00:00Z",
-      "Temperature": 14.5,
-      "WindSpeed": 28.1,
-      "WindDirection": 249.0,
-      "Rainfall": 0.3,
-      "WeatherSymbol": "9"
-    },
-    {
-      "group": "Downings_30Aug",
-      "time": "2025-08-28T17:00:00Z",
-      "Temperature": 14.4,
-      "WindSpeed": 27.0,
-      "WindDirection": 243.0,
-      "Rainfall": 0.4,
-      "WeatherSymbol": "9"
-    },
-    {
-      "group": "Downings_30Aug",
-      "time": "2025-08-28T18:00:00Z",
-      "Temperature": 14.6,
-      "WindSpeed": 22.3,
-      "WindDirection": 247.0,
-      "Rainfall": 0.2,
-      "WeatherSymbol": "40"
-    },
-    {
-      "group": "Downings_30Aug",
-      "time": "2025-08-28T19:00:00Z",
-      "Temperature": 14.3,
-      "WindSpeed": 14.8,
-      "WindDirection": 240.0,
-      "Rainfall": 0.3,
-      "WeatherSymbol": "5"
-    },
-    {
-      "group": "Downings_30Aug",
-      "time": "2025-08-29T07:00:00Z",
-      "Temperature": 13.4,
-      "WindSpeed": 22.3,
-      "WindDirection": 265.0,
-      "Rainfall": 0.2,
-      "WeatherSymbol": "46"
-    },
-    {
-      "group": "Downings_30Aug",
-      "time": "2025-08-29T08:00:00Z",
-      "Temperature": 13.6,
-      "WindSpeed": 21.2,
-      "WindDirection": 264.0,
-      "Rainfall": 0.2,
-      "WeatherSymbol": "40"
-    },
-    {
-      "group": "Downings_30Aug",
-      "time": "2025-08-29T09:00:00Z",
-      "Temperature": 14.0,
-      "WindSpeed": 18.4,
-      "WindDirection": 261.0,
-      "Rainfall": 0.1,
-      "WeatherSymbol": "40"
-    },
-    {
-      "group": "Downings_30Aug",
-      "time": "2025-08-29T10:00:00Z",
-      "Temperature": 14.5,
-      "WindSpeed": 19.4,
-      "WindDirection": 269.0,
-      "Rainfall": 0.2,
-      "WeatherSymbol": "40"
-    },
-    {
-      "group": "Downings_30Aug",
-      "time": "2025-08-29T11:00:00Z",
-      "Temperature": 14.4,
-      "WindSpeed": 22.0,
-      "WindDirection": 272.0,
-      "Rainfall": 0.2,
-      "WeatherSymbol": "40"
-    },
-    {
-      "group": "Downings_30Aug",
-      "time": "2025-08-29T12:00:00Z",
-      "Temperature": 15.1,
-      "WindSpeed": 22.0,
-      "WindDirection": 272.0,
-      "Rainfall": 0.2,
-      "WeatherSymbol": "40"
-    },
-    {
-      "group": "Downings_30Aug",
-      "time": "2025-08-29T13:00:00Z",
-      "Temperature": 16.0,
-      "WindSpeed": 24.5,
-      "WindDirection": 280.0,
-      "Rainfall": 0.2,
-      "WeatherSymbol": "40"
-    },
-    {
-      "group": "Downings_30Aug",
-      "time": "2025-08-29T14:00:00Z",
-      "Temperature": 15.8,
-      "WindSpeed": 25.6,
-      "WindDirection": 279.0,
-      "Rainfall": 0.1,
-      "WeatherSymbol": "40"
-    },
-    {
-      "group": "Downings_30Aug",
-      "time": "2025-08-29T15:00:00Z",
-      "Temperature": 15.9,
-      "WindSpeed": 24.1,
-      "WindDirection": 274.0,
-      "Rainfall": 0.1,
-      "WeatherSymbol": "40"
-    },
-    {
-      "group": "Downings_30Aug",
-      "time": "2025-08-29T16:00:00Z",
-      "Temperature": 15.6,
-      "WindSpeed": 24.8,
-      "WindDirection": 276.0,
-      "Rainfall": 0.1,
-      "WeatherSymbol": "40"
-    },
-    {
-      "group": "Downings_30Aug",
-      "time": "2025-08-29T17:00:00Z",
-      "Temperature": 15.3,
-      "WindSpeed": 23.0,
-      "WindDirection": 277.0,
-      "Rainfall": 0.0,
-      "WeatherSymbol": "3"
-    },
-    {
-      "group": "Downings_30Aug",
-      "time": "2025-08-29T18:00:00Z",
-      "Temperature": 14.8,
-      "WindSpeed": 21.2,
-      "WindDirection": 272.0,
-      "Rainfall": 0.0,
-      "WeatherSymbol": "3"
-    },
-    {
-      "group": "Downings_30Aug",
-      "time": "2025-08-29T19:00:00Z",
-      "Temperature": 14.1,
-      "WindSpeed": 18.4,
-      "WindDirection": 267.0,
-      "Rainfall": 0.0,
-      "WeatherSymbol": "3"
-    },
-    {
-      "group": "Downings_30Aug",
-      "time": "2025-08-30T09:00:00Z",
-      "Temperature": 14.4,
-      "WindSpeed": 16.2,
-      "WindDirection": 174.0,
-      "Rainfall": 1.8,
-      "WeatherSymbol": "9"
-    },
-    {
-      "group": "Downings_30Aug",
-      "time": "2025-08-30T12:00:00Z",
-      "Temperature": 13.5,
-      "WindSpeed": 16.2,
-      "WindDirection": 142.0,
-      "Rainfall": 6.5,
-      "WeatherSymbol": "10"
-    },
-    {
-      "group": "Downings_30Aug",
-      "time": "2025-08-30T15:00:00Z",
-      "Temperature": 13.5,
-      "WindSpeed": 15.1,
-      "WindDirection": 88.0,
-      "Rainfall": 8.7,
-      "WeatherSymbol": "10"
-    },
-    {
-      "group": "Downings_30Aug",
-      "time": "2025-08-30T18:00:00Z",
-      "Temperature": 13.5,
-      "WindSpeed": 23.8,
-      "WindDirection": 27.0,
-      "Rainfall": 11.6,
-      "WeatherSymbol": "10"
-    },
-    {
-      "group": "Downings_30Aug",
-      "time": "2025-08-31T09:00:00Z",
-      "Temperature": 13.4,
-      "WindSpeed": 26.3,
-      "WindDirection": 250.0,
-      "Rainfall": 0.8,
-      "WeatherSymbol": "5"
-    },
-    {
-      "group": "Downings_30Aug",
-      "time": "2025-08-31T12:00:00Z",
-      "Temperature": 13.6,
-      "WindSpeed": 31.7,
-      "WindDirection": 244.0,
-      "Rainfall": 0.4,
-      "WeatherSymbol": "40"
-    },
-    {
-      "group": "Downings_30Aug",
-      "time": "2025-08-31T15:00:00Z",
-      "Temperature": 14.6,
-      "WindSpeed": 28.1,
-      "WindDirection": 241.0,
-      "Rainfall": 0.0,
-      "WeatherSymbol": "2"
-    },
-    {
-      "group": "Downings_30Aug",
-      "time": "2025-08-31T18:00:00Z",
-      "Temperature": 13.8,
-      "WindSpeed": 19.4,
-      "WindDirection": 228.0,
-      "Rainfall": 0.0,
-      "WeatherSymbol": "3"
-    },
-    {
-      "group": "Downings_30Aug",
-      "time": "2025-09-01T09:00:00Z",
-      "Temperature": 13.2,
-      "WindSpeed": 22.7,
-      "WindDirection": 282.0,
-      "Rainfall": 0.4,
-      "WeatherSymbol": "46"
-    },
-    {
-      "group": "Downings_30Aug",
-      "time": "2025-09-01T12:00:00Z",
-      "Temperature": 14.2,
-      "WindSpeed": 25.6,
-      "WindDirection": 275.0,
-      "Rainfall": 2.6,
-      "WeatherSymbol": "5"
-    },
-    {
-      "group": "Downings_30Aug",
-      "time": "2025-09-01T18:00:00Z",
-      "Temperature": 13.7,
-      "WindSpeed": 25.2,
-      "WindDirection": 266.0,
-      "Rainfall": 1.3,
-      "WeatherSymbol": "5"
-    },
-    {
-      "group": "Downings_30Aug",
-      "time": "2025-09-02T12:00:00Z",
-      "Temperature": 15.6,
-      "WindSpeed": 14.0,
-      "WindDirection": 214.0,
-      "Rainfall": 0.0,
-      "WeatherSymbol": "4"
-    },
-    {
-      "group": "Downings_30Aug",
-      "time": "2025-09-02T18:00:00Z",
-      "Temperature": 15.5,
-      "WindSpeed": 5.0,
-      "WindDirection": 153.0,
-      "Rainfall": 0.0,
-      "WeatherSymbol": "4"
-    },
-    {
-      "group": "Downings_30Aug",
-      "time": "2025-09-03T12:00:00Z",
-      "Temperature": 16.8,
-      "WindSpeed": 3.6,
-      "WindDirection": 284.0,
-      "Rainfall": 3.0,
-      "WeatherSymbol": "9"
-    },
-    {
-      "group": "Downings_30Aug",
-      "time": "2025-09-03T18:00:00Z",
-      "Temperature": 15.3,
-      "WindSpeed": 13.7,
-      "WindDirection": 168.0,
-      "Rainfall": 0.9,
-      "WeatherSymbol": "40"
-    },
-    {
-      "group": "Downings_30Aug",
-      "time": "2025-09-04T12:00:00Z",
-      "Temperature": 15.0,
-      "WindSpeed": 34.6,
-      "WindDirection": 284.0,
-      "Rainfall": 0.7,
-      "WeatherSymbol": "46"
-    },
-    {
-      "group": "Downings_30Aug",
-      "time": "2025-09-04T18:00:00Z",
-      "Temperature": 13.7,
-      "WindSpeed": 25.2,
-      "WindDirection": 270.0,
-      "Rainfall": 0.6,
-      "WeatherSymbol": "40"
-    },
-    {
-      "group": "Downings_30Aug",
       "time": "2025-09-05T12:00:00Z",
       "Temperature": 15.7,
       "WindSpeed": 28.8,
       "WindDirection": 246.0
-    },
-    {
-      "group": "Downings_31Aug",
-      "time": "2025-08-27T07:00:00Z",
-      "Temperature": 13.0,
-      "WindSpeed": 22.7,
-      "WindDirection": 148.0,
-      "Rainfall": 0.8,
-      "WeatherSymbol": "9"
-    },
-    {
-      "group": "Downings_31Aug",
-      "time": "2025-08-27T08:00:00Z",
-      "Temperature": 13.1,
-      "WindSpeed": 16.2,
-      "WindDirection": 168.0,
-      "Rainfall": 0.3,
-      "WeatherSymbol": "9"
-    },
-    {
-      "group": "Downings_31Aug",
-      "time": "2025-08-27T09:00:00Z",
-      "Temperature": 13.5,
-      "WindSpeed": 12.2,
-      "WindDirection": 168.0,
-      "Rainfall": 0.0,
-      "WeatherSymbol": "3"
-    },
-    {
-      "group": "Downings_31Aug",
-      "time": "2025-08-27T10:00:00Z",
-      "Temperature": 14.2,
-      "WindSpeed": 13.3,
-      "WindDirection": 174.0,
-      "Rainfall": 0.0,
-      "WeatherSymbol": "1"
-    },
-    {
-      "group": "Downings_31Aug",
-      "time": "2025-08-27T11:00:00Z",
-      "Temperature": 16.0,
-      "WindSpeed": 16.6,
-      "WindDirection": 179.0,
-      "Rainfall": 0.0,
-      "WeatherSymbol": "4"
-    },
-    {
-      "group": "Downings_31Aug",
-      "time": "2025-08-27T12:00:00Z",
-      "Temperature": 16.8,
-      "WindSpeed": 21.2,
-      "WindDirection": 182.0,
-      "Rainfall": 0.0,
-      "WeatherSymbol": "4"
-    },
-    {
-      "group": "Downings_31Aug",
-      "time": "2025-08-27T13:00:00Z",
-      "Temperature": 16.5,
-      "WindSpeed": 25.2,
-      "WindDirection": 176.0,
-      "Rainfall": 0.2,
-      "WeatherSymbol": "46"
-    },
-    {
-      "group": "Downings_31Aug",
-      "time": "2025-08-27T14:00:00Z",
-      "Temperature": 15.1,
-      "WindSpeed": 25.9,
-      "WindDirection": 166.0,
-      "Rainfall": 0.2,
-      "WeatherSymbol": "46"
-    },
-    {
-      "group": "Downings_31Aug",
-      "time": "2025-08-27T15:00:00Z",
-      "Temperature": 15.7,
-      "WindSpeed": 24.1,
-      "WindDirection": 162.0,
-      "Rainfall": 0.2,
-      "WeatherSymbol": "46"
-    },
-    {
-      "group": "Downings_31Aug",
-      "time": "2025-08-27T16:00:00Z",
-      "Temperature": 14.8,
-      "WindSpeed": 22.0,
-      "WindDirection": 160.0,
-      "Rainfall": 0.3,
-      "WeatherSymbol": "9"
-    },
-    {
-      "group": "Downings_31Aug",
-      "time": "2025-08-27T17:00:00Z",
-      "Temperature": 14.3,
-      "WindSpeed": 19.8,
-      "WindDirection": 154.0,
-      "Rainfall": 0.2,
-      "WeatherSymbol": "46"
-    },
-    {
-      "group": "Downings_31Aug",
-      "time": "2025-08-27T18:00:00Z",
-      "Temperature": 14.1,
-      "WindSpeed": 22.0,
-      "WindDirection": 164.0,
-      "Rainfall": 0.2,
-      "WeatherSymbol": "46"
-    },
-    {
-      "group": "Downings_31Aug",
-      "time": "2025-08-27T19:00:00Z",
-      "Temperature": 14.0,
-      "WindSpeed": 21.2,
-      "WindDirection": 149.0,
-      "Rainfall": 0.3,
-      "WeatherSymbol": "9"
-    },
-    {
-      "group": "Downings_31Aug",
-      "time": "2025-08-28T07:00:00Z",
-      "Temperature": 13.3,
-      "WindSpeed": 18.0,
-      "WindDirection": 166.0,
-      "Rainfall": 0.2,
-      "WeatherSymbol": "46"
-    },
-    {
-      "group": "Downings_31Aug",
-      "time": "2025-08-28T08:00:00Z",
-      "Temperature": 13.6,
-      "WindSpeed": 21.2,
-      "WindDirection": 158.0,
-      "Rainfall": 0.3,
-      "WeatherSymbol": "9"
-    },
-    {
-      "group": "Downings_31Aug",
-      "time": "2025-08-28T09:00:00Z",
-      "Temperature": 14.1,
-      "WindSpeed": 22.7,
-      "WindDirection": 162.0,
-      "Rainfall": 0.5,
-      "WeatherSymbol": "9"
-    },
-    {
-      "group": "Downings_31Aug",
-      "time": "2025-08-28T10:00:00Z",
-      "Temperature": 14.4,
-      "WindSpeed": 22.7,
-      "WindDirection": 155.0,
-      "Rainfall": 0.4,
-      "WeatherSymbol": "9"
-    },
-    {
-      "group": "Downings_31Aug",
-      "time": "2025-08-28T11:00:00Z",
-      "Temperature": 14.8,
-      "WindSpeed": 24.8,
-      "WindDirection": 152.0,
-      "Rainfall": 0.3,
-      "WeatherSymbol": "9"
-    },
-    {
-      "group": "Downings_31Aug",
-      "time": "2025-08-28T12:00:00Z",
-      "Temperature": 14.1,
-      "WindSpeed": 25.6,
-      "WindDirection": 151.0,
-      "Rainfall": 0.5,
-      "WeatherSymbol": "9"
-    },
-    {
-      "group": "Downings_31Aug",
-      "time": "2025-08-28T13:00:00Z",
-      "Temperature": 13.7,
-      "WindSpeed": 24.5,
-      "WindDirection": 152.0,
-      "Rainfall": 0.7,
-      "WeatherSymbol": "5"
-    },
-    {
-      "group": "Downings_31Aug",
-      "time": "2025-08-28T14:00:00Z",
-      "Temperature": 14.5,
-      "WindSpeed": 16.6,
-      "WindDirection": 156.0,
-      "Rainfall": 0.7,
-      "WeatherSymbol": "9"
-    },
-    {
-      "group": "Downings_31Aug",
-      "time": "2025-08-28T15:00:00Z",
-      "Temperature": 15.3,
-      "WindSpeed": 16.9,
-      "WindDirection": 218.0,
-      "Rainfall": 0.3,
-      "WeatherSymbol": "9"
-    },
-    {
-      "group": "Downings_31Aug",
-      "time": "2025-08-28T16:00:00Z",
-      "Temperature": 14.5,
-      "WindSpeed": 28.1,
-      "WindDirection": 249.0,
-      "Rainfall": 0.3,
-      "WeatherSymbol": "9"
-    },
-    {
-      "group": "Downings_31Aug",
-      "time": "2025-08-28T17:00:00Z",
-      "Temperature": 14.4,
-      "WindSpeed": 27.0,
-      "WindDirection": 243.0,
-      "Rainfall": 0.4,
-      "WeatherSymbol": "9"
-    },
-    {
-      "group": "Downings_31Aug",
-      "time": "2025-08-28T18:00:00Z",
-      "Temperature": 14.6,
-      "WindSpeed": 22.3,
-      "WindDirection": 247.0,
-      "Rainfall": 0.2,
-      "WeatherSymbol": "40"
-    },
-    {
-      "group": "Downings_31Aug",
-      "time": "2025-08-28T19:00:00Z",
-      "Temperature": 14.3,
-      "WindSpeed": 14.8,
-      "WindDirection": 240.0,
-      "Rainfall": 0.3,
-      "WeatherSymbol": "5"
-    },
-    {
-      "group": "Downings_31Aug",
-      "time": "2025-08-29T07:00:00Z",
-      "Temperature": 13.4,
-      "WindSpeed": 22.3,
-      "WindDirection": 265.0,
-      "Rainfall": 0.2,
-      "WeatherSymbol": "46"
-    },
-    {
-      "group": "Downings_31Aug",
-      "time": "2025-08-29T08:00:00Z",
-      "Temperature": 13.6,
-      "WindSpeed": 21.2,
-      "WindDirection": 264.0,
-      "Rainfall": 0.2,
-      "WeatherSymbol": "40"
-    },
-    {
-      "group": "Downings_31Aug",
-      "time": "2025-08-29T09:00:00Z",
-      "Temperature": 14.0,
-      "WindSpeed": 18.4,
-      "WindDirection": 261.0,
-      "Rainfall": 0.1,
-      "WeatherSymbol": "40"
-    },
-    {
-      "group": "Downings_31Aug",
-      "time": "2025-08-29T10:00:00Z",
-      "Temperature": 14.5,
-      "WindSpeed": 19.4,
-      "WindDirection": 269.0,
-      "Rainfall": 0.2,
-      "WeatherSymbol": "40"
-    },
-    {
-      "group": "Downings_31Aug",
-      "time": "2025-08-29T11:00:00Z",
-      "Temperature": 14.4,
-      "WindSpeed": 22.0,
-      "WindDirection": 272.0,
-      "Rainfall": 0.2,
-      "WeatherSymbol": "40"
-    },
-    {
-      "group": "Downings_31Aug",
-      "time": "2025-08-29T12:00:00Z",
-      "Temperature": 15.1,
-      "WindSpeed": 22.0,
-      "WindDirection": 272.0,
-      "Rainfall": 0.2,
-      "WeatherSymbol": "40"
-    },
-    {
-      "group": "Downings_31Aug",
-      "time": "2025-08-29T13:00:00Z",
-      "Temperature": 16.0,
-      "WindSpeed": 24.5,
-      "WindDirection": 280.0,
-      "Rainfall": 0.2,
-      "WeatherSymbol": "40"
-    },
-    {
-      "group": "Downings_31Aug",
-      "time": "2025-08-29T14:00:00Z",
-      "Temperature": 15.8,
-      "WindSpeed": 25.6,
-      "WindDirection": 279.0,
-      "Rainfall": 0.1,
-      "WeatherSymbol": "40"
-    },
-    {
-      "group": "Downings_31Aug",
-      "time": "2025-08-29T15:00:00Z",
-      "Temperature": 15.9,
-      "WindSpeed": 24.1,
-      "WindDirection": 274.0,
-      "Rainfall": 0.1,
-      "WeatherSymbol": "40"
-    },
-    {
-      "group": "Downings_31Aug",
-      "time": "2025-08-29T16:00:00Z",
-      "Temperature": 15.6,
-      "WindSpeed": 24.8,
-      "WindDirection": 276.0,
-      "Rainfall": 0.1,
-      "WeatherSymbol": "40"
-    },
-    {
-      "group": "Downings_31Aug",
-      "time": "2025-08-29T17:00:00Z",
-      "Temperature": 15.3,
-      "WindSpeed": 23.0,
-      "WindDirection": 277.0,
-      "Rainfall": 0.0,
-      "WeatherSymbol": "3"
-    },
-    {
-      "group": "Downings_31Aug",
-      "time": "2025-08-29T18:00:00Z",
-      "Temperature": 14.8,
-      "WindSpeed": 21.2,
-      "WindDirection": 272.0,
-      "Rainfall": 0.0,
-      "WeatherSymbol": "3"
-    },
-    {
-      "group": "Downings_31Aug",
-      "time": "2025-08-29T19:00:00Z",
-      "Temperature": 14.1,
-      "WindSpeed": 18.4,
-      "WindDirection": 267.0,
-      "Rainfall": 0.0,
-      "WeatherSymbol": "3"
-    },
-    {
-      "group": "Downings_31Aug",
-      "time": "2025-08-30T09:00:00Z",
-      "Temperature": 14.4,
-      "WindSpeed": 16.2,
-      "WindDirection": 174.0,
-      "Rainfall": 1.8,
-      "WeatherSymbol": "9"
-    },
-    {
-      "group": "Downings_31Aug",
-      "time": "2025-08-30T12:00:00Z",
-      "Temperature": 13.5,
-      "WindSpeed": 16.2,
-      "WindDirection": 142.0,
-      "Rainfall": 6.5,
-      "WeatherSymbol": "10"
-    },
-    {
-      "group": "Downings_31Aug",
-      "time": "2025-08-30T15:00:00Z",
-      "Temperature": 13.5,
-      "WindSpeed": 15.1,
-      "WindDirection": 88.0,
-      "Rainfall": 8.7,
-      "WeatherSymbol": "10"
-    },
-    {
-      "group": "Downings_31Aug",
-      "time": "2025-08-30T18:00:00Z",
-      "Temperature": 13.5,
-      "WindSpeed": 23.8,
-      "WindDirection": 27.0,
-      "Rainfall": 11.6,
-      "WeatherSymbol": "10"
-    },
-    {
-      "group": "Downings_31Aug",
-      "time": "2025-08-31T09:00:00Z",
-      "Temperature": 13.4,
-      "WindSpeed": 26.3,
-      "WindDirection": 250.0,
-      "Rainfall": 0.8,
-      "WeatherSymbol": "5"
-    },
-    {
-      "group": "Downings_31Aug",
-      "time": "2025-08-31T12:00:00Z",
-      "Temperature": 13.6,
-      "WindSpeed": 31.7,
-      "WindDirection": 244.0,
-      "Rainfall": 0.4,
-      "WeatherSymbol": "40"
-    },
-    {
-      "group": "Downings_31Aug",
-      "time": "2025-08-31T15:00:00Z",
-      "Temperature": 14.6,
-      "WindSpeed": 28.1,
-      "WindDirection": 241.0,
-      "Rainfall": 0.0,
-      "WeatherSymbol": "2"
-    },
-    {
-      "group": "Downings_31Aug",
-      "time": "2025-08-31T18:00:00Z",
-      "Temperature": 13.8,
-      "WindSpeed": 19.4,
-      "WindDirection": 228.0,
-      "Rainfall": 0.0,
-      "WeatherSymbol": "3"
-    },
-    {
-      "group": "Downings_31Aug",
-      "time": "2025-09-01T09:00:00Z",
-      "Temperature": 13.2,
-      "WindSpeed": 22.7,
-      "WindDirection": 282.0,
-      "Rainfall": 0.4,
-      "WeatherSymbol": "46"
-    },
-    {
-      "group": "Downings_31Aug",
-      "time": "2025-09-01T12:00:00Z",
-      "Temperature": 14.2,
-      "WindSpeed": 25.6,
-      "WindDirection": 275.0,
-      "Rainfall": 2.6,
-      "WeatherSymbol": "5"
-    },
-    {
-      "group": "Downings_31Aug",
-      "time": "2025-09-01T18:00:00Z",
-      "Temperature": 13.7,
-      "WindSpeed": 25.2,
-      "WindDirection": 266.0,
-      "Rainfall": 1.3,
-      "WeatherSymbol": "5"
-    },
-    {
-      "group": "Downings_31Aug",
-      "time": "2025-09-02T12:00:00Z",
-      "Temperature": 15.6,
-      "WindSpeed": 14.0,
-      "WindDirection": 214.0,
-      "Rainfall": 0.0,
-      "WeatherSymbol": "4"
-    },
-    {
-      "group": "Downings_31Aug",
-      "time": "2025-09-02T18:00:00Z",
-      "Temperature": 15.5,
-      "WindSpeed": 5.0,
-      "WindDirection": 153.0,
-      "Rainfall": 0.0,
-      "WeatherSymbol": "4"
-    },
-    {
-      "group": "Downings_31Aug",
-      "time": "2025-09-03T12:00:00Z",
-      "Temperature": 16.8,
-      "WindSpeed": 3.6,
-      "WindDirection": 284.0,
-      "Rainfall": 3.0,
-      "WeatherSymbol": "9"
-    },
-    {
-      "group": "Downings_31Aug",
-      "time": "2025-09-03T18:00:00Z",
-      "Temperature": 15.3,
-      "WindSpeed": 13.7,
-      "WindDirection": 168.0,
-      "Rainfall": 0.9,
-      "WeatherSymbol": "40"
-    },
-    {
-      "group": "Downings_31Aug",
-      "time": "2025-09-04T12:00:00Z",
-      "Temperature": 15.0,
-      "WindSpeed": 34.6,
-      "WindDirection": 284.0,
-      "Rainfall": 0.7,
-      "WeatherSymbol": "46"
-    },
-    {
-      "group": "Downings_31Aug",
-      "time": "2025-09-04T18:00:00Z",
-      "Temperature": 13.7,
-      "WindSpeed": 25.2,
-      "WindDirection": 270.0,
-      "Rainfall": 0.6,
-      "WeatherSymbol": "40"
     },
     {
       "group": "Downings_31Aug",
