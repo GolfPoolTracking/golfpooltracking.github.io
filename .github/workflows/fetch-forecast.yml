@@ -15,11 +15,9 @@ jobs:
       - name: Fetch and save forecast
         run: |
           python3 - <<'PYCODE'
-          import requests
-          import json
-          from datetime import datetime
+          import requests, json, os
           import xml.etree.ElementTree as ET
-          import os
+          from datetime import datetime
           from collections import defaultdict
 
           coords = {
@@ -29,68 +27,44 @@ jobs:
               "Downings_31Aug": (55.1948628, -7.8369654),
           }
 
-          forecasts = []
+          forecasts_dict = defaultdict(dict)
 
           for group, (lat, lon) in coords.items():
               url = f"http://openaccess.pf.api.met.ie/metno-wdb2ts/locationforecast?lat={lat};long={lon}"
-              try:
-                  r = requests.get(url, timeout=10)
-                  r.raise_for_status()
-                  root = ET.fromstring(r.content)
-              except Exception as e:
-                  print(f"Error fetching {group}: {e}")
-                  continue
-
-              # Merge all parameters per timestamp to avoid duplicates
-              forecasts_dict = defaultdict(dict)
+              r = requests.get(url, timeout=10)
+              r.raise_for_status()
+              root = ET.fromstring(r.content)
 
               for time_item in root.findall(".//time"):
                   t = time_item.attrib.get("from")
-                  if not t:
-                      continue
+                  if not t: continue
                   hour = int(t[11:13])
-                  if not (7 <= hour <= 19):
-                      continue
+                  if not (7 <= hour <= 19): continue
 
-                  loc = time_item.find("location")
-                  if loc is None:
-                      continue
-
-                  entry = forecasts_dict[t]
+                  key = (group, t)
+                  entry = forecasts_dict[key]
                   entry["group"] = group
                   entry["time"] = t
 
+                  loc = time_item.find("location")
+                  if loc is None: continue
+
                   temp = loc.find("temperature")
-                  if temp is not None:
-                      entry["Temperature"] = round(float(temp.attrib["value"]), 1)
-
+                  if temp is not None: entry["Temperature"] = round(float(temp.attrib["value"]),1)
                   rain = loc.find("precipitation")
-                  if rain is not None:
-                      entry["Rainfall"] = round(float(rain.attrib.get("value", 0)), 2)
-
+                  if rain is not None: entry["Rainfall"] = round(float(rain.attrib.get("value",0)),2)
                   wind_speed = loc.find("windSpeed")
-                  if wind_speed is not None:
-                      entry["WindSpeed"] = round(float(wind_speed.attrib.get("mps",0))*3.6,1)
-
+                  if wind_speed is not None: entry["WindSpeed"] = round(float(wind_speed.attrib.get("mps",0))*3.6,1)
                   wind_dir = loc.find("windDirection")
-                  if wind_dir is not None:
-                      entry["WindDirection"] = round(float(wind_dir.attrib.get("deg",0)), 0)
-
+                  if wind_dir is not None: entry["WindDirection"] = round(float(wind_dir.attrib.get("deg",0)),0)
                   symbol = loc.find("symbol")
-                  if symbol is not None:
-                      entry["WeatherSymbol"] = symbol.attrib.get("number", "01")
+                  if symbol is not None: entry["WeatherSymbol"] = symbol.attrib.get("number","01")
 
-              # Append merged entries to forecasts list
-              forecasts.extend(list(forecasts_dict.values()))
-
-          output = {
-              "timestamp": datetime.utcnow().isoformat() + "Z",
-              "forecasts": forecasts
-          }
+          forecasts = sorted(forecasts_dict.values(), key=lambda x: x["time"])
 
           os.makedirs("forecast_data", exist_ok=True)
-          with open("forecast_data/forecast.json", "w") as f:
-              json.dump(output, f, indent=2)
+          with open("forecast_data/forecast.json","w") as f:
+              json.dump({"timestamp":datetime.utcnow().isoformat()+"Z","forecasts":forecasts}, f, indent=2)
           PYCODE
 
       - name: Download Met Éireann icons (01.png → 52.png)
@@ -99,7 +73,6 @@ jobs:
           for i in $(seq -w 1 52); do
             curl -s -o forecast_icons/${i}.png https://www.met.ie/cms/assets/uploads/2018/01/${i}.png
           done
-          # fallback icon
           curl -s -o forecast_icons/00.png https://www.met.ie/cms/assets/uploads/2018/01/01.png
 
       - name: Commit changes
