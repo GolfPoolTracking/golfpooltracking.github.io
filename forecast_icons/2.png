@@ -7,8 +7,8 @@
         <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta id="token" name="token" content="tuy1tjZ3kBBchPwyxKXuoSsifCvRifkhsGw87nlv" />
-<meta property="og:url" content="https://www.met.ie/cms/assets/uploads/2018/01/01.png" />
+<meta id="token" name="token" content="n7wyvQufHNdj6HcxIl5P8ytMEUFx4eIOpfYw5UVc" />
+<meta property="og:url" content="https://www.met.ie/cms/assets/uploads/2018/01/2d.png" />
 <meta property="og:type" content="website" />
 <meta property="og:title"  content="Met Éireann - The Irish Meteorological Service" />
 <meta property="og:image"  content="/images/OG-icon.jpg" />
@@ -35,7 +35,7 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.2/jquery.fancybox.css" />
         <script>
-    window.Laravel = {"csrfToken":"tuy1tjZ3kBBchPwyxKXuoSsifCvRifkhsGw87nlv"};
+    window.Laravel = {"csrfToken":"n7wyvQufHNdj6HcxIl5P8ytMEUFx4eIOpfYw5UVc"};
     window.cdnUrl = "https://cdn-a.metweb.ie";
     window.cdnVersion = "8004";
 
@@ -901,7 +901,7 @@
 		</div>
 	</div></header>
 
-                <div id="vue-container" class='page-unknown parent-cms-assets-uploads-2018-01 page-cms-assets-uploads-2018-01-01.png'>
+                <div id="vue-container" class='page-unknown parent-cms-assets-uploads-2018-01 page-cms-assets-uploads-2018-01-2d.png'>
 
         	<div class="container">	
                 <div class="row">
@@ -922,7 +922,7 @@
                 </div>
                 <div class="row">    
                     <ul class="col-12">    
-                        <li  style="border-left:none; padding-left:none !important;"><a href="/ga/cms/assets/uploads/2018/01/01.png">As Gaeilge</a></li>
+                        <li  style="border-left:none; padding-left:none !important;"><a href="/ga/cms/assets/uploads/2018/01/2d.png">As Gaeilge</a></li>
                         <li><a href="https://www.met.ie/about-us/contact-us">Contact</a></li>
                         <li><a href="https://www.met.ie/about-us/privacy" >Privacy</a></li>
                         <li><a href="https://www.met.ie/about-us/faq">FAQ</a></li>
@@ -1257,7 +1257,7 @@
     <script src="https://cdn-b.metweb.ie/js/typeahead.js"></script>
     <script src="https://cdn-b.metweb.ie/js/openlayers.js"></script>
 
-            <script src="/js/app-min.js?v=1756247059"></script>
+            <script src="/js/app-min.js?v=1756247058"></script>
     
     <script>
     jQuery('.carousel').carousel({ interval: false });
