@@ -38,7 +38,8 @@ jobs:
           forecasts = []
 
           for group, (lat, lon) in coords.items():
-              url = f"http://openaccess.pf.api.met.ie/metno-wdb2ts/locationforecast?lat={lat}&lon={lon}&msl&format=xml"
+              url = f"http://openaccess.pf.api.met.ie/metno-wdb2ts/locationforecast?lat={lat};long={lon}"
+  
               try:
                   r = requests.get(url, timeout=10)
                   r.raise_for_status()
