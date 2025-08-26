@@ -18,8 +18,8 @@ jobs:
           import requests
           import json
           from datetime import datetime
+          import os
 
-          # Coordinates for courses
           coords = {
               "Portsalon_28Aug": (55.2056262, -7.6350788),
               "Downings_29Aug": (55.1948628, -7.8369654),
@@ -27,7 +27,6 @@ jobs:
               "Downings_31Aug": (55.1948628, -7.8369654),
           }
 
-          # Dates for each day
           start_dates = {
               "Portsalon_28Aug": "2025-08-28",
               "Downings_29Aug": "2025-08-29",
@@ -45,37 +44,39 @@ jobs:
                   f"&hourly=temperature_2m,precipitation,weathercode,windspeed_10m,winddirection_10m"
                   f"&timezone=auto&start_date={date}&end_date={date}"
               )
-              r = requests.get(url)
-              data = r.json()
+              try:
+                  r = requests.get(url, timeout=10)
+                  r.raise_for_status()
+                  data = r.json()
+              except Exception as e:
+                  print(f"Error fetching data for {group}: {e}")
+                  continue
 
-              times = data["hourly"]["time"]
-              temps = data["hourly"]["temperature_2m"]
-              winds = data["hourly"]["windspeed_10m"]
-              dirs = data["hourly"]["winddirection_10m"]
-              rains = data["hourly"]["precipitation"]
-              codes = data["hourly"]["weathercode"]
-
-              for t, temp, ws, wd, rain, code in zip(times, temps, winds, dirs, rains, codes):
-                  # Only between 7:00 and 19:00 inclusive
+              for t, temp, ws, wd, rain, code in zip(
+                  data["hourly"]["time"],
+                  data["hourly"]["temperature_2m"],
+                  data["hourly"]["windspeed_10m"],
+                  data["hourly"]["winddirection_10m"],
+                  data["hourly"]["precipitation"],
+                  data["hourly"]["weathercode"]
+              ):
                   hour = int(t[11:13])
                   if 7 <= hour <= 19:
                       forecasts.append({
                           "group": group,
                           "time": t,
-                          "Temperature": temp,
-                          "WindDirection": wd,
-                          "WindSpeed": ws,
-                          "Rainfall": rain,
+                          "Temperature": round(temp, 1),
+                          "WindDirection": round(wd, 0),
+                          "WindSpeed": round(ws, 1),
+                          "Rainfall": round(rain, 2),
                           "WeatherSymbol3": str(code).zfill(2)
                       })
 
           output = {
-              "timestamp": datetime.utcnow().strftime("%Y-%m-%d %H:%M"),
+              "timestamp": datetime.utcnow().isoformat() + "Z",
               "forecasts": forecasts
           }
 
-          # Save file
-          import os
           os.makedirs("forecast_data", exist_ok=True)
           with open("forecast_data/forecast.json", "w") as f:
               json.dump(output, f, indent=2)
@@ -86,5 +87,5 @@ jobs:
           git config --global user.name "github-actions"
           git config --global user.email "github-actions@github.com"
           git add forecast_data/forecast.json
-          git commit -m "Update forecast data" || echo "No changes to commit"
+          git diff --cached --quiet || git commit -m "Update forecast data"
           git push
