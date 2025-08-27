@@ -15,7 +15,7 @@
       const { useState, useEffect } = React;
 
       function WeatherWidget() {
-        const [forecast, setForecast] = useState([]);
+        const [forecast, setForecast] = useState({});
         const [lastUpdate, setLastUpdate] = useState(null);
         const [error, setError] = useState(null);
 
@@ -24,15 +24,15 @@
             try {
               const lat = 55.2;
               const lon = -7.6;
-              const url =
-                `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}` +
-                `&hourly=temperature_2m,precipitation,weathercode&timezone=auto` +
-                `&start_date=2025-09-04&end_date=2025-09-07`;
+              const startDate = '2025-08-28';
+              const endDate = '2025-09-07';
+              const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}` +
+                `&hourly=temperature_2m,precipitation,weathercode,windspeed_10m,winddirection_10m&timezone=auto` +
+                `&start_date=${startDate}&end_date=${endDate}`;
 
               const res = await fetch(url);
               if (!res.ok) throw new Error("API error " + res.status);
               const data = await res.json();
-
               if (!data.hourly) throw new Error("No hourly data returned");
 
               const hours = data.hourly.time.map((t, i) => ({
@@ -40,14 +40,23 @@
                 temp: data.hourly.temperature_2m[i],
                 rain: data.hourly.precipitation[i],
                 code: data.hourly.weathercode[i],
+                windSpeed: data.hourly.windspeed_10m[i],
+                windDir: data.hourly.winddirection_10m[i],
               }));
 
-              const filtered = hours.filter((h) => {
+              const filtered = hours.filter(h => {
                 const d = new Date(h.time);
                 return d.getHours() >= 7 && d.getHours() <= 19;
               });
 
-              setForecast(filtered);
+              const grouped = {};
+              filtered.forEach(h => {
+                const dateStr = new Date(h.time).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
+                if (!grouped[dateStr]) grouped[dateStr] = [];
+                grouped[dateStr].push(h);
+              });
+
+              setForecast(grouped);
               setLastUpdate(new Date().toLocaleString());
               setError(null);
             } catch (e) {
@@ -66,13 +75,20 @@
           return "🌤️";
         }
 
+        function getWindArrow(deg) {
+          // Returns a Unicode arrow rotated approximately to degrees
+          const arrows = ["↑","↗","→","↘","↓","↙","←","↖"];
+          const idx = Math.round(deg / 45) % 8;
+          return arrows[idx];
+        }
+
         return React.createElement(
           "div",
-          { className: "max-w-4xl mx-auto p-4 rounded-xl shadow bg-white" },
+          { className: "max-w-5xl mx-auto p-4 rounded-xl shadow bg-white" },
           React.createElement(
             "h2",
-            { className: "text-xl font-bold mb-4 text-center" },
-            "🌦️ Portsalon Forecast – 4–7 Sept"
+            { className: "text-2xl font-bold mb-4 text-center" },
+            "🌦️ Portsalon Forecast – 28 Aug to 7 Sep"
           ),
           error &&
             React.createElement(
@@ -80,39 +96,56 @@
               { className: "text-red-600 text-center mb-4" },
               "Error: " + error
             ),
-          React.createElement(
-            "div",
-            { className: "grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-3" },
-            forecast.map((hour, idx) => {
-              const date = new Date(hour.time);
-              return React.createElement(
+          Object.keys(forecast).map(day =>
+            React.createElement(
+              "div",
+              { key: day, className: "mb-6" },
+              React.createElement(
+                "h3",
+                { className: "text-lg font-semibold mb-2" },
+                day
+              ),
+              React.createElement(
                 "div",
-                {
-                  key: idx,
-                  className:
-                    "flex flex-col items-center bg-sky-100 p-3 rounded-lg shadow",
-                },
-                React.createElement(
-                  "span",
-                  { className: "text-sm font-semibold" },
-                  date.toLocaleDateString("en-GB", { day: "numeric", month: "short" }) +
-                    " " +
-                    date.getHours() +
-                    ":00"
-                ),
-                React.createElement(
-                  "div",
-                  { className: "my-2 text-2xl" },
-                  getIcon(hour.code, hour.rain)
-                ),
-                React.createElement("span", { className: "text-sm" }, Math.round(hour.temp) + "°C"),
-                React.createElement(
-                  "span",
-                  { className: "text-xs text-blue-700" },
-                  hour.rain > 0 ? hour.rain.toFixed(1) + "mm" : "—"
-                )
-              );
-            })
+                { className: "grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-3" },
+                forecast[day].map((hour, idx) => {
+                  const date = new Date(hour.time);
+                  const bgColor = hour.rain > 0 ? "bg-blue-200" : "bg-sky-100";
+                  return React.createElement(
+                    "div",
+                    {
+                      key: idx,
+                      className: `flex flex-col items-center p-3 rounded-lg shadow ${bgColor}`,
+                    },
+                    React.createElement(
+                      "span",
+                      { className: "text-sm font-semibold" },
+                      date.getHours() + ":00"
+                    ),
+                    React.createElement(
+                      "div",
+                      { className: "my-2 text-2xl" },
+                      getIcon(hour.code, hour.rain)
+                    ),
+                    React.createElement(
+                      "span",
+                      { className: "text-sm" },
+                      Math.round(hour.temp) + "°C"
+                    ),
+                    React.createElement(
+                      "span",
+                      { className: "text-xs text-blue-700" },
+                      hour.rain > 0 ? hour.rain.toFixed(1) + "mm" : "—"
+                    ),
+                    React.createElement(
+                      "span",
+                      { className: "text-xs mt-1" },
+                      `${Math.round(hour.windSpeed)} km/h ${getWindArrow(hour.windDir)}`
+                    )
+                  );
+                })
+              )
+            )
           ),
           lastUpdate &&
             React.createElement(
