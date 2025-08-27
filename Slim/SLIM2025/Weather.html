@@ -26,12 +26,11 @@ function WeatherWidget() {
     { date: '2025-09-07', label: '7 Sep', course: 'Sandy Hills', lat: 55.25, lon: -7.9 }
   ];
 
-  // Map day to summary hour range
   const summaryHoursMap = {
-    '2025-09-04': { start: 13, end: 18 }, // 1pm-6pm
-    '2025-09-05': { start: 12, end: 17 }, // 12pm-5pm
-    '2025-09-06': { start: 13, end: 18 }, // 1pm-6pm
-    '2025-09-07': { start: 8, end: 13 },  // 8am-1pm
+    '2025-09-04': { start: 13, end: 18 },
+    '2025-09-05': { start: 12, end: 17 },
+    '2025-09-06': { start: 13, end: 18 },
+    '2025-09-07': { start: 8, end: 13 },
   };
 
   useEffect(() => {
@@ -50,7 +49,6 @@ function WeatherWidget() {
 
           const updatedTime = data.current_weather?.time || new Date().toISOString();
 
-          // All hourly tiles 8am-6pm
           const hours = data.hourly.time.map((t, i) => {
             const d = new Date(t);
             return {
@@ -64,18 +62,15 @@ function WeatherWidget() {
             };
           }).filter(h => h.hour >= 8 && h.hour <= 18);
 
-          // Summary only uses key hours
           const summaryRange = summaryHoursMap[day.date];
           const summaryHours = hours.filter(h => h.hour >= summaryRange.start && h.hour <= summaryRange.end);
-          
-          // Calculate rain/cloud summary
+
           let summary = 'Sunny';
           const rainTotal = summaryHours.reduce((sum,h)=>sum+h.rain,0);
           const cloudHours = summaryHours.filter(h=>[1,2,3].includes(h.code)).length;
           if(rainTotal>0) summary = `Rain expected`;
           else if(cloudHours > summaryHours.length/2) summary = 'Mostly cloudy';
 
-          // Calculate average wind speed & general direction
           const avgWind = summaryHours.reduce((sum,h)=>sum+h.windSpeed,0)/summaryHours.length;
           const avgWindDirDeg = summaryHours.reduce((sum,h)=>sum+h.windDir,0)/summaryHours.length;
           const windArrows = ["N","NE","E","SE","S","SW","W","NW"];
@@ -117,6 +112,12 @@ function WeatherWidget() {
     return h+'am';
   }
 
+  function getTempBg(temp) {
+    if(temp <= 10) return "bg-blue-200";
+    if(temp <= 20) return "bg-yellow-200";
+    return "bg-orange-200";
+  }
+
   return React.createElement(
     "div",
     { className:"max-w-5xl w-full mx-auto p-4 rounded-xl shadow bg-white" },
@@ -139,8 +140,9 @@ function WeatherWidget() {
       React.createElement("span", null, "🌤️ Sunny / Clear"),
       React.createElement("span", null, "☁️ Cloudy"),
       React.createElement("span", null, "🌧️ Rain"),
-      React.createElement("span", null, "Blue tile → rain"),
       React.createElement("span", null, "Green border + darker bg → key hours"),
+      React.createElement("span", null, "Tile color → temp"),
+      React.createElement("span", null, "Rain overlay → darker"),
       React.createElement("span", null, "Wind arrow → direction")
     ),
 
@@ -161,6 +163,19 @@ function WeatherWidget() {
           `${day.label} – ${day.course}`
         ),
 
+        // Key hours strip
+        React.createElement(
+          "div",
+          { className:"flex mb-1 gap-1 overflow-x-auto" },
+          Array.from({length:11}, (_,i)=>i+8).map(h=>{
+            const isKey = h >= day.summaryRange.start && h <= day.summaryRange.end;
+            return React.createElement("div", {
+              key:h,
+              className:`flex-shrink-0 w-5 h-2 rounded ${isKey ? "bg-green-500" : "bg-gray-300"}`
+            });
+          })
+        ),
+
         React.createElement(
           "p",
           { className:"text-sm italic mb-2" },
@@ -172,11 +187,12 @@ function WeatherWidget() {
           { className:"flex overflow-x-auto gap-3 py-2" },
           day.hours.map((hour, idx)=>{
             const isKeyHour = hour.hour >= day.summaryRange.start && hour.hour <= day.summaryRange.end;
-            const bgColor = hour.rain>0 ? "bg-blue-200" : "bg-sky-100";
-            const highlightClass = isKeyHour ? "border-2 border-green-500 bg-sky-300" : "";
+            let tempBg = getTempBg(hour.temp);
+            if(isKeyHour) tempBg += " border-2 border-green-500"; 
+            if(hour.rain>0) tempBg += " brightness-90"; 
             return React.createElement(
               "div",
-              { key:idx, className:`flex-shrink-0 flex flex-col items-center p-2 rounded-lg shadow min-w-[60px] ${bgColor} ${highlightClass}` },
+              { key:idx, className:`flex-shrink-0 flex flex-col items-center p-2 rounded-lg shadow min-w-[60px] ${tempBg}` },
               React.createElement("span",{className:"text-xs font-semibold"}, formatHour(hour.hour)),
               React.createElement("div",{className:"my-1 text-2xl"}, getIcon(hour.code,hour.rain)),
               React.createElement("span",{className:"text-sm"}, Math.round(hour.temp)+"°C"),
