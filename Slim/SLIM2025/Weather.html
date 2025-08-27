@@ -20,10 +20,10 @@ function WeatherWidget() {
   const [error, setError] = useState(null);
 
   const days = [
-    { date: '2025-09-04', label: '4 Sep', course: 'Portsalon (1.30pm)', lat: 55.2, lon: -7.6 },
-    { date: '2025-09-05', label: '5 Sep', course: 'Old Tom Morris (12.10pm)', lat: 55.25, lon: -7.9 },
-    { date: '2025-09-06', label: '6 Sep', course: "St Patrick's (1.30pm)", lat: 55.25, lon: -7.9 },
-    { date: '2025-09-07', label: '7 Sep', course: 'Sandy Hills (8.10am)', lat: 55.25, lon: -7.9 }
+    { date: '2025-09-04', label: '4 Sep', course: 'Portsalon', lat: 55.2, lon: -7.6 },
+    { date: '2025-09-05', label: '5 Sep', course: 'Old Tom Morris', lat: 55.25, lon: -7.9 },
+    { date: '2025-09-06', label: '6 Sep', course: "St Patrick's", lat: 55.25, lon: -7.9 },
+    { date: '2025-09-07', label: '7 Sep', course: 'Sandy Hills', lat: 55.25, lon: -7.9 }
   ];
 
   const summaryHoursMap = {
@@ -113,22 +113,21 @@ function WeatherWidget() {
   }
 
   return React.createElement(
-        "div",
+    "div",
     { className:"max-w-5xl w-full mx-auto p-4 rounded-xl shadow bg-white" },
+
+    React.createElement(
       "h2",
-      { className:"text-2xl font-bold mb-2 text-center" },
+      { className:"text-2xl font-bold mb-1 text-center" },
       "SLIM 2025 - WEATHER FORECAST"
     ),
 
-    React.createElement(
-      
     lastUpdate && React.createElement(
       "p",
-      { className:"text-center text-xs mt-0 mb-4 text-gray-600" },
+      { className:"text-center text-xs mb-4 text-gray-600" },
       "Last forecast update: "+ new Date(lastUpdate).toLocaleString()
     ),
 
-      
     error && React.createElement(
       "p",
       { className:"text-red-600 text-center mb-4" },
