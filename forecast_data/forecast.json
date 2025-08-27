@@ -1,63 +1,27 @@
 {
-  "timestamp": "2025-08-27T13:20:39.840741Z",
+  "timestamp": "2025-08-27T14:09:03.902101Z",
   "forecasts": [
     {
       "group": "Portsalon_28Aug",
-      "time": "2025-08-27T13:00:00Z",
-      "Rainfall": 0.2,
-      "WeatherSymbol": "40"
-    },
-    {
-      "group": "Downings_29Aug",
-      "time": "2025-08-27T13:00:00Z",
-      "Rainfall": 0.1,
-      "WeatherSymbol": "46"
-    },
-    {
-      "group": "Downings_30Aug",
-      "time": "2025-08-27T13:00:00Z",
-      "Rainfall": 0.1,
-      "WeatherSymbol": "46"
-    },
-    {
-      "group": "Downings_31Aug",
-      "time": "2025-08-27T13:00:00Z",
-      "Rainfall": 0.1,
-      "WeatherSymbol": "46"
-    },
-    {
-      "group": "Portsalon_28Aug",
       "time": "2025-08-27T14:00:00Z",
-      "Temperature": 18.1,
-      "WindSpeed": 18.4,
-      "WindDirection": 182.0,
       "Rainfall": 0.4,
       "WeatherSymbol": "9"
     },
     {
       "group": "Downings_29Aug",
       "time": "2025-08-27T14:00:00Z",
-      "Temperature": 17.2,
-      "WindSpeed": 18.4,
-      "WindDirection": 179.0,
       "Rainfall": 0.1,
       "WeatherSymbol": "46"
     },
     {
       "group": "Downings_30Aug",
       "time": "2025-08-27T14:00:00Z",
-      "Temperature": 17.2,
-      "WindSpeed": 18.4,
-      "WindDirection": 179.0,
       "Rainfall": 0.1,
       "WeatherSymbol": "46"
     },
     {
       "group": "Downings_31Aug",
       "time": "2025-08-27T14:00:00Z",
-      "Temperature": 17.2,
-      "WindSpeed": 18.4,
-      "WindDirection": 179.0,
       "Rainfall": 0.1,
       "WeatherSymbol": "46"
     },
