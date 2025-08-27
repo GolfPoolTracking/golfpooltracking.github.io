@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Portsalon Weather</title>
+    <title>SLIM 2025 - WEATHER FORECAST</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
@@ -19,44 +19,52 @@
         const [lastUpdate, setLastUpdate] = useState(null);
         const [error, setError] = useState(null);
 
+        // Map of dates to golf courses and coordinates
+        const courseMap = {
+          '4 Sep': { name: 'Portsalon', lat: 55.2, lon: -7.6 },
+          '5 Sep': { name: 'Old Tom Morris', lat: 55.25, lon: -7.9 },
+          '6 Sep': { name: "St Patrick's", lat: 55.25, lon: -7.9 },
+          '7 Sep': { name: 'Sandy Hills', lat: 55.25, lon: -7.9 }
+        };
+
         useEffect(() => {
           async function getForecast() {
             try {
-              const lat = 55.2;
-              const lon = -7.6;
-              const startDate = '2025-08-28';
-              const endDate = '2025-09-07';
-              const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}` +
-                `&hourly=temperature_2m,precipitation,weathercode,windspeed_10m,winddirection_10m&timezone=auto` +
-                `&start_date=${startDate}&end_date=${endDate}`;
+              const days = Object.keys(courseMap);
+              const allForecast = {};
 
-              const res = await fetch(url);
-              if (!res.ok) throw new Error("API error " + res.status);
-              const data = await res.json();
-              if (!data.hourly) throw new Error("No hourly data returned");
+              for (const day of days) {
+                const { lat, lon } = courseMap[day];
+                const startDate = '2025-09-04';
+                const endDate = '2025-09-07';
+                const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}` +
+                  `&hourly=temperature_2m,precipitation,weathercode,windspeed_10m,winddirection_10m&timezone=auto` +
+                  `&start_date=${startDate}&end_date=${endDate}`;
 
-              const hours = data.hourly.time.map((t, i) => ({
-                time: t,
-                temp: data.hourly.temperature_2m[i],
-                rain: data.hourly.precipitation[i],
-                code: data.hourly.weathercode[i],
-                windSpeed: data.hourly.windspeed_10m[i],
-                windDir: data.hourly.winddirection_10m[i],
-              }));
+                const res = await fetch(url);
+                if (!res.ok) throw new Error("API error " + res.status);
+                const data = await res.json();
+                if (!data.hourly) throw new Error("No hourly data returned");
 
-              const filtered = hours.filter(h => {
-                const d = new Date(h.time);
-                return d.getHours() >= 7 && d.getHours() <= 19;
-              });
+                const hours = data.hourly.time.map((t, i) => ({
+                  time: t,
+                  temp: data.hourly.temperature_2m[i],
+                  rain: data.hourly.precipitation[i],
+                  code: data.hourly.weathercode[i],
+                  windSpeed: data.hourly.windspeed_10m[i],
+                  windDir: data.hourly.winddirection_10m[i],
+                }));
 
-              const grouped = {};
-              filtered.forEach(h => {
-                const dateStr = new Date(h.time).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
-                if (!grouped[dateStr]) grouped[dateStr] = [];
-                grouped[dateStr].push(h);
-              });
+                const filtered = hours.filter(h => {
+                  const d = new Date(h.time);
+                  return d.getHours() >= 7 && d.getHours() <= 19;
+                });
 
-              setForecast(grouped);
+                const dayStr = new Date(filtered[0].time).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
+                allForecast[dayStr] = filtered;
+              }
+
+              setForecast(allForecast);
               setLastUpdate(new Date().toLocaleString());
               setError(null);
             } catch (e) {
@@ -76,7 +84,6 @@
         }
 
         function getWindArrow(deg) {
-          // Returns a Unicode arrow rotated approximately to degrees
           const arrows = ["↑","↗","→","↘","↓","↙","←","↖"];
           const idx = Math.round(deg / 45) % 8;
           return arrows[idx];
@@ -88,7 +95,7 @@
           React.createElement(
             "h2",
             { className: "text-2xl font-bold mb-4 text-center" },
-            "🌦️ Portsalon Forecast – 28 Aug to 7 Sep"
+            "SLIM 2025 - WEATHER FORECAST"
           ),
           error &&
             React.createElement(
@@ -102,8 +109,8 @@
               { key: day, className: "mb-6" },
               React.createElement(
                 "h3",
-                { className: "text-lg font-semibold mb-2" },
-                day
+                { className: "text-lg font-bold mb-2 p-2 bg-green-400 text-white rounded" },
+                `${day} – ${courseMap[day].name}`
               ),
               React.createElement(
                 "div",
