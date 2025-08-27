@@ -15,31 +15,26 @@
       const { useState, useEffect } = React;
 
       function WeatherWidget() {
-        const [forecast, setForecast] = useState({});
+        const [forecast, setForecast] = useState([]);
         const [lastUpdate, setLastUpdate] = useState(null);
         const [error, setError] = useState(null);
 
         // Map of dates to golf courses and coordinates
-        const courseMap = {
-          '4 Sep': { name: 'Portsalon', lat: 55.2, lon: -7.6 },
-          '5 Sep': { name: 'Old Tom Morris', lat: 55.25, lon: -7.9 },
-          '6 Sep': { name: "St Patrick's", lat: 55.25, lon: -7.9 },
-          '7 Sep': { name: 'Sandy Hills', lat: 55.25, lon: -7.9 }
-        };
+        const days = [
+          { date: '2025-09-04', label: '4 Sep', course: 'Portsalon', lat: 55.2, lon: -7.6 },
+          { date: '2025-09-05', label: '5 Sep', course: 'Old Tom Morris', lat: 55.25, lon: -7.9 },
+          { date: '2025-09-06', label: '6 Sep', course: "St Patrick's", lat: 55.25, lon: -7.9 },
+          { date: '2025-09-07', label: '7 Sep', course: 'Sandy Hills', lat: 55.25, lon: -7.9 }
+        ];
 
         useEffect(() => {
           async function getForecast() {
             try {
-              const days = Object.keys(courseMap);
-              const allForecast = {};
-
+              const results = [];
               for (const day of days) {
-                const { lat, lon } = courseMap[day];
-                const startDate = '2025-09-04';
-                const endDate = '2025-09-07';
-                const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}` +
+                const url = `https://api.open-meteo.com/v1/forecast?latitude=${day.lat}&longitude=${day.lon}` +
                   `&hourly=temperature_2m,precipitation,weathercode,windspeed_10m,winddirection_10m&timezone=auto` +
-                  `&start_date=${startDate}&end_date=${endDate}`;
+                  `&start_date=${day.date}&end_date=${day.date}`;
 
                 const res = await fetch(url);
                 if (!res.ok) throw new Error("API error " + res.status);
@@ -53,18 +48,15 @@
                   code: data.hourly.weathercode[i],
                   windSpeed: data.hourly.windspeed_10m[i],
                   windDir: data.hourly.winddirection_10m[i],
-                }));
-
-                const filtered = hours.filter(h => {
+                })).filter(h => {
                   const d = new Date(h.time);
                   return d.getHours() >= 7 && d.getHours() <= 19;
                 });
 
-                const dayStr = new Date(filtered[0].time).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
-                allForecast[dayStr] = filtered;
+                results.push({ label: day.label, course: day.course, hours });
               }
 
-              setForecast(allForecast);
+              setForecast(results);
               setLastUpdate(new Date().toLocaleString());
               setError(null);
             } catch (e) {
@@ -103,19 +95,19 @@
               { className: "text-red-600 text-center mb-4" },
               "Error: " + error
             ),
-          Object.keys(forecast).map(day =>
+          forecast.map(day =>
             React.createElement(
               "div",
-              { key: day, className: "mb-6" },
+              { key: day.label, className: "mb-6" },
               React.createElement(
                 "h3",
-                { className: "text-lg font-bold mb-2 p-2 bg-green-400 text-white rounded" },
-                `${day} – ${courseMap[day].name}`
+                { className: "text-lg font-bold mb-2 p-2 bg-green-500 text-white rounded" },
+                `${day.label} – ${day.course}`
               ),
               React.createElement(
                 "div",
                 { className: "grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-3" },
-                forecast[day].map((hour, idx) => {
+                day.hours.map((hour, idx) => {
                   const date = new Date(hour.time);
                   const bgColor = hour.rain > 0 ? "bg-blue-200" : "bg-sky-100";
                   return React.createElement(
