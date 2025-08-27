@@ -112,6 +112,12 @@ function WeatherWidget() {
     return h+'am';
   }
 
+    React.createElement(
+      "h2",
+      { className:"text-2xl font-bold mb-2 text-center" },
+      "SLIM 2025 - WEATHER FORECAST"
+    ),
+
   return React.createElement(
     "div",
     { className:"max-w-5xl w-full mx-auto p-4 rounded-xl shadow bg-white" },
@@ -122,12 +128,7 @@ function WeatherWidget() {
       "Last forecast update: "+ new Date(lastUpdate).toLocaleString()
     ),
 
-    React.createElement(
-      "h2",
-      { className:"text-2xl font-bold mb-2 text-center" },
-      "SLIM 2025 - WEATHER FORECAST"
-    ),
-
+      
     error && React.createElement(
       "p",
       { className:"text-red-600 text-center mb-4" },
