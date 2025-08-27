@@ -1,39 +1,27 @@
 {
-  "timestamp": "2025-08-27T06:14:00.131789Z",
+  "timestamp": "2025-08-27T07:09:25.930945Z",
   "forecasts": [
     {
       "group": "Portsalon_28Aug",
       "time": "2025-08-27T07:00:00Z",
-      "Temperature": 14.2,
-      "WindSpeed": 23.4,
-      "WindDirection": 137.0,
       "Rainfall": 1.0,
       "WeatherSymbol": "10"
     },
     {
       "group": "Downings_29Aug",
       "time": "2025-08-27T07:00:00Z",
-      "Temperature": 13.5,
-      "WindSpeed": 24.5,
-      "WindDirection": 142.0,
       "Rainfall": 0.8,
       "WeatherSymbol": "9"
     },
     {
       "group": "Downings_30Aug",
       "time": "2025-08-27T07:00:00Z",
-      "Temperature": 13.5,
-      "WindSpeed": 24.5,
-      "WindDirection": 142.0,
       "Rainfall": 0.8,
       "WeatherSymbol": "9"
     },
     {
       "group": "Downings_31Aug",
       "time": "2025-08-27T07:00:00Z",
-      "Temperature": 13.5,
-      "WindSpeed": 24.5,
-      "WindDirection": 142.0,
       "Rainfall": 0.8,
       "WeatherSymbol": "9"
     },
