@@ -20,10 +20,10 @@ function WeatherWidget() {
   const [error, setError] = useState(null);
 
   const days = [
-    { date: '2025-09-04', label: '4 Sep', course: 'Portsalon', lat: 55.2, lon: -7.6 },
-    { date: '2025-09-05', label: '5 Sep', course: 'Old Tom Morris', lat: 55.25, lon: -7.9 },
-    { date: '2025-09-06', label: '6 Sep', course: "St Patrick's", lat: 55.25, lon: -7.9 },
-    { date: '2025-09-07', label: '7 Sep', course: 'Sandy Hills', lat: 55.25, lon: -7.9 }
+    { date: '2025-09-04', label: 'Thursday 4 Sep', course: 'Portsalon (1.30pm)', lat: 55.2, lon: -7.6 },
+    { date: '2025-09-05', label: 'Friday 5 Sep', course: 'Old Tom Morris (12.10pm)', lat: 55.25, lon: -7.9 },
+    { date: '2025-09-06', label: 'Saturday 6 Sep', course: "St Patrick's (1.30pm)", lat: 55.25, lon: -7.9 },
+    { date: '2025-09-07', label: 'Sunday 7 Sep', course: 'Sandy Hills (8.10am)', lat: 55.25, lon: -7.9 }
   ];
 
   const summaryHoursMap = {
@@ -49,6 +49,8 @@ function WeatherWidget() {
 
           const updatedTime = data.current_weather?.time || new Date().toISOString();
 
+          const summaryRange = summaryHoursMap[day.date];
+
           const hours = data.hourly.time.map((t, i) => {
             const d = new Date(t);
             return {
@@ -60,10 +62,9 @@ function WeatherWidget() {
               windSpeed: data.hourly.windspeed_10m[i],
               windDir: data.hourly.winddirection_10m[i],
             };
-          }).filter(h => h.hour >= 8 && h.hour <= 18);
+          }).filter(h => h.hour >= summaryRange.start && h.hour <= summaryRange.end);
 
-          const summaryRange = summaryHoursMap[day.date];
-          const summaryHours = hours.filter(h => h.hour >= summaryRange.start && h.hour <= summaryRange.end);
+          const summaryHours = hours;
 
           let summary = 'Sunny';
           const rainTotal = summaryHours.reduce((sum,h)=>sum+h.rain,0);
@@ -145,19 +146,6 @@ function WeatherWidget() {
           `${day.label} – ${day.course}`
         ),
 
-        // Key hours strip
-        React.createElement(
-          "div",
-          { className:"flex mb-1 gap-1 overflow-x-auto" },
-          Array.from({length:11}, (_,i)=>i+8).map(h=>{
-            const isKey = h >= day.summaryRange.start && h <= day.summaryRange.end;
-            return React.createElement("div", {
-              key:h,
-              className:`flex-shrink-0 w-5 h-2 rounded ${isKey ? "bg-green-500" : "bg-gray-300"}`
-            });
-          })
-        ),
-
         React.createElement(
           "p",
           { className:"text-sm italic mb-2" },
@@ -168,12 +156,10 @@ function WeatherWidget() {
           "div",
           { className:"flex overflow-x-auto gap-3 py-2" },
           day.hours.map((hour, idx)=>{
-            const isKeyHour = hour.hour >= day.summaryRange.start && hour.hour <= day.summaryRange.end;
-            let tileBg = hour.rain > 0 ? "bg-blue-200 brightness-90" : "bg-sky-100"; 
-            const borderClass = isKeyHour ? "border-2 border-green-500 bg-sky-300" : ""; 
+            const tileBg = hour.rain > 0 ? "bg-blue-200 brightness-90" : "bg-sky-100"; 
             return React.createElement(
               "div",
-              { key:idx, className:`flex-shrink-0 flex flex-col items-center p-2 rounded-lg shadow min-w-[60px] ${tileBg} ${borderClass}` },
+              { key:idx, className:`flex-shrink-0 flex flex-col items-center p-2 rounded-lg shadow min-w-[60px] ${tileBg}` },
               React.createElement("span",{className:"text-xs font-semibold"}, formatHour(hour.hour)),
               React.createElement("div",{className:"my-1 text-2xl"}, getIcon(hour.code,hour.rain)),
               React.createElement("span",{className:"text-sm"}, Math.round(hour.temp)+"°C"),
