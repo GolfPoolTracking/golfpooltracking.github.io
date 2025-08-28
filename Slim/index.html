@@ -5,13 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>SLIM 2025 - Donegal</title>
   <style>
-    /* Base body styling with background image */
+    /* Base body styling */
     body {
       margin: 0;
       font-family: Arial, sans-serif;
       color: #111;
-      background: url("./SLIM2025/Dancer_2024.jpg") no-repeat center center fixed;
-      background-size: cover;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
@@ -20,15 +18,20 @@
       box-sizing: border-box;
       overflow-x: hidden;
       position: relative;
+      background: #f8f8f8; /* fallback */
     }
 
-    /* Light overlay for readability */
+    /* Background layer with overlay */
     body::before {
       content: "";
       position: fixed;
-      inset: 0;
-      background: rgba(255, 255, 255, 0.55); /* adjust opacity if needed */
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: 
+        linear-gradient(rgba(255,255,255,0.45), rgba(255,255,255,0.45)), 
+        url("SLIM2025/Dancer_2024.jpg") no-repeat center center;
+      background-size: cover;
       z-index: -1;
+      transform: translateZ(0); /* improves smoothness */
     }
 
     /* Headings */
@@ -128,6 +131,13 @@
       font-size: 0.85rem;
       color: rgba(0,0,0,0.6);
       user-select: none;
+    }
+
+    /* iOS fix: disable fixed backgrounds */
+    @supports (-webkit-touch-callout: none) {
+      body::before {
+        position: absolute; /* acts like scroll on iOS */
+      }
     }
   </style>
 </head>
