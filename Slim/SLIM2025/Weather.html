@@ -33,13 +33,31 @@ function WeatherWidget() {
     '2025-09-07': { start: 8, end: 13 },
   };
 
+  function describeWind(speed) {
+    if (speed <= 5) return "Calm";
+    else if (speed <= 19) return "Light breeze";
+    else if (speed <= 38) return "Moderate breeze";
+    else if (speed <= 49) return "Fresh breeze";
+    else if (speed <= 61) return "Strong breeze";
+    else if (speed <= 74) return "Near gale";
+    else if (speed <= 88) return "Gale";
+    else return "Storm";
+  }
+
+  function getWindArrow(deg){
+    const correctedDeg = (deg + 180) % 360; // Corrected 180°
+    const arrows = ["↑","↗","→","↘","↓","↙","←","↖"];
+    const idx = Math.round(correctedDeg/45)%8;
+    return arrows[idx];
+  }
+
   useEffect(() => {
     async function getForecast() {
       try {
         const results = [];
         for (const day of days) {
           const url = `https://api.open-meteo.com/v1/forecast?latitude=${day.lat}&longitude=${day.lon}` +
-                      `&hourly=temperature_2m,precipitation,weathercode,windspeed_10m,winddirection_10m&current_weather=true&timezone=auto` +
+                      `&hourly=temperature_2m,precipitation,weathercode,windspeed_10m,winddirection_10m,windgusts_10m&current_weather=true&timezone=auto` +
                       `&start_date=${day.date}&end_date=${day.date}`;
 
           const res = await fetch(url);
@@ -48,7 +66,6 @@ function WeatherWidget() {
           if (!data.hourly) throw new Error("No hourly data returned");
 
           const updatedTime = data.current_weather?.time || new Date().toISOString();
-
           const summaryRange = summaryHoursMap[day.date];
 
           const hours = data.hourly.time.map((t, i) => {
@@ -61,22 +78,31 @@ function WeatherWidget() {
               code: data.hourly.weathercode[i],
               windSpeed: data.hourly.windspeed_10m[i],
               windDir: data.hourly.winddirection_10m[i],
+              windGust: data.hourly.windgusts_10m ? data.hourly.windgusts_10m[i] : null
             };
           }).filter(h => h.hour >= summaryRange.start && h.hour <= summaryRange.end);
 
-          const summaryHours = hours;
+          // ---- Rain Summary with Duration ----
+          const rainHours = hours.filter(h => h.rain > 0);
+          let rainSummary = "No rain expected";
+          if (rainHours.length > 0) {
+            const maxRain = Math.max(...rainHours.map(h => h.rain));
+            const duration = rainHours.length;
+            let intensity = "Light rain";
+            if (maxRain >= 5) intensity = "Heavy rain";
+            else if (maxRain >= 1) intensity = "Moderate rain";
+            rainSummary = `${intensity} (~${maxRain.toFixed(1)}mm) expected for ${duration} hour${duration > 1 ? "s" : ""}`;
+          }
 
-          let summary = 'Sunny';
-          const rainTotal = summaryHours.reduce((sum,h)=>sum+h.rain,0);
-          const cloudHours = summaryHours.filter(h=>[1,2,3].includes(h.code)).length;
-          if(rainTotal>0) summary = `Rain expected`;
-          else if(cloudHours > summaryHours.length/2) summary = 'Mostly cloudy';
-
-          const avgWind = summaryHours.reduce((sum,h)=>sum+h.windSpeed,0)/summaryHours.length;
-          const avgWindDirDeg = summaryHours.reduce((sum,h)=>sum+h.windDir,0)/summaryHours.length;
+          // ---- Wind Summary with Max Gust ----
+          const avgWind = hours.reduce((sum,h)=>sum+h.windSpeed,0)/hours.length;
+          const maxGust = Math.max(...hours.map(h=>h.windGust||h.windSpeed));
+          const avgWindDirDeg = hours.reduce((sum,h)=>sum+h.windDir,0)/hours.length;
           const windArrows = ["N","NE","E","SE","S","SW","W","NW"];
-          const windDirIndex = Math.round(avgWindDirDeg/45)%8;
-          summary += `, Wind: ${Math.round(avgWind)} km/h ${windArrows[windDirIndex]}`;
+          const windDirIndex = Math.round((avgWindDirDeg+180)/45)%8; // Corrected 180°
+          const windSummary = `${describeWind(avgWind)} ${Math.round(avgWind)} km/h, gusts up to ${Math.round(maxGust)} km/h from ${windArrows[windDirIndex]}`;
+
+          const summary = `${rainSummary}, Wind: ${windSummary}`;
 
           results.push({ label: day.label, course: day.course, hours, summary, lastUpdate: updatedTime, summaryRange });
         }
@@ -98,12 +124,6 @@ function WeatherWidget() {
     if(code===0) return "🌤️";
     if([1,2,3].includes(code)) return "☁️";
     return "🌤️";
-  }
-
-  function getWindArrow(deg){
-    const arrows = ["↑","↗","→","↘","↓","↙","←","↖"];
-    const idx = Math.round(deg/45)%8;
-    return arrows[idx];
   }
 
   function formatHour(h) {
@@ -156,7 +176,15 @@ function WeatherWidget() {
           "div",
           { className:"flex overflow-x-auto gap-3 py-2" },
           day.hours.map((hour, idx)=>{
-            const tileBg = hour.rain > 0 ? "bg-blue-200 brightness-90" : "bg-sky-100"; 
+            // ---- Tile background based on rain intensity ----
+            let tileBg = "bg-sky-100";
+            if(hour.rain > 0 && hour.rain < 1) tileBg = "bg-blue-200 brightness-90";        // Light rain
+            else if(hour.rain >= 1 && hour.rain < 5) tileBg = "bg-blue-300 brightness-95";  // Moderate rain
+            else if(hour.rain >= 5) tileBg = "bg-blue-400";                                 // Heavy rain
+
+            // ---- Highlight strong gusts ----
+            if(hour.windGust && hour.windGust >= 50) tileBg += " border-2 border-red-500";
+
             return React.createElement(
               "div",
               { key:idx, className:`flex-shrink-0 flex flex-col items-center p-2 rounded-lg shadow min-w-[60px] ${tileBg}` },
@@ -164,7 +192,7 @@ function WeatherWidget() {
               React.createElement("div",{className:"my-1 text-2xl"}, getIcon(hour.code,hour.rain)),
               React.createElement("span",{className:"text-sm"}, Math.round(hour.temp)+"°C"),
               React.createElement("span",{className:"text-xs text-blue-700"}, hour.rain>0 ? hour.rain.toFixed(1)+"mm" : "—"),
-              React.createElement("span",{className:"text-xs mt-1"}, `${Math.round(hour.windSpeed)} km/h ${getWindArrow(hour.windDir)}`)
+              React.createElement("span",{className:"text-xs mt-1"}, `${describeWind(hour.windSpeed)} ${Math.round(hour.windSpeed)} km/h, gusts ${hour.windGust ? Math.round(hour.windGust)+" km/h" : "—"} ${getWindArrow(hour.windDir)}`)
             );
           })
         )
