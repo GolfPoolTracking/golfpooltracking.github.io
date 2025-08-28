@@ -45,8 +45,7 @@ function WeatherWidget() {
   }
 
   function getWindArrow(degFrom) {
-    // Arrow points toward where wind is going
-    const degTo = (degFrom + 180) % 360;
+    const degTo = (degFrom + 180) % 360; // Arrow points where wind is going
     const arrows = ["↑","↗","→","↘","↓","↙","←","↖"];
     const idx = Math.round(degTo / 45) % 8;
     return arrows[idx];
@@ -85,7 +84,6 @@ function WeatherWidget() {
             };
           }).filter(h => h.hour >= summaryRange.start && h.hour <= summaryRange.end);
 
-          // ---- Rain Summary ----
           const rainHours = hours.filter(h => h.rain > 0);
           let rainSummary = "No rain expected";
           if (rainHours.length > 0) {
@@ -97,11 +95,10 @@ function WeatherWidget() {
             rainSummary = `${intensity} (~${maxRain.toFixed(1)}mm) expected for ${duration} hour${duration > 1 ? "s" : ""}`;
           }
 
-          // ---- Wind Summary ----
           const avgWind = hours.reduce((sum,h)=>sum+h.windSpeed,0)/hours.length;
           const maxGust = Math.max(...hours.map(h=>h.windGust||h.windSpeed));
           const avgWindDirDeg = hours.reduce((sum,h)=>sum+h.windDir,0)/hours.length;
-          const windDirIndex = Math.round(avgWindDirDeg/45)%8; // coming from
+          const windDirIndex = Math.round(avgWindDirDeg/45)%8;
           const windSummary = `${describeWind(avgWind)} ${Math.round(avgWind)} km/h, gusts up to ${Math.round(maxGust)} km/h from ${windDirs[windDirIndex]}`;
 
           const summary = `${rainSummary}, Wind: ${windSummary}`;
@@ -176,15 +173,12 @@ function WeatherWidget() {
 
         React.createElement(
           "div",
-          { className:"flex overflow-x-auto gap-3 py-2" },
+          { className:"flex overflow-x-auto gap-2 py-2" },
           day.hours.map((hour, idx)=>{
-            // ---- Tile background based on rain intensity ----
             let tileBg = "bg-sky-100";
-            if(hour.rain > 0 && hour.rain < 1) tileBg = "bg-blue-200 brightness-90";        // Light rain
-            else if(hour.rain >= 1 && hour.rain < 5) tileBg = "bg-blue-300 brightness-95";  // Moderate rain
-            else if(hour.rain >= 5) tileBg = "bg-blue-400";                                 // Heavy rain
-
-            // ---- Highlight strong gusts ----
+            if(hour.rain > 0 && hour.rain < 1) tileBg = "bg-blue-200 brightness-90";
+            else if(hour.rain >= 1 && hour.rain < 5) tileBg = "bg-blue-300 brightness-95";
+            else if(hour.rain >= 5) tileBg = "bg-blue-400";
             if(hour.windGust && hour.windGust >= 50) tileBg += " border-2 border-red-500";
 
             const windArrow = getWindArrow(hour.windDir);
@@ -192,7 +186,7 @@ function WeatherWidget() {
 
             return React.createElement(
               "div",
-              { key:idx, className:`flex-shrink-0 flex flex-col items-center p-2 rounded-lg shadow min-w-[60px] ${tileBg}` },
+              { key:idx, className:`flex-shrink-0 flex flex-col items-center p-1 sm:p-2 rounded-lg shadow min-w-[50px] sm:min-w-[60px] ${tileBg}` },
               React.createElement("span",{className:"text-xs font-semibold"}, formatHour(hour.hour)),
               React.createElement("div",{className:"my-1 text-2xl"}, getIcon(hour.code,hour.rain)),
               React.createElement("span",{className:"text-sm"}, Math.round(hour.temp)+"°C"),
