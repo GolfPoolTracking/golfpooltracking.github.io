@@ -44,15 +44,6 @@ function WeatherWidget() {
     else return "Storm";
   }
 
-  function getWindArrow(degFrom) {
-    const degTo = (degFrom + 180) % 360; // arrow points toward where wind is going
-    const arrows = ["↑","↗","→","↘","↓","↙","←","↖"];
-    const idx = Math.round(degTo / 45) % 8;
-    return arrows[idx];
-  }
-
-  const windDirs = ["N","NE","E","SE","S","SW","W","NW"];
-
   useEffect(() => {
     async function getForecast() {
       try {
@@ -78,9 +69,6 @@ function WeatherWidget() {
               temp: data.hourly.temperature_2m[i],
               rain: data.hourly.precipitation[i],
               code: data.hourly.weathercode[i],
-              windSpeed: data.hourly.windspeed_10m[i],
-              windDir: data.hourly.winddirection_10m[i],
-              windGust: data.hourly.windgusts_10m ? data.hourly.windgusts_10m[i] : null
             };
           }).filter(h => h.hour >= summaryRange.start && h.hour <= summaryRange.end);
 
@@ -98,6 +86,7 @@ function WeatherWidget() {
           const avgWind = hours.reduce((sum,h)=>sum+h.windSpeed,0)/hours.length;
           const maxGust = Math.max(...hours.map(h=>h.windGust||h.windSpeed));
           const avgWindDirDeg = hours.reduce((sum,h)=>sum+h.windDir,0)/hours.length;
+          const windDirs = ["N","NE","E","SE","S","SW","W","NW"];
           const windDirIndex = Math.round(avgWindDirDeg/45)%8;
           const windSummary = `${describeWind(avgWind)} ${Math.round(avgWind)} km/h, gusts up to ${Math.round(maxGust)} km/h from ${windDirs[windDirIndex]}`;
 
@@ -131,8 +120,6 @@ function WeatherWidget() {
     if(h>12) return (h-12)+'pm';
     return h+'am';
   }
-
-  const isMobile = window.innerWidth < 640;
 
   return React.createElement(
     "div",
@@ -181,14 +168,6 @@ function WeatherWidget() {
             if(hour.rain > 0 && hour.rain < 1) tileBg = "bg-blue-200 brightness-90";
             else if(hour.rain >= 1 && hour.rain < 5) tileBg = "bg-blue-300 brightness-95";
             else if(hour.rain >= 5) tileBg = "bg-blue-400";
-            if(hour.windGust && hour.windGust >= 50) tileBg += " border-2 border-red-500";
-
-            const windArrow = getWindArrow(hour.windDir);
-            const windTextFrom = windDirs[Math.round(hour.windDir/45)%8];
-
-            const windSummaryText = isMobile
-              ? `${Math.round(hour.windSpeed)} km/h${hour.windGust ? " ⬆" + Math.round(hour.windGust) : ""} ${windArrow}`
-              : `${describeWind(hour.windSpeed)} ${Math.round(hour.windSpeed)} km/h, gusts ${hour.windGust ? Math.round(hour.windGust)+" km/h" : "—"} from ${windTextFrom} ${windArrow}`;
 
             return React.createElement(
               "div",
@@ -196,8 +175,7 @@ function WeatherWidget() {
               React.createElement("span",{className:"text-xs font-semibold"}, formatHour(hour.hour)),
               React.createElement("div",{className:"my-1 text-2xl"}, getIcon(hour.code,hour.rain)),
               React.createElement("span",{className:"text-sm"}, Math.round(hour.temp)+"°C"),
-              React.createElement("span",{className:"text-xs text-blue-700"}, hour.rain>0 ? hour.rain.toFixed(1)+"mm" : "—"),
-              React.createElement("span",{className:"text-xs mt-1"}, windSummaryText)
+              React.createElement("span",{className:"text-xs text-blue-700"}, hour.rain>0 ? hour.rain.toFixed(1)+"mm" : "—")
             );
           })
         )
