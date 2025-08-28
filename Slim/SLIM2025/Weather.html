@@ -45,7 +45,7 @@ function WeatherWidget() {
   }
 
   function getWindArrow(degFrom) {
-    const degTo = (degFrom + 180) % 360; // Arrow points where wind is going
+    const degTo = (degFrom + 180) % 360; // arrow points toward where wind is going
     const arrows = ["↑","↗","→","↘","↓","↙","←","↖"];
     const idx = Math.round(degTo / 45) % 8;
     return arrows[idx];
@@ -132,6 +132,8 @@ function WeatherWidget() {
     return h+'am';
   }
 
+  const isMobile = window.innerWidth < 640;
+
   return React.createElement(
     "div",
     { className:"max-w-5xl w-full mx-auto p-4 rounded-xl shadow bg-white" },
@@ -184,6 +186,10 @@ function WeatherWidget() {
             const windArrow = getWindArrow(hour.windDir);
             const windTextFrom = windDirs[Math.round(hour.windDir/45)%8];
 
+            const windSummaryText = isMobile
+              ? `${Math.round(hour.windSpeed)} km/h${hour.windGust ? " ⬆" + Math.round(hour.windGust) : ""} ${windArrow}`
+              : `${describeWind(hour.windSpeed)} ${Math.round(hour.windSpeed)} km/h, gusts ${hour.windGust ? Math.round(hour.windGust)+" km/h" : "—"} from ${windTextFrom} ${windArrow}`;
+
             return React.createElement(
               "div",
               { key:idx, className:`flex-shrink-0 flex flex-col items-center p-1 sm:p-2 rounded-lg shadow min-w-[50px] sm:min-w-[60px] ${tileBg}` },
@@ -191,7 +197,7 @@ function WeatherWidget() {
               React.createElement("div",{className:"my-1 text-2xl"}, getIcon(hour.code,hour.rain)),
               React.createElement("span",{className:"text-sm"}, Math.round(hour.temp)+"°C"),
               React.createElement("span",{className:"text-xs text-blue-700"}, hour.rain>0 ? hour.rain.toFixed(1)+"mm" : "—"),
-              React.createElement("span",{className:"text-xs mt-1"}, `${describeWind(hour.windSpeed)} ${Math.round(hour.windSpeed)} km/h, gusts ${hour.windGust ? Math.round(hour.windGust)+" km/h" : "—"} from ${windTextFrom} ${windArrow}`)
+              React.createElement("span",{className:"text-xs mt-1"}, windSummaryText)
             );
           })
         )
