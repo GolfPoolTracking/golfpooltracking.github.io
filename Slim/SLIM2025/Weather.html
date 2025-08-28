@@ -12,12 +12,14 @@
 <div id="root"></div>
 
 <script type="text/javascript">
-const { useState, useEffect } = React;
+const { useState, useEffect, useRef } = React;
 
 function WeatherWidget() {
   const [forecast, setForecast] = useState([]);
   const [lastUpdate, setLastUpdate] = useState(null);
   const [error, setError] = useState(null);
+
+  const tileRefs = useRef({}); // refs for each day's hourly tiles
 
   const days = [
     { date: '2025-09-04', label: 'Thursday 4 Sep', course: 'Portsalon (1.30pm)', lat: 55.2, lon: -7.6 },
@@ -75,7 +77,6 @@ function WeatherWidget() {
           const updatedTime = data.current_weather?.time || new Date().toISOString();
           const summaryRange = summaryHoursMap[day.date];
 
-          // Keep wind info for summary calculations, even if not displayed in hourly boxes
           const hours = data.hourly.time.map((t, i) => {
             const d = new Date(t);
             return {
@@ -90,7 +91,6 @@ function WeatherWidget() {
             };
           }).filter(h => h.hour >= summaryRange.start && h.hour <= summaryRange.end);
 
-          // Rain summary
           const rainHours = hours.filter(h => h.rain > 0);
           let rainSummary = "No rain expected";
           if (rainHours.length > 0) {
@@ -102,7 +102,6 @@ function WeatherWidget() {
             rainSummary = `${intensity} (~${maxRain.toFixed(1)}mm) expected for ${duration} hour${duration > 1 ? "s" : ""}`;
           }
 
-          // Wind summary
           const avgWind = hours.reduce((sum,h)=>sum+h.windSpeed,0)/hours.length;
           const maxGust = Math.max(...hours.map(h=>h.windGust||h.windSpeed));
           const avgWindDirDeg = hours.reduce((sum,h)=>sum+h.windDir,0)/hours.length;
@@ -149,47 +148,52 @@ function WeatherWidget() {
       "Error: "+error
     ),
 
-    forecast.map(day =>
+    forecast.map((day, index) =>
       React.createElement(
         "div",
-        { key:day.label, className:"mb-6" },
+        { key:day.label, className:"mb-6 flex flex-col items-start" },
 
-        // Wrap title and hourly tiles to align width
+        // Green bar and summary at the top, width will match tiles
         React.createElement(
           "div",
-          { className:"flex flex-col items-start" },
-
+          {
+            style: { width: tileRefs.current[index]?.offsetWidth || "100%" },
+            className:"flex flex-col mb-2"
+          },
           React.createElement(
             "h3",
-            { className:"text-lg font-bold mb-1 p-2 bg-green-500 text-white rounded max-w-max" },
+            { className:"text-lg font-bold mb-1 p-2 bg-green-500 text-white rounded w-full" },
             `${day.label} – ${day.course}`
           ),
-
           React.createElement(
             "p",
-            { className:"text-sm italic mb-2" },
+            { className:"text-sm italic w-full" },
             day.summary
-          ),
-
-          React.createElement(
-            "div",
-            { className:"flex overflow-x-auto gap-2 py-2" },
-            day.hours.map((hour, idx)=>{
-              let tileBg = "bg-sky-100";
-              if(hour.rain > 0 && hour.rain < 1) tileBg = "bg-blue-200 brightness-90";
-              else if(hour.rain >= 1 && hour.rain < 5) tileBg = "bg-blue-300 brightness-95";
-              else if(hour.rain >= 5) tileBg = "bg-blue-400";
-
-              return React.createElement(
-                "div",
-                { key:idx, className:`flex-shrink-0 flex flex-col items-center p-1 sm:p-2 rounded-lg shadow min-w-[50px] sm:min-w-[60px] ${tileBg}` },
-                React.createElement("span",{className:"text-xs font-semibold"}, formatHour(hour.hour)),
-                React.createElement("div",{className:"my-1 text-2xl"}, getIcon(hour.code,hour.rain)),
-                React.createElement("span",{className:"text-sm"}, Math.round(hour.temp)+"°C"),
-                React.createElement("span",{className:"text-xs text-blue-700"}, hour.rain>0 ? hour.rain.toFixed(1)+"mm" : "—")
-              );
-            })
           )
+        ),
+
+        // Hourly tiles scrollable below
+        React.createElement(
+          "div",
+          {
+            className:"flex overflow-x-auto gap-2 py-2",
+            ref: el => tileRefs.current[index] = el
+          },
+          day.hours.map((hour, idx)=>{
+            let tileBg = "bg-sky-100";
+            if(hour.rain > 0 && hour.rain < 1) tileBg = "bg-blue-200 brightness-90";
+            else if(hour.rain >= 1 && hour.rain < 5) tileBg = "bg-blue-300 brightness-95";
+            else if(hour.rain >= 5) tileBg = "bg-blue-400";
+
+            return React.createElement(
+              "div",
+              { key:idx, className:`flex-shrink-0 flex flex-col items-center p-1 sm:p-2 rounded-lg shadow min-w-[50px] sm:min-w-[60px] ${tileBg}` },
+              React.createElement("span",{className:"text-xs font-semibold"}, formatHour(hour.hour)),
+              React.createElement("div",{className:"my-1 text-2xl"}, getIcon(hour.code,hour.rain)),
+              React.createElement("span",{className:"text-sm"}, Math.round(hour.temp)+"°C"),
+              React.createElement("span",{className:"text-xs text-blue-700"}, hour.rain>0 ? hour.rain.toFixed(1)+"mm" : "—")
+            );
+          })
         )
       )
     )
