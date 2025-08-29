@@ -27,20 +27,20 @@
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
       background: 
-        linear-gradient(rgba(255,255,255,0.45), rgba(255,255,255,0.45)), 
+        linear-gradient(rgba(0,0,0,0.35), rgba(0,0,0,0.35)), 
         url("SLIM2025/Dancer_2024.jpg") no-repeat center center;
       background-size: cover;
       z-index: -1;
-      transform: translateZ(0); /* improves smoothness */
+      transform: translateZ(0);
     }
 
     /* Headings */
     h1 {
       margin: 0 0 20px;
-      text-shadow: 1px 1px 4px rgba(255,255,255,0.8);
+      text-shadow: 1px 1px 6px rgba(0,0,0,0.6);
       font-size: clamp(1.8rem, 4vw, 2.5rem);
       text-align: center;
-      color: #000;
+      color: #fff;
     }
 
     /* Navigation layout */
@@ -56,16 +56,28 @@
       margin-bottom: 30px;
     }
 
+    /* Section Titles - pop-out cards */
     nav > ul > li > strong {
       display: block;
-      font-size: 1.25rem;
-      margin-bottom: 10px;
-      padding-bottom: 6px;
-      color: #444;
-      border-bottom: 2px solid #ccc;
+      font-size: 1.6rem;
+      margin-bottom: 15px;
+      padding: 12px 20px;
+      color: #fff;
+      background: linear-gradient(135deg, #1e90ff, #00bfff);
+      border-radius: 12px;
+      text-shadow: 1px 2px 4px rgba(0,0,0,0.5);
+      border: 2px solid #104e8b;
+      box-shadow: 2px 4px 12px rgba(0,0,0,0.3);
+      transition: all 0.3s ease;
     }
 
-    /* Submenu buttons */
+    nav > ul > li > strong:hover {
+      background: linear-gradient(135deg, #104e8b, #1c86ee);
+      box-shadow: 2px 6px 16px rgba(0,0,0,0.4);
+      cursor: default;
+    }
+
+    /* Submenu buttons - card style */
     nav ul.submenu {
       list-style: none;
       padding: 0;
@@ -83,22 +95,22 @@
       display: block;
       text-decoration: none;
       color: #111;
-      background-color: rgba(255, 255, 255, 0.9);
-      padding: 12px 20px;
-      border-radius: 8px;
+      background-color: rgba(255, 255, 255, 0.95);
+      padding: 14px 22px;
+      border-radius: 10px;
       font-weight: 700;
       text-align: center;
       transition: all 0.3s ease;
-      box-shadow: 1px 1px 5px rgba(0,0,0,0.2);
+      box-shadow: 1px 3px 8px rgba(0,0,0,0.2);
       font-size: 1rem;
-      min-width: 140px;
+      min-width: 150px;
     }
 
     nav ul.submenu a:hover,
     nav ul.submenu a:focus {
       background-color: #ffd700;
       color: #000;
-      box-shadow: 0 0 10px rgba(0,0,0,0.3);
+      box-shadow: 0 0 12px rgba(0,0,0,0.3);
       outline: none;
     }
 
@@ -112,6 +124,10 @@
     @media (max-width: 600px) {
       body {
         padding: 15px 10px;
+      }
+      nav > ul > li > strong {
+        font-size: 1.4rem;
+        padding: 10px 15px;
       }
       nav ul.submenu {
         flex-direction: column;
@@ -129,14 +145,14 @@
       width: 100%;
       text-align: center;
       font-size: 0.85rem;
-      color: rgba(0,0,0,0.6);
+      color: rgba(255,255,255,0.7);
       user-select: none;
     }
 
     /* iOS fix: disable fixed backgrounds */
     @supports (-webkit-touch-callout: none) {
       body::before {
-        position: absolute; /* acts like scroll on iOS */
+        position: absolute;
       }
     }
   </style>
@@ -150,6 +166,7 @@
       <li>
         <strong>Admin</strong>
         <ul class="submenu">
+          <li><a href="./SLIM2025/Weather.html">Weather Forecast</a></li>
           <li><a href="./SLIM2025/Rules.html">Rules</a></li>
           <li><a href="./SLIM2025/TeeTimes.html">Tee Times</a></li>
           <li><a href="./SLIM2025/Groupings.html">Groupings</a></li>
@@ -157,7 +174,6 @@
           <li><a href="./SLIM2025/PlayingHandicaps.html">Playing Handicaps</a></li>
           <li><a href="https://www.golfgamebook.com/golf-scorecard" target="_blank" rel="noopener noreferrer">
             ***Download the Golf GameBook App***</a></li>
-          <li><a href="./SLIM2025/Weather.html">Weather Forecast</a></li>
         </ul>
       </li>
 
