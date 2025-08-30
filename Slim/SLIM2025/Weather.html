@@ -112,7 +112,7 @@ function WeatherWidget() {
           const avgWindDirDeg = hours.reduce((sum,h)=>sum+h.windDir,0)/hours.length;
           const windDirs = ["N","NE","E","SE","S","SW","W","NW"];
           const windDirIndex = Math.round(avgWindDirDeg/45)%8;
-          const windSummary = `${describeWind(avgWind)} ${Math.round(avgWind)} km/h, gusts up to ${Math.round(maxGust)} km/h from ${windDirs[windDirIndex]}`;
+          const windSummary = `${describeWind(avgWind)} ${Math.round(avgWind)} km/h, gusts up to ${Math.round(maxGust)} km/h`;
 
           const summary = `${rainSummary}, Wind: ${windSummary}`;
 
