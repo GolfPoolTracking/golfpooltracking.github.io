@@ -9,7 +9,13 @@
 <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
 </head>
 <body class="bg-sky-50">
-<div id="root"></div>
+  <!-- Global Back Button -->
+  <button onclick="window.history.back()" 
+          class="m-4 px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-lg shadow text-sm">
+    ← Back
+  </button>
+
+  <div id="root"></div>
 
 <script type="text/javascript">
 const { useState, useEffect, useRef } = React;
@@ -18,8 +24,7 @@ function WeatherWidget() {
   const [forecast, setForecast] = useState([]);
   const [lastUpdate, setLastUpdate] = useState(null);
   const [error, setError] = useState(null);
-
-  const tileRefs = useRef({}); // refs for each day's hourly tiles
+  const tileRefs = useRef({});
 
   const days = [
     { date: '2025-09-04', label: 'Thursday 4 Sep', course: 'Portsalon (1.30pm)', lat: 55.2, lon: -7.6 },
@@ -139,7 +144,10 @@ function WeatherWidget() {
     lastUpdate && React.createElement(
       "p",
       { className:"text-center text-xs mb-4 text-gray-600" },
-      "Last forecast update: "+ new Date(lastUpdate).toLocaleString()
+      "Forecast last updated: " +
+      new Date(lastUpdate).toLocaleDateString("en-GB") + // UK style dd/mm/yyyy
+	  " at " +
+	  new Date(lastUpdate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     ),
 
     error && React.createElement(
@@ -153,7 +161,6 @@ function WeatherWidget() {
         "div",
         { key:day.label, className:"mb-6 flex flex-col items-start" },
 
-        // Green bar and summary at the top, width will match tiles
         React.createElement(
           "div",
           {
@@ -172,7 +179,6 @@ function WeatherWidget() {
           )
         ),
 
-        // Hourly tiles scrollable below
         React.createElement(
           "div",
           {
