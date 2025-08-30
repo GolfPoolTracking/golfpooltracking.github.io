@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>SLIM 2025 - WEATHER FORECAST</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+</head>
+<body class="bg-sky-50">
+  <!-- Global Back Button -->
+  <button onclick="window.history.back()" 
+          class="m-4 px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-lg shadow text-sm">
+    ← Back
+  </button>
+
+  <div id="root"></div>
+
+<script type="text/javascript">
+const { useState, useEffect, useRef } = React;
+
+function WeatherWidget() {
+  const [forecast, setForecast] = useState([]);
+  const [lastUpdate, setLastUpdate] = useState(null);
+  const [error, setError] = useState(null);
+  const tileRefs = useRef({});
+
+  const days = [
+    { date: '2025-09-04', label: 'Thursday 4 Sep', course: 'Portsalon (1.30pm)', lat: 55.2, lon: -7.6 },
+    { date: '2025-09-05', label: 'Friday 5 Sep', course: 'Old Tom Morris (12.10pm)', lat: 55.25, lon: -7.9 },
+    { date: '2025-09-06', label: 'Saturday 6 Sep', course: "St Patrick's (1.30pm)", lat: 55.25, lon: -7.9 },
+    { date: '2025-09-07', label: 'Sunday 7 Sep', course: 'Sandy Hills (9.00am)', lat: 55.25, lon: -7.9 }
+  ];
+
+  const summaryHoursMap = {
+    '2025-09-04': { start: 13, end: 19 },
+    '2025-09-05': { start: 12, end: 18 },
+    '2025-09-06': { start: 13, end: 19 },
+    '2025-09-07': { start: 9, end: 15 },
+  };
+
+  function describeWind(speed) {
+    if (speed <= 5) return "Calm";
+    else if (speed <= 19) return "Light breeze";
+    else if (speed <= 38) return "Moderate breeze";
+    else if (speed <= 49) return "Fresh breeze";
+    else if (speed <= 61) return "Strong breeze";
+    else if (speed <= 74) return "Near gale";
+    else if (speed <= 88) return "Gale";
+    else return "Storm";
+  }
+
+  function getIcon(code, rain) {
+    if(rain>0) return "🌧️";
+    if(code===0) return "🌤️";
+    if([1,2,3].includes(code)) return "☁️";
+    return "🌤️";
+  }
+
+  function formatHour(h) {
+    if(h===12) return '12pm';
+    if(h===0) return '12am';
+    if(h>12) return (h-12)+'pm';
+    return h+'am';
+  }
+
+  useEffect(() => {
+    async function getForecast() {
+      try {
+        const results = [];
+        for (const day of days) {
+          const url = `https://api.open-meteo.com/v1/forecast?latitude=${day.lat}&longitude=${day.lon}` +
+                      `&hourly=temperature_2m,precipitation,weathercode,windspeed_10m,winddirection_10m,windgusts_10m&current_weather=true&timezone=auto` +
+                      `&start_date=${day.date}&end_date=${day.date}`;
+
+          const res = await fetch(url);
+          if (!res.ok) throw new Error("API error " + res.status);
+          const data = await res.json();
+          if (!data.hourly) throw new Error("No hourly data returned");
+
+          const updatedTime = data.current_weather?.time || new Date().toISOString();
+          const summaryRange = summaryHoursMap[day.date];
+
+          const hours = data.hourly.time.map((t, i) => {
+            const d = new Date(t);
+            return {
+              time: t,
+              hour: d.getHours(),
+              temp: data.hourly.temperature_2m[i],
+              rain: data.hourly.precipitation[i],
+              code: data.hourly.weathercode[i],
+              windSpeed: data.hourly.windspeed_10m[i],
+              windDir: data.hourly.winddirection_10m[i],
+              windGust: data.hourly.windgusts_10m ? data.hourly.windgusts_10m[i] : null
+            };
+          }).filter(h => h.hour >= summaryRange.start && h.hour <= summaryRange.end);
+
+          const rainHours = hours.filter(h => h.rain > 0);
+          let rainSummary = "No rain expected";
+          if (rainHours.length > 0) {
+            const maxRain = Math.max(...rainHours.map(h => h.rain));
+            const duration = rainHours.length;
+            let intensity = "Light rain";
+            if (maxRain >= 5) intensity = "Heavy rain";
+            else if (maxRain >= 1) intensity = "Moderate rain";
+            rainSummary = `${intensity} (~${maxRain.toFixed(1)}mm) expected for ${duration} hour${duration > 1 ? "s" : ""}`;
+          }
+
+          const avgWind = hours.reduce((sum,h)=>sum+h.windSpeed,0)/hours.length;
+          const maxGust = Math.max(...hours.map(h=>h.windGust||h.windSpeed));
+          const avgWindDirDeg = hours.reduce((sum,h)=>sum+h.windDir,0)/hours.length;
+          const windDirs = ["N","NE","E","SE","S","SW","W","NW"];
+          const windDirIndex = Math.round(avgWindDirDeg/45)%8;
+          const windSummary = `${describeWind(avgWind)} ${Math.round(avgWind)} km/h, gusts up to ${Math.round(maxGust)} km/h from ${windDirs[windDirIndex]}`;
+
+          const summary = `${rainSummary}, Wind: ${windSummary}`;
+
+          results.push({ label: day.label, course: day.course, hours, summary, lastUpdate: updatedTime });
+        }
+
+        setForecast(results);
+        setLastUpdate(results[0]?.lastUpdate || new Date().toISOString());
+        setError(null);
+      } catch(e) {
+        console.error(e);
+        setError(e.message);
+      }
+    }
+
+    getForecast();
+  }, []);
+
+  return React.createElement(
+    "div",
+    { className:"max-w-5xl w-full mx-auto p-4 rounded-xl shadow bg-white" },
+
+    React.createElement(
+      "h2",
+      { className:"text-2xl font-bold mb-1 text-center" },
+      "SLIM 2025 - WEATHER FORECAST"
+    ),
+
+    lastUpdate && React.createElement(
+      "p",
+      { className:"text-center text-xs mb-4 text-gray-600" },
+      "Forecast last updated: " +
+      new Date(lastUpdate).toLocaleDateString("en-GB") + // UK style dd/mm/yyyy
+	  " at " +
+	  new Date(lastUpdate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    ),
+
+    error && React.createElement(
+      "p",
+      { className:"text-red-600 text-center mb-4" },
+      "Error: "+error
+    ),
+
+    forecast.map((day, index) =>
+      React.createElement(
+        "div",
+        { key:day.label, className:"mb-6 flex flex-col items-start" },
+
+        React.createElement(
+          "div",
+          {
+            style: { width: tileRefs.current[index]?.offsetWidth || "100%" },
+            className:"flex flex-col mb-2"
+          },
+          React.createElement(
+            "h3",
+            { className:"text-lg font-bold mb-1 p-2 bg-green-500 text-white rounded w-full" },
+            `${day.label} – ${day.course}`
+          ),
+          React.createElement(
+            "p",
+            { className:"text-sm italic w-full" },
+            day.summary
+          )
+        ),
+
+        React.createElement(
+          "div",
+          {
+            className:"flex overflow-x-auto gap-2 py-2",
+            ref: el => tileRefs.current[index] = el
+          },
+          day.hours.map((hour, idx)=>{
+            let tileBg = "bg-sky-100";
+            if(hour.rain > 0 && hour.rain < 1) tileBg = "bg-blue-200 brightness-90";
+            else if(hour.rain >= 1 && hour.rain < 5) tileBg = "bg-blue-300 brightness-95";
+            else if(hour.rain >= 5) tileBg = "bg-blue-400";
+
+            return React.createElement(
+              "div",
+              { key:idx, className:`flex-shrink-0 flex flex-col items-center p-1 sm:p-2 rounded-lg shadow min-w-[50px] sm:min-w-[60px] ${tileBg}` },
+              React.createElement("span",{className:"text-xs font-semibold"}, formatHour(hour.hour)),
+              React.createElement("div",{className:"my-1 text-2xl"}, getIcon(hour.code,hour.rain)),
+              React.createElement("span",{className:"text-sm"}, Math.round(hour.temp)+"°C"),
+              React.createElement("span",{className:"text-xs text-blue-700"}, hour.rain>0 ? hour.rain.toFixed(1)+"mm" : "—")
+            );
+          })
+        )
+      )
+    )
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(
+  React.createElement(WeatherWidget)
+);
+</script>
+</body>
+</html>
