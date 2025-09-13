@@ -27,14 +27,14 @@ function WeatherWidget() {
   const tileRefs = useRef({});
 
   const days = [
-    { date: '2025-09-14', label: 'Thursday 3 Sep', course: 'Old Course (1.30pm)', lat: 55.2784, lon: -7.3942 },
-    { date: '2026-09-04', label: 'Friday 4 Sep', course: 'Glashedy (10.30am)', lat: 55.2784, lon: -7.3942 },
-    { date: '2026-09-05', label: 'Saturday 5 Sep', course: 'Old Course (10.30am)', lat: 55.2784, lon: -7.3942 },
-    { date: '2026-09-06', label: 'Sunday 6 Sep', course: 'Glashedy (8.30am)', lat: 55.2784, lon: -7.3942 }
+    { date: '2026-09-03', label: 'Thursday 3 Sep', course: 'Old Course R1 (1.30pm)', lat: 55.2, lon: -7.6 },
+    { date: '2026-09-04', label: 'Friday 4 Sep', course: 'Glashedy R2 (10.30am)', lat: 55.25, lon: -7.9 },
+    { date: '2026-09-05', label: 'Saturday 5 Sep', course: 'Old Course R3 (10.30am)', lat: 55.25, lon: -7.9 },
+    { date: '2026-09-06', label: 'Sunday 6 Sep', course: 'Glashedy R2 (8.30am)', lat: 55.25, lon: -7.9 }
   ];
 
   const summaryHoursMap = {
-    '2025-09-14': { start: 13, end: 19 },
+    '2026-09-03': { start: 13, end: 19 },
     '2026-09-04': { start: 10, end: 16 },
     '2026-09-05': { start: 10, end: 16 },
     '2026-09-06': { start: 8, end: 14 },
