@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>SLIM 2025 - WEATHER FORECAST</title>
+<title>SLIM 2026 - WEATHER FORECAST</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
 <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
@@ -27,10 +27,10 @@ function WeatherWidget() {
   const tileRefs = useRef({});
 
   const days = [
-    { date: '2025-09-04', label: 'Thursday 4 Sep', course: 'Portsalon (1.30pm)', lat: 55.2, lon: -7.6 },
-    { date: '2025-09-05', label: 'Friday 5 Sep', course: 'Old Tom Morris (12.10pm)', lat: 55.25, lon: -7.9 },
-    { date: '2025-09-06', label: 'Saturday 6 Sep', course: "St Patrick's (1.30pm)", lat: 55.25, lon: -7.9 },
-    { date: '2025-09-07', label: 'Sunday 7 Sep', course: 'Sandy Hills (9.00am)', lat: 55.25, lon: -7.9 }
+    { date: '2026-09-03', label: 'Thursday 3 Sep', course: 'Old Course (1.30pm)', lat: 55.2784, lon: -7.3942 },
+    { date: '2026-09-04', label: 'Friday 4 Sep', course: 'Glashedy (10.30am)', lat: 55.2784, lon: -7.3942 },
+    { date: '2026-09-05', label: 'Saturday 5 Sep', course: 'Old Course (10.30am)', lat: 55.2784, lon: -7.3942 },
+    { date: '2026-09-06', label: 'Sunday 6 Sep', course: 'Glashedy (8.30am)', lat: 55.2784, lon: -7.3942 }
   ];
 
   const summaryHoursMap = {
@@ -71,7 +71,7 @@ function WeatherWidget() {
         const results = [];
         for (const day of days) {
           const url = `https://api.open-meteo.com/v1/forecast?latitude=${day.lat}&longitude=${day.lon}` +
-                      `&hourly=temperature_2m,apparent_temperature,precipitation,weathercode,windspeed_10m,winddirection_10m,windgusts_10m&current_weather=true&timezone=auto` +
+                      `&hourly=temperature_2m,precipitation,weathercode,windspeed_10m,winddirection_10m,windgusts_10m&current_weather=true&timezone=auto` +
                       `&start_date=${day.date}&end_date=${day.date}`;
 
           const res = await fetch(url);
@@ -88,7 +88,6 @@ function WeatherWidget() {
               time: t,
               hour: d.getHours(),
               temp: data.hourly.temperature_2m[i],
-              realFeel: data.hourly.apparent_temperature[i],
               rain: data.hourly.precipitation[i],
               code: data.hourly.weathercode[i],
               windSpeed: data.hourly.windspeed_10m[i],
@@ -108,9 +107,6 @@ function WeatherWidget() {
             rainSummary = `${intensity} (~${maxRain.toFixed(1)}mm) expected for ${duration} hour${duration > 1 ? "s" : ""}`;
           }
 
-          const avgTemp = hours.reduce((sum,h)=>sum+h.temp,0)/hours.length;
-          const avgRealFeel = hours.reduce((sum,h)=>sum+h.realFeel,0)/hours.length;
-
           const avgWind = hours.reduce((sum,h)=>sum+h.windSpeed,0)/hours.length;
           const maxGust = Math.max(...hours.map(h=>h.windGust||h.windSpeed));
           const avgWindDirDeg = hours.reduce((sum,h)=>sum+h.windDir,0)/hours.length;
@@ -118,7 +114,7 @@ function WeatherWidget() {
           const windDirIndex = Math.round(avgWindDirDeg/45)%8;
           const windSummary = `${describeWind(avgWind)} ${Math.round(avgWind)} km/h, gusts up to ${Math.round(maxGust)} km/h`;
 
-          const summary = `Temp: ${avgTemp.toFixed(1)}°C, Real Feel: ${avgRealFeel.toFixed(1)}°C. ${rainSummary}, Wind: ${windSummary}`;
+          const summary = `${rainSummary}, Wind: ${windSummary}`;
 
           results.push({ label: day.label, course: day.course, hours, summary, lastUpdate: updatedTime });
         }
@@ -149,9 +145,9 @@ function WeatherWidget() {
       "p",
       { className:"text-center text-xs mb-4 text-gray-600" },
       "Forecast last updated: " +
-      new Date(lastUpdate).toLocaleDateString("en-GB") +
-      " at " +
-      new Date(lastUpdate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      new Date(lastUpdate).toLocaleDateString("en-GB") + // UK style dd/mm/yyyy
+	  " at " +
+	  new Date(lastUpdate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     ),
 
     error && React.createElement(

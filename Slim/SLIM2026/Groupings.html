@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <title>SLIM 2025 - GROUPINGS</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: Arial, sans-serif;
+      background: #f9f9f9;
+    }
+
+    /* Full height container */
+    .golf_table {
+      position: relative;
+      width: 100%;
+      height: 100vh; /* Always fill viewport height */
+      background: #fff;
+      box-sizing: border-box;
+    }
+
+    /* Iframe styling */
+    .golf_table iframe {
+      width: 100%;
+      height: 100%;
+      display: block;
+      border: 1px solid black;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+  </style>
+</head>
+
+<body>
+    <!-- Global Back Button -->
+  <button onclick="window.history.back()" 
+          class="m-4 px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-lg shadow text-sm">
+    ← Back
+  </button>
+  
+  <div class="golf_table">
+    <iframe id="excelFrame" src="" title="SLIM 2025 Groupings" loading="lazy"></iframe>
+  </div>
+
+  <script>
+    // Base OneDrive link (replace FILE_ID with your real file's ID)
+    const baseLink = "https://onedrive.live.com/edit?cid=29a99d65aa1785d4&id=29A99D65AA1785D4!s4fc07b975524497da651a46e4de1b0fe&resid=29A99D65AA1785D4!s4fc07b975524497da651a46e4de1b0fe&ithint=file%2Cxlsx&embed=1&wdAllowInteractivity=False&Item=WEBSITE_BIRDIES_EAGLES&wdHideGridlines=True&wdInConfigurator=True&wdDownloadButton=False&migratedtospo=true&redeem=aHR0cHM6Ly8xZHJ2Lm1zL3gvYy8yOWE5OWQ2NWFhMTc4NWQ0L0lRU1hlOEJQSkZWOVNhWlJwRzVONGJELUFiU2NmYWJPTVFOYnJPcUlQTndUcXFjP3dkQWxsb3dJbnRlcmFjdGl2aXR5PUZhbHNlJkl0ZW09V0VCU0lURV9CSVJESUVTX0VBR0xFUyZ3ZEhpZGVHcmlkbGluZXM9VHJ1ZSZ3ZEluQ29uZmlndXJhdG9yPVRydWUmd2REb3dubG9hZEJ1dHRvbj1GYWxzZQ&wdo=2";
+    
+    
+    // Simple iOS detection
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+
+    // Set zoom based on device
+    const zoomLevel = isIOS ? 100 : 70;
+    document.getElementById("excelFrame").src = `${baseLink}&wdZoom=${zoomLevel}`;
+  </script>
+
+  <!-- Clicky Analytics -->
+  <script>
+    var clicky_site_ids = clicky_site_ids || [];
+    clicky_site_ids.push(101261230);
+  </script>
+  <script async src="//static.getclicky.com/js"></script>
+  <noscript>
+    <p><img alt="Clicky" width="1" height="1" src="//in.getclicky.com/101261230ns.gif" /></p>
+  </noscript>
+</body>
+</html>
