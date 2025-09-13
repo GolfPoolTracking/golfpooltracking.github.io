@@ -27,17 +27,17 @@ function WeatherWidget() {
   const tileRefs = useRef({});
 
   const days = [
-    { date: '2025-09-03', label: 'Thursday 3 Sep', course: 'Old Course (1.30pm)', lat: 55.2784, lon: -7.3942 },
+    { date: '2025-09-14', label: 'Thursday 3 Sep', course: 'Old Course (1.30pm)', lat: 55.2784, lon: -7.3942 },
     { date: '2026-09-04', label: 'Friday 4 Sep', course: 'Glashedy (10.30am)', lat: 55.2784, lon: -7.3942 },
     { date: '2026-09-05', label: 'Saturday 5 Sep', course: 'Old Course (10.30am)', lat: 55.2784, lon: -7.3942 },
     { date: '2026-09-06', label: 'Sunday 6 Sep', course: 'Glashedy (8.30am)', lat: 55.2784, lon: -7.3942 }
   ];
 
   const summaryHoursMap = {
-    '2025-09-04': { start: 13, end: 19 },
-    '2025-09-05': { start: 12, end: 18 },
-    '2025-09-06': { start: 13, end: 19 },
-    '2025-09-07': { start: 9, end: 15 },
+    '2025-09-14': { start: 13, end: 19 },
+    '2026-09-04': { start: 10, end: 16 },
+    '2026-09-05': { start: 10, end: 16 },
+    '2026-09-06': { start: 8, end: 14 },
   };
 
   function describeWind(speed) {
@@ -138,7 +138,7 @@ function WeatherWidget() {
     React.createElement(
       "h2",
       { className:"text-2xl font-bold mb-1 text-center" },
-      "SLIM 2025 - WEATHER FORECAST"
+      "SLIM 2026 - WEATHER FORECAST"
     ),
 
     lastUpdate && React.createElement(
