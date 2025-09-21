@@ -9,7 +9,6 @@
 <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
 </head>
 <body class="bg-sky-50">
-  <!-- Global Back Button -->
   <button onclick="window.history.back()" 
           class="m-4 px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-lg shadow text-sm">
     ← Back
@@ -25,6 +24,7 @@ function WeatherWidget() {
   const [lastUpdate, setLastUpdate] = useState(null);
   const [error, setError] = useState(null);
   const tileRefs = useRef({});
+  const maxForecastDays = 16;
 
   const days = [
     { date: '2026-09-03', label: 'Thursday 3 Sep', course: 'Old Course R1 (1.30pm)', lat: 55.2, lon: -7.6 },
@@ -52,24 +52,42 @@ function WeatherWidget() {
   }
 
   function getIcon(code, rain) {
-    if(rain>0) return "🌧️";
-    if(code===0) return "🌤️";
-    if([1,2,3].includes(code)) return "☁️";
+    if (rain > 0) return "🌧️";
+    if (code === 0) return "🌤️";
+    if ([1, 2, 3].includes(code)) return "☁️";
     return "🌤️";
   }
 
   function formatHour(h) {
-    if(h===12) return '12pm';
-    if(h===0) return '12am';
-    if(h>12) return (h-12)+'pm';
-    return h+'am';
+    if (h === 12) return '12pm';
+    if (h === 0) return '12am';
+    if (h > 12) return (h - 12) + 'pm';
+    return h + 'am';
   }
 
   useEffect(() => {
     async function getForecast() {
       try {
         const results = [];
+        const today = new Date();
+        today.setHours(0,0,0,0);
+
         for (const day of days) {
+          const eventDate = new Date(day.date);
+          const diffDays = Math.ceil((eventDate - today) / (1000 * 60 * 60 * 24));
+
+          // 👉 Check if forecast is within 16 days
+          if (diffDays > maxForecastDays) {
+            results.push({
+              label: day.label,
+              course: day.course,
+              summary: `Forecast not yet available. Open-Meteo only provides forecasts ${maxForecastDays} days in advance. Please check back after ${new Date(eventDate.getTime() - maxForecastDays*24*60*60*1000).toLocaleDateString()}.`,
+              hours: []
+            });
+            continue;
+          }
+
+          // Otherwise fetch real data
           const url = `https://api.open-meteo.com/v1/forecast?latitude=${day.lat}&longitude=${day.lon}` +
                       `&hourly=temperature_2m,precipitation,weathercode,windspeed_10m,winddirection_10m,windgusts_10m&current_weather=true&timezone=auto` +
                       `&start_date=${day.date}&end_date=${day.date}`;
@@ -110,17 +128,13 @@ function WeatherWidget() {
           const avgWind = hours.reduce((sum,h)=>sum+h.windSpeed,0)/hours.length;
           const maxGust = Math.max(...hours.map(h=>h.windGust||h.windSpeed));
           const avgWindDirDeg = hours.reduce((sum,h)=>sum+h.windDir,0)/hours.length;
-          const windDirs = ["N","NE","E","SE","S","SW","W","NW"];
-          const windDirIndex = Math.round(avgWindDirDeg/45)%8;
           const windSummary = `${describeWind(avgWind)} ${Math.round(avgWind)} km/h, gusts up to ${Math.round(maxGust)} km/h`;
 
-          const summary = `${rainSummary}, Wind: ${windSummary}`;
-
-          results.push({ label: day.label, course: day.course, hours, summary, lastUpdate: updatedTime });
+          results.push({ label: day.label, course: day.course, hours, summary: `${rainSummary}, Wind: ${windSummary}`, lastUpdate: updatedTime });
         }
 
         setForecast(results);
-        setLastUpdate(results[0]?.lastUpdate || new Date().toISOString());
+        setLastUpdate(new Date().toISOString());
         setError(null);
       } catch(e) {
         console.error(e);
@@ -135,56 +149,31 @@ function WeatherWidget() {
     "div",
     { className:"max-w-5xl w-full mx-auto p-4 rounded-xl shadow bg-white" },
 
-    React.createElement(
-      "h2",
-      { className:"text-2xl font-bold mb-1 text-center" },
-      "SLIM 2026 - WEATHER FORECAST"
-    ),
+    React.createElement("h2",{className:"text-2xl font-bold mb-1 text-center"},"SLIM 2026 - WEATHER FORECAST"),
 
     lastUpdate && React.createElement(
-      "p",
-      { className:"text-center text-xs mb-4 text-gray-600" },
-      "Forecast last updated: " +
-      new Date(lastUpdate).toLocaleDateString("en-GB") + // UK style dd/mm/yyyy
-	  " at " +
-	  new Date(lastUpdate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      "p",{className:"text-center text-xs mb-4 text-gray-600"},
+      "Forecast last updated: "+
+      new Date(lastUpdate).toLocaleDateString("en-GB")+" at "+
+      new Date(lastUpdate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     ),
 
-    error && React.createElement(
-      "p",
-      { className:"text-red-600 text-center mb-4" },
-      "Error: "+error
-    ),
+    error && React.createElement("p",{className:"text-red-600 text-center mb-4"},"Error: "+error),
 
     forecast.map((day, index) =>
       React.createElement(
-        "div",
-        { key:day.label, className:"mb-6 flex flex-col items-start" },
+        "div",{ key:day.label, className:"mb-6 flex flex-col items-start" },
 
-        React.createElement(
-          "div",
-          {
-            style: { width: tileRefs.current[index]?.offsetWidth || "100%" },
-            className:"flex flex-col mb-2"
-          },
-          React.createElement(
-            "h3",
-            { className:"text-lg font-bold mb-1 p-2 bg-green-500 text-white rounded w-full" },
-            `${day.label} – ${day.course}`
-          ),
-          React.createElement(
-            "p",
-            { className:"text-sm italic w-full" },
-            day.summary
-          )
+        React.createElement("div",
+          { style:{width:tileRefs.current[index]?.offsetWidth || "100%"}, className:"flex flex-col mb-2" },
+          React.createElement("h3",{className:"text-lg font-bold mb-1 p-2 bg-green-500 text-white rounded w-full"},
+            `${day.label} – ${day.course}`),
+          React.createElement("p",{className:"text-sm italic w-full"}, day.summary)
         ),
 
-        React.createElement(
+        day.hours.length>0 && React.createElement(
           "div",
-          {
-            className:"flex overflow-x-auto gap-2 py-2",
-            ref: el => tileRefs.current[index] = el
-          },
+          {className:"flex overflow-x-auto gap-2 py-2",ref:el=>tileRefs.current[index]=el},
           day.hours.map((hour, idx)=>{
             let tileBg = "bg-sky-100";
             if(hour.rain > 0 && hour.rain < 1) tileBg = "bg-blue-200 brightness-90";
