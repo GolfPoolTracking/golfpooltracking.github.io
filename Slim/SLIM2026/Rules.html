@@ -1,145 +1,210 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SLIM 2026 Rules & Format</title>
-    <style>
-        body {
-            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f4f4f4;
-            color: #333;
-            margin: 0;
-            padding: 0;
-        }
-        
-        header {
-            background: linear-gradient(
-                135deg,
-                rgba(46, 139, 87, 0.8),   /* #2e8b57 with 80% opacity */
-                rgba(34, 139, 34, 0.8)    /* #228b22 with 80% opacity */
-            );
-            color: white;
-            text-align: center;
-            padding: 40px 20px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-        }
-        
-        header h1 {
-            margin: 0;
-            font-size: 2.5em;
-        }
-        header p {
-            font-size: 1.2em;
-            margin-top: 10px;
-            font-style: italic;
-        }
-        .container {
-            max-width: 900px;
-            margin: 40px auto;
-            background: rgba(255, 255, 255, 0.8); /* white with 80% opacity */
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-            backdrop-filter: blur(4px); /* optional: soft blur of background */
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SLIM 2026 Rules & Format</title>
+<style>
+    :root {
+        --bg: #f6f7f9;
+        --card-shadow: 0 6px 18px rgba(12,20,30,0.06);
+        --accent: #0b6b3a;
+        --muted: #6b7280;
+        font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
 
-        /* Background layer with overlay */
-            body::before {
-            content: "";
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: 
-                linear-gradient(rgba(0,0,0,0.35), rgba(0,0,0,0.35)), 
+    /* Background layer with overlay */
+    body::before {
+        content: "";
+        position: fixed;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background: 
+            linear-gradient(rgba(0,0,0,0.35), rgba(0,0,0,0.35)), 
             url("WinnerPhoto.jpg") no-repeat center center;
-            background-size: cover;
-            z-index: -1;
-            transform: translateZ(0);
-        }
+        background-size: cover;
+        z-index: -1;
+        transform: translateZ(0);
+    }
 
-        h2 {
-            color: #006400;
-            border-bottom: 2px solid #e0e0e0;
-            padding-bottom: 5px;
-            margin-top: 30px;
+    body {
+        margin: 0;
+        padding: 24px;
+        color: #0b1720;
+        background: var(--bg);
+    }
+
+    /* Container */
+    .container {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 20px;
+        border-radius: 10px;
+        backdrop-filter: blur(4px);
+    }
+
+    /* Header */
+    header {
+        display: flex;
+        justify-content: center; /* centers horizontally */
+        align-items: center;     /* centers vertically */
+        gap: 12px;
+        margin-bottom: 18px;
+        background: rgba(11, 107, 58, 0.8);
+        padding: 10px 14px;
+        border-radius: 8px;
+        color: white;
+        backdrop-filter: blur(4px);
+    }
+    header h1 {
+        font-size: 20px;
+        margin: 0;
+    }
+
+    /* List of cards */
+    .list {
+        display: grid;
+        gap: 14px;
+    }
+
+    /* Cards */
+    .card {
+        background: rgba(255, 255, 255, 0.8);
+        padding: 16px;
+        border-radius: 10px;
+        box-shadow: var(--card-shadow);
+        display: flex;
+        flex-direction: column;
+        gap: 12px; /* spacing between rows inside card */
+        backdrop-filter: blur(4px);
+    }
+
+    .card h2 {
+        color: var(--accent);
+        font-size: 18px;
+        margin: 0 0 8px 0;
+    }
+
+    .card ul {
+        margin: 0;
+        padding-left: 20px;
+    }
+
+    .card ul li {
+        margin-bottom: 8px; /* space between list items */
+        line-height: 1.6;
+    }
+
+    .note {
+        font-weight: bold;
+        color: #cc0000;
+        font-size: 1.2em;
+        text-align: center;
+    }
+
+    .emoji {
+        font-size: 1.5em;
+    }
+
+    /* Global back button */
+    button {
+        margin: 1rem 0;
+        padding: 0.5rem 1rem;
+        background: rgba(200, 200, 200, 0.8);
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        backdrop-filter: blur(4px);
+    }
+    button:hover {
+        background: rgba(220, 220, 220, 0.8);
+    }
+
+    footer.card {
+        text-align: center;
+        font-size: 0.9em;
+        color: #666;
+        margin-top: 14px;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 480px) {
+        .card {
+            padding: 12px;
         }
-        ul {
-            list-style-type: disc;
-            padding-left: 20px;
-            line-height: 1.6;
+        .card h2 {
+            font-size: 16px;
+        }
+        .card ul li {
+            font-size: 14px;
         }
         .note {
-            font-weight: bold;
-            color: #cc0000;
-            font-size: 1.2em;
-            margin-top: 20px;
-            text-align: center;
+            font-size: 1.1em;
         }
-        .emoji {
-            font-size: 1.5em;
-        }
-        footer {
-            text-align: center;
-            font-size: 0.9em;
-            color: #666;
-            padding: 20px;
-        }
-    </style>
+    }
+</style>
 </head>
 <body>
-      <!-- Global Back Button -->
-  <button onclick="window.history.back()" 
-          class="m-4 px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-lg shadow text-sm">
-    ← Back
-  </button>
-  
-  <header>
-        <h1>SLIM 2026 Rules & Format</h1>
-        <!-- <p>Your guide to the competition — play fair, play well!</p> -->
-    </header>
+    <!-- Global Back Button -->
+    <button onclick="window.history.back()">← Back</button>
 
     <div class="container">
-        <h2>Format</h2>
-        <ul>
-            <li><strong>Singles:</strong> Stableford</li>
-            <li><strong>Team Event:</strong> Stableford: Best 2 scores to count.</li>
-            <li><strong>Slim Trophy:</strong> All 4 rounds count this year. Tie-break: Best score on Round 4, then countback on R4 (last 9 → last 6 → last 3 → last 1).</li>
-            <li><strong>Slim Plate:</strong> Best score on Round 4. Tie-break: Countback on R4 (last 9 → last 6 → last 3 → last 1). Slim Champion cannot win Slim Plate; if so, 2nd best score wins.</li>
-        </ul>
+        <header>
+            <h1>SLIM 2026 Rules & Format</h1>
+        </header>
 
-        <h2>Handicap Allowances</h2>
-        <ul>
-            <li><strong>Maximum Playing Handicap:</strong> 18</li>
-			<li><strong>Handicap Index:</strong> Your Day 1 Handicap Index will apply for all 4 rounds.</li>
-			<li><strong>Handicap Reductions:</strong> Anyone scoring 40pts or more in a round will have their Playing Handicap reduced by 1 shot for all subsequent rounds. Reductions will be cumlative.</li>
-			<li><strong>Singles:</strong> 85% of Course Handicap</li>
-            <li><strong>Team Event:</strong> 75% of Course Handicap <!--/ 3-Person Teams get 100% of Course Handicap--></li>
-            <li><strong>Reigning Slim Champion:</strong> Full Playing Handicap in daily Singles & Team event, but 3-point deduction from overall Slim total.</li>
-        </ul>
+        <section class="list" aria-label="Rules & Format">
 
-        <h2>Prizes</h2>
-        <ul>
-            <li><strong>Singles:</strong> 1st, 2nd, 3rd & 4th per round</li>
-            <li><strong>Team Event:</strong> 1st Prize per round</li>
-            <li><strong>2's:</strong> Daily pot split equally per 2. If no 2's, pot carries to next round.</li>
-            <li><strong>Closest to Pin:</strong> Two per round (ball must be on green).</li>
-            <li><strong>Longest Drive (optional):</strong> Two per round (ball must be on fairway).</li>
-        </ul>
-		
-		<h2>Entry Fees</h2>
-        <ul>
-            <li><strong>€80 per person</strong> - covers Singles, Teams, Nearest the Pin and 2s. Click <a href="./Payouts.html">here</a> for full breakdown of prizes.</strong></li>
-            <li><strong>Longest Drive Entry is Optional</strong> - €20 extra to cover all 4 days.</li>
-        </ul>
+            <article class="card" aria-labelledby="format">
+                <h2 id="format">Format</h2>
+                <ul>
+                    <li><strong>Singles:</strong> Stableford</li>
+                    <li><strong>Team Event:</strong> Stableford: Best 2 scores to count.</li>
+                    <li><strong>Slim Trophy:</strong> All 4 rounds count this year. Tie-break: Best score on Round 4, then countback on R4 (last 9 → last 6 → last 3 → last 1).</li>
+                    <li><strong>Slim Plate:</strong> Best score on Round 4. Tie-break: Countback on R4 (last 9 → last 6 → last 3 → last 1). Slim Champion cannot win Slim Plate; if so, 2nd best score wins.</li>
+                </ul>
+            </article>
 
-        <p class="note">MOST IMPORTANT RULE<br>
-        Play the ball as it lies <span class="emoji">😂</span></p>
-        
-        <footer>
+            <article class="card" aria-labelledby="handicap">
+                <h2 id="handicap">Handicap Allowances</h2>
+                <ul>
+                    <li><strong>Maximum Playing Handicap:</strong> 18</li>
+                    <li><strong>Handicap Index:</strong> Your Day 1 Handicap Index will apply for all 4 rounds.</li>
+                    <li><strong>Handicap Reductions:</strong> Anyone scoring 40pts or more in a round will have their Playing Handicap reduced by 1 shot for all subsequent rounds. Reductions will be cumulative.</li>
+                    <li><strong>Singles:</strong> 85% of Course Handicap</li>
+                    <li><strong>Team Event:</strong> 75% of Course Handicap</li>
+                    <li><strong>Reigning Slim Champion:</strong> Full Playing Handicap in daily Singles & Team event, but 3-point deduction from overall Slim total.</li>
+                </ul>
+            </article>
+
+            <article class="card" aria-labelledby="prizes">
+                <h2 id="prizes">Prizes</h2>
+                <ul>
+                    <li><strong>Singles:</strong> 1st, 2nd, 3rd & 4th per round</li>
+                    <li><strong>Team Event:</strong> 1st Prize per round</li>
+                    <li><strong>2's:</strong> Daily pot split equally per 2. If no 2's, pot carries to next round.</li>
+                    <li><strong>Closest to Pin:</strong> Two per round (ball must be on green).</li>
+                    <li><strong>Longest Drive (optional):</strong> Two per round (ball must be on fairway).</li>
+                </ul>
+            </article>
+
+            <article class="card" aria-labelledby="entry">
+                <h2 id="entry">Entry Fees</h2>
+                <ul>
+                    <li><strong>€80 per person</strong> - covers Singles, Teams, Nearest the Pin and 2s. Click <a href="./Payouts.html">here</a> for full breakdown of prizes.</li>
+                    <li><strong>Longest Drive Entry is Optional</strong> - €20 extra to cover all 4 days.</li>
+                </ul>
+            </article>
+
+            <article class="card" aria-labelledby="note">
+                <p class="note">MOST IMPORTANT RULE<br>Play the ball as it lies <span class="emoji">😂</span></p>
+            </article>
+
+        </section>
+
+        <!-- Footer as a card -->
+        <footer class="card">
             &copy; Your Councillor | Guinness & Casinos Await (well, maybe no Casinos this year in Donegal)
         </footer>
     </div>
-
-
 </body>
 </html>
