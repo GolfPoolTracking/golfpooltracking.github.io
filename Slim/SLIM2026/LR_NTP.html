@@ -21,15 +21,39 @@
       color:var(--text);
       padding:32px;
     }
-    .container{
-      max-width:980px;
-      margin:0 auto;
+    /* Container */
+    .container {
+      max-width: 980px;
+      margin: 0 auto;
+      background: rgba(255, 255, 255, 0);
+      padding: 20px;
+      border-radius: 10px;
+      backdrop-filter: blur(4px);
     }
-    header{
-      margin-bottom:24px;
+    
+    /* Background layer with overlay */
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: url("WinnerPhoto.jpg") no-repeat center center;
+      background-size: cover;
+      z-index: -1;
+      transform: translateZ(0);
     }
-    h1{font-size:1.6rem;margin:0}
-    p.lead{margin:6px 0 0;color:rgba(11,45,26,0.7)}
+
+    /* Header */
+    header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 18px;
+      background: rgba(11, 107, 58, 0.8);
+      padding: 10px 14px;
+      border-radius: 8px;
+      color: white;
+      backdrop-filter: blur(4px);
+    }
 
     .grid{
       display:grid;
@@ -38,13 +62,15 @@
     }
 
     .card{
-      background:var(--card-bg);
+      background: rgba(255, 255, 255, 0.8); /* white with 80% opacity */
       border-radius:14px;
       padding:16px;
       box-shadow: 0 6px 20px rgba(11,45,26,0.06);
       border:1px solid rgba(11,45,26,0.04);
       transition:transform .18s ease, box-shadow .18s ease;
+      backdrop-filter: blur(4px); /* optional: soft glass effect */
     }
+    
     .card:hover{transform:translateY(-6px);box-shadow:0 18px 40px rgba(11,45,26,0.09)}
 
     .course-title{
@@ -76,9 +102,9 @@
     
     <main class="grid" role="list">
     
-    <section class="card" role="listitem" aria-labelledby="portsalon">
+    <section class="card" role="listitem" aria-labelledby="day1">
         <div class="course-title">
-          <h2 id="portsalon">Old Course R1</h2>
+          <h2 id="day1">Old Course R1</h2>
         </div>
         <div class="score-list">
           <div class="score-row"><div>Nearest the Pin</div><div class="hole-pill">XXX &amp; XXX</div></div>
@@ -86,9 +112,9 @@
         </div>
       </section>
       
-      <section class="card" role="listitem" aria-labelledby="oldtom">
+      <section class="card" role="listitem" aria-labelledby="day2">
         <div class="course-title">
-          <h2 id="oldtom">Glashedy R2</h2>
+          <h2 id="day2">Glashedy R2</h2>
         </div>
         <div class="score-list">
           <div class="score-row"><div>Nearest the Pin</div><div class="hole-pill">XXX &amp; XXX</div></div>
@@ -96,9 +122,9 @@
         </div>
       </section>
 
-      <section class="card" role="listitem" aria-labelledby="stpatricks">
+      <section class="card" role="listitem" aria-labelledby="day3">
         <div class="course-title">
-          <h2 id="stpatricks">Old Course R3</h2>
+          <h2 id="day3">Old Course R3</h2>
         </div>
         <div class="score-list">
           <div class="score-row"><div>Nearest the Pin</div><div class="hole-pill">XXX &amp; XXX</div></div>
@@ -106,9 +132,9 @@
         </div>
       </section>
       
-      <section class="card" role="listitem" aria-labelledby="sandyhills">
+      <section class="card" role="listitem" aria-labelledby="day4">
         <div class="course-title">
-          <h2 id="sandyhills">Glashedy R4</h2>
+          <h2 id="day4">Glashedy R4</h2>
         </div>
         <div class="score-list">
           <div class="score-row"><div>Nearest the Pin</div><div class="hole-pill">XXX &amp; XXX</div></div>

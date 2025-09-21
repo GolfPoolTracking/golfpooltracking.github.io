@@ -12,13 +12,19 @@
             margin: 0;
             padding: 0;
         }
+        
         header {
-            background: linear-gradient(135deg, #2e8b57, #228b22);
+            background: linear-gradient(
+                135deg,
+                rgba(46, 139, 87, 0.8),   /* #2e8b57 with 80% opacity */
+                rgba(34, 139, 34, 0.8)    /* #228b22 with 80% opacity */
+            );
             color: white;
             text-align: center;
             padding: 40px 20px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.2);
         }
+        
         header h1 {
             margin: 0;
             font-size: 2.5em;
@@ -31,11 +37,26 @@
         .container {
             max-width: 900px;
             margin: 40px auto;
-            background: #fff;
+            background: rgba(255, 255, 255, 0.8); /* white with 80% opacity */
             padding: 30px;
             border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(4px); /* optional: soft blur of background */
         }
+
+        /* Background layer with overlay */
+            body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: 
+                linear-gradient(rgba(0,0,0,0.35), rgba(0,0,0,0.35)), 
+            url("WinnerPhoto.jpg") no-repeat center center;
+            background-size: cover;
+            z-index: -1;
+            transform: translateZ(0);
+        }
+
         h2 {
             color: #006400;
             border-bottom: 2px solid #e0e0e0;
@@ -113,10 +134,12 @@
 
         <p class="note">MOST IMPORTANT RULE<br>
         Play the ball as it lies <span class="emoji">😂</span></p>
+        
+        <footer>
+            &copy; Your Councillor | Guinness & Casinos Await (well, maybe no Casinos this year in Donegal)
+        </footer>
     </div>
 
-    <footer>
-        &copy; Your Councillor | Guinness & Casinos Await (well, maybe no Casinos this year in Donegal)
-    </footer>
+
 </body>
 </html>
