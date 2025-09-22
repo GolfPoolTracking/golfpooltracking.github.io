@@ -7,37 +7,49 @@ const FILE_ID = process.env.29A99D65AA1785D4!s4fc07b975524497da651a46e4;
 const NAMED_RANGE = 'WEBSITE_RESULTS';
 
 export default async function handler(req, res) {
-    try {
-        // 1️⃣ Get MS Graph token
-        const tokenResponse = await fetch(`https://login.microsoftonline.com/${TENANT_ID}/oauth2/v2.0/token`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: new URLSearchParams({
-                client_id: CLIENT_ID,
-                scope: 'https://graph.microsoft.com/.default',
-                client_secret: CLIENT_SECRET,
-                grant_type: 'client_credentials'
-            })
-        });
-        const tokenData = await tokenResponse.json();
-        const accessToken = tokenData.access_token;
+  try {
+    // 1️⃣ Get token
+    const tokenResponse = await fetch(`https://login.microsoftonline.com/${TENANT_ID}/oauth2/v2.0/token`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams({
+        client_id: CLIENT_ID,
+        scope: 'https://graph.microsoft.com/.default',
+        client_secret: CLIENT_SECRET,
+        grant_type: 'client_credentials'
+      })
+    });
 
-        // 2️⃣ Fetch the named range by file ID
-        const rangeUrl = `https://graph.microsoft.com/v1.0/me/drive/items/${FILE_ID}/workbook/names('${NAMED_RANGE}')/range`;
+    const tokenData = await tokenResponse.json();
+    console.log('Token response:', tokenData);
 
-        const rangeResponse = await fetch(rangeUrl, {
-            headers: { Authorization: `Bearer ${accessToken}` }
-        });
-        const rangeData = await rangeResponse.json();
-
-        // Debug: log data
-        console.log(JSON.stringify(rangeData, null, 2));
-
-        res.status(200).json(rangeData);
-
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: 'Failed to fetch leaderboard', details: err.message });
+    if (!tokenData.access_token) {
+      throw new Error('Failed to get access token');
     }
-}
 
+    const accessToken = tokenData.access_token;
+
+    // 2️⃣ Fetch named range
+    const rangeUrl = `https://graph.microsoft.com/v1.0/me/drive/items/${FILE_ID}/workbook/names('${NAMED_RANGE}')/range`;
+    console.log('Fetching:', rangeUrl);
+
+    const rangeResponse = await fetch(rangeUrl, {
+      headers: { Authorization: `Bearer ${accessToken}` }
+    });
+
+    if (!rangeResponse.ok) {
+      const text = await rangeResponse.text();
+      console.log('Range response error:', text);
+      throw new Error(`Graph API request failed: ${text}`);
+    }
+
+    const rangeData = await rangeResponse.json();
+    console.log('Range data:', JSON.stringify(rangeData, null, 2));
+
+    res.status(200).json(rangeData);
+
+  } catch (err) {
+    console.error('Function error:', err);
+    res.status(500).json({ error: 'Failed to fetch leaderboard', details: err.message });
+  }
+}
