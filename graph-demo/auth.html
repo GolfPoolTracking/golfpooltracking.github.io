@@ -1,14 +1,21 @@
 <!DOCTYPE html>
 <html>
-<head><meta charset="UTF-8"><title>Auth Redirect</title></head>
+<head>
+  <meta charset="UTF-8">
+  <title>Auth Redirect</title>
+</head>
 <body>
 <script src="https://alcdn.msauth.net/browser/2.25.0/js/msal-browser.min.js"></script>
 <script>
+  // Create the MSAL instance
   const msalInstance = new msal.PublicClientApplication({
     auth: { clientId: "af978ce8-62ec-47dd-8d03-a8ef61ed78b1" }
   });
+
+  // Handle the redirect response and return to the correct page
   msalInstance.handleRedirectPromise().then(() => {
-    window.location.replace("/");
+    // ✅ Redirect back to the demo folder instead of root
+    window.location.replace("/graph-demo/");
   });
 </script>
 </body>
