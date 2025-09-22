@@ -17,71 +17,86 @@
     <p class="text-muted">Click "Sign in with Microsoft" to load Excel data.</p>
   </div>
 
-  <!-- Microsoft Authentication Library -->
+  <!-- MSAL.js -->
   <script src="https://alcdn.msauth.net/browser/2.25.0/js/msal-browser.min.js"></script>
 
   <script>
   // ======== CONFIGURE THESE =========
-  const clientId = "af978ce8-62ec-47dd-8d03-a8ef61ed78b1"; // Azure App Registration
-  const fileId   = "29A99D65AA1785D4!s4fc07b975524497da651a46e4de1b0fe"; // Excel file ID
-  const rangeName = "WEBSITE_RESULTS"; // Exact name of the Excel named range
+  const clientId   = "af978ce8-62ec-47dd-8d03-a8ef61ed78b1"; // Azure App Registration
+  const fileId     = "29A99D65AA1785D4!s4fc07b975524497da651a46e4de1b0fe"; // Excel file ID
+  const rangeName  = "WEBSITE_RESULTS"; // Excel named range
   // ===================================
 
   const msalConfig = {
     auth: {
       clientId: clientId,
-      // Redirect back to the same page after popup closes
-      redirectUri: window.location.origin + "/graph-demo/"
+      redirectUri: window.location.origin // must match Azure AD app
     }
   };
 
   const msalInstance = new msal.PublicClientApplication(msalConfig);
   const loginRequest = { scopes: ["Files.Read"] };
 
-  // Handle Sign In
+  let account = null; // currently logged-in account
+
+  // Sign in & fetch data
   document.getElementById("signin").onclick = async () => {
     try {
-      // Prompt user to log in
       const loginResp = await msalInstance.loginPopup(loginRequest);
+      account = loginResp.account;
+      await fetchExcelData(); // fetch immediately after login
+    } catch (err) {
+      console.error("Login error:", err);
+      document.getElementById("results-container").innerHTML =
+        `<div class="alert alert-danger">Login error: ${err.message}</div>`;
+    }
+  };
 
-      // Get an access token silently if possible, else popup
+  // Fetch Excel data with automatic token refresh
+  async function fetchExcelData() {
+    try {
+      if (!account) throw new Error("User not logged in");
+
+      // Try silent token acquisition first
       const tokenResp = await msalInstance.acquireTokenSilent({
         ...loginRequest,
-        account: loginResp.account
-      }).catch(() => msalInstance.acquireTokenPopup(loginRequest));
+        account: account
+      }).catch(async (silentErr) => {
+        // fallback to popup if silent fails (expired session, etc.)
+        console.warn("Silent token failed, showing popup:", silentErr);
+        return msalInstance.acquireTokenPopup(loginRequest);
+      });
 
       const token = tokenResp.accessToken;
 
-      // Microsoft Graph API endpoint for Excel named range
       const url = `https://graph.microsoft.com/v1.0/me/drive/items/${fileId}/workbook/names('${rangeName}')/range`;
-
-      console.log("Fetching data from:", url);
-
       const resp = await fetch(url, {
         headers: { "Authorization": `Bearer ${token}` }
       });
 
       if (!resp.ok) {
         const errorText = await resp.text();
-        console.error("Graph API error:", resp.status, errorText);
-        document.getElementById("results-container").innerHTML =
-          `<div class="alert alert-danger">Error ${resp.status}: ${errorText}</div>`;
-        return;
+        throw new Error(`Graph API error ${resp.status}: ${errorText}`);
       }
 
       const data = await resp.json();
-      console.log("Graph response:", data);
       renderTable(data.values);
 
     } catch (err) {
-      console.error("Login/Fetch error:", err);
+      console.error("Fetch error:", err);
       document.getElementById("results-container").innerHTML =
-        `<div class="alert alert-danger">Error: ${err.message}</div>`;
+        `<div class="alert alert-danger">Error fetching data: ${err.message}</div>`;
     }
-  };
+  }
 
-  // Render Excel range as a Bootstrap table
+  // Render Excel range as Bootstrap table
   function renderTable(values) {
+    if (!values || values.length === 0) {
+      document.getElementById("results-container").innerHTML =
+        `<p class="text-muted">No data found in the named range.</p>`;
+      return;
+    }
+
     const table = document.createElement("table");
     table.className = "table table-striped table-bordered";
 
@@ -90,7 +105,7 @@
       row.forEach(cell => {
         const tag = i === 0 ? "th" : "td";
         const td = document.createElement(tag);
-        td.textContent = cell;
+        td.textContent = cell ?? "";
         tr.appendChild(td);
       });
       table.appendChild(tr);
@@ -100,6 +115,15 @@
     container.innerHTML = "";
     container.appendChild(table);
   }
+
+  // Optional: automatically fetch data if user is already logged in
+  window.addEventListener("load", async () => {
+    const accounts = msalInstance.getAllAccounts();
+    if (accounts.length > 0) {
+      account = accounts[0];
+      await fetchExcelData();
+    }
+  });
   </script>
 </body>
 </html>
