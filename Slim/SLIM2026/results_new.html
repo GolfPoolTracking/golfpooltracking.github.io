@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SLIM 2026 Leaderboard</title>
+<style>
+:root {
+    --bg: #f6f7f9;
+    --card-shadow: 0 6px 18px rgba(12,20,30,0.06);
+    --accent: #0b6b3a;
+    --muted: #6b7280;
+    font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: 
+        linear-gradient(rgba(0,0,0,0.35), rgba(0,0,0,0.35)), 
+        url("WinnerPhoto.jpg") no-repeat center center;
+    background-size: cover;
+    z-index: -1;
+    transform: translateZ(0);
+}
+
+body { margin: 0; padding: 24px; color: #0b1720; background: var(--bg); }
+
+.container {
+    max-width: 900px; margin: 0 auto; padding: 20px;
+    border-radius: 10px; backdrop-filter: blur(4px);
+}
+
+header {
+    display: flex; justify-content: center; align-items: center;
+    gap: 12px; margin-bottom: 18px;
+    background: rgba(11, 107, 58, 0.8);
+    padding: 10px 14px; border-radius: 8px;
+    color: white; backdrop-filter: blur(4px);
+}
+header h1 { font-size: 20px; margin: 0; }
+
+.list { display: grid; gap: 14px; }
+
+.card {
+    background: rgba(255, 255, 255, 0.8);
+    padding: 16px; border-radius: 10px; box-shadow: var(--card-shadow);
+    display: flex; flex-direction: column; gap: 12px;
+    backdrop-filter: blur(4px);
+}
+
+.card h2 { color: var(--accent); font-size: 18px; margin: 0 0 8px 0; }
+
+.card ul { margin: 0; padding-left: 20px; }
+.card ul li { margin-bottom: 8px; line-height: 1.6; }
+
+.note { font-weight: bold; color: #cc0000; font-size: 1.2em; text-align: center; }
+.emoji { font-size: 1.5em; }
+
+button { margin: 1rem 0; padding: 0.5rem 1rem;
+    background: rgba(200, 200, 200, 0.8); border: none; border-radius: 8px;
+    cursor: pointer; backdrop-filter: blur(4px);
+}
+button:hover { background: rgba(220, 220, 220, 0.8); }
+
+footer.card { text-align: center; font-size: 0.9em; color: #666; margin-top: 14px; }
+
+@media (max-width: 480px) {
+    .card { padding: 12px; }
+    .card h2 { font-size: 16px; }
+    .card ul li { font-size: 14px; }
+    .note { font-size: 1.1em; }
+}
+</style>
+</head>
+<body>
+<button onclick="window.history.back()">← Back</button>
+
+<div class="container">
+    <header>
+        <h1>SLIM 2026 Leaderboard</h1>
+    </header>
+
+    <section class="list" id="leaderboard-section">
+        <!-- Leaderboard cards will be injected here -->
+    </section>
+
+    <footer class="card">
+        &copy; Your Councillor | Guinness & Casinos Await (well, maybe no Casinos this year in Donegal)
+    </footer>
+</div>
+
+<script>
+async function loadLeaderboard() {
+    const response = await fetch('/api/leaderboard');
+    const data = await response.json();
+    const container = document.getElementById('leaderboard-section');
+
+    container.innerHTML = '';
+
+    if (!data.values || data.values.length < 2) {
+        container.innerHTML = '<div class="card">No leaderboard data available.</div>';
+        return;
+    }
+
+    const headers = data.values[0];
+    const rows = data.values.slice(1);
+
+    rows.forEach(row => {
+        const card = document.createElement('article');
+        card.className = 'card';
+        card.innerHTML = `<h2>${row[0]}</h2>
+                          <ul>
+                              <li>${headers[1]}: ${row[1]}</li>
+                              <li>${headers[2]}: ${row[2]}</li>
+                              <li>${headers[3]}: ${row[3]}</li>
+                          </ul>`;
+        container.appendChild(card);
+    });
+}
+
+// Load leaderboard on page load
+loadLeaderboard();
+</script>
+</body>
+</html>
