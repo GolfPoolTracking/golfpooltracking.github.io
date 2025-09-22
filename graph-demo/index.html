@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5/dist/css/bootstrap.min.css">
 </head>
 <body class="p-4">
-  <h1 class="mb-4">Golf Pool Results (Demo)</h1>
+  <h1 class="mb-4">Golf Pool Results (Live)</h1>
 
   <button id="signin" class="btn btn-primary mb-3">Sign in with Microsoft</button>
 
@@ -20,10 +20,10 @@
 
   <script>
   // ======== CONFIGURE THESE =========
-  const clientId = "af978ce8-62ec-47dd-8d03-a8ef61ed78b1";  // from Azure App Registration
+  const clientId    = "af978ce8-62ec-47dd-8d03-a8ef61ed78b1";  // Azure App Registration
   const redirectUri = window.location.origin + "/graph-demo/auth.html";
-  const filePath = "/Documents /Slim/2026/SLIM%202026.xlsm";  // path in OneDrive/SharePoint
-  const rangeName = "WEBSITE_RESULTS";               // Excel named range
+  const fileId      = "29A99D65AA1785D4!s4fc07b975524497da651a46e4de1b0fe"; // OneDrive file ID
+  const rangeName   = "WEBSITE_RESULTS"; // Named range in Excel (case-sensitive)
   // ===================================
 
   const msalConfig = {
@@ -33,22 +33,39 @@
   const loginRequest = { scopes: ["Files.Read"] };
 
   document.getElementById("signin").onclick = async () => {
-      const loginResp = await msalInstance.loginPopup(loginRequest);
-      const account = loginResp.account;
-      msalInstance.setActiveAccount(account);
-      const tokenResp = await msalInstance.acquireTokenSilent({
-          ...loginRequest, account
-      }).catch(() => msalInstance.acquireTokenPopup(loginRequest));
+      try {
+          // Sign in
+          const loginResp = await msalInstance.loginPopup(loginRequest);
+          const account = loginResp.account;
+          msalInstance.setActiveAccount(account);
 
-      const token = tokenResp.accessToken;
-      const url = `https://graph.microsoft.com/v1.0/me/drive/root:${filePath}:/workbook/names('${rangeName}')/range`;
+          // Get access token
+          const tokenResp = await msalInstance.acquireTokenSilent({
+              ...loginRequest, account
+          }).catch(() => msalInstance.acquireTokenPopup(loginRequest));
 
-      const resp = await fetch(url, {
-          headers: { "Authorization": `Bearer ${token}` }
-      });
-      const data = await resp.json();
+          const token = tokenResp.accessToken;
 
-      renderTable(data.values);
+          // Build Graph URL using file ID
+          const url = `https://graph.microsoft.com/v1.0/me/drive/items/${fileId}/workbook/names('${encodeURIComponent(rangeName)}')/range`;
+
+          // Fetch data from Graph
+          const resp = await fetch(url, {
+              headers: { "Authorization": `Bearer ${token}` }
+          });
+
+          if (!resp.ok) {
+              throw new Error(`Graph API error: ${resp.status}`);
+          }
+
+          const data = await resp.json();
+          renderTable(data.values);
+
+      } catch (err) {
+          console.error("Error loading Excel data:", err);
+          document.getElementById("results-container").innerHTML =
+              `<div class="alert alert-danger">Failed to load data: ${err.message}</div>`;
+      }
   };
 
   function renderTable(values) {
