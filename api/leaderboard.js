@@ -1,5 +1,7 @@
 const fetch = require('node-fetch');
 
+console.log(JSON.stringify(rangeData, null, 2));
+
 const TENANT_ID = process.env.TENANT_ID;
 const CLIENT_ID = process.env.CLIENT_ID;
 const CLIENT_SECRET = process.env.CLIENT_SECRET;
