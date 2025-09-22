@@ -1,9 +1,9 @@
 const fetch = require('node-fetch');
 
-const TENANT_ID = process.env.a5635f25-6614-42fc-a5aa-51d5a7545c22;
-const CLIENT_ID = process.env.bf792ce4-6a94-42a0-9c59-0672fdfe650;
-const CLIENT_SECRET = process.env.924b3ddc-09d3-4918-9ae3-6aa1cadfc484;
-const FILE_ID = process.env.29A99D65AA1785D4!s4fc07b975524497da651a46e4;          
+const TENANT_ID = process.env.TENANT_ID;
+const CLIENT_ID = process.env.CLIENT_ID;
+const CLIENT_SECRET = process.env.CLIENT_SECRET;
+const FILE_ID = process.env.FILE_ID;
 const NAMED_RANGE = 'WEBSITE_RESULTS';
 
 module.exports = async (req, res) => {
