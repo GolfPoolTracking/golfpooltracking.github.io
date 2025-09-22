@@ -1,0 +1,23 @@
+{
+  "name": "golfpooltracking.github.io",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GolfPoolTracking/golfpooltracking.github.io.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/GolfPoolTracking/golfpooltracking.github.io/issues"
+  },
+  "homepage": "https://github.com/GolfPoolTracking/golfpooltracking.github.io#readme",
+  "devDependencies": {
+    "vercel": "^48.1.0"
+  }
+}
